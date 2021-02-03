@@ -1,0 +1,19 @@
+.auth__container {
+    height: 100%;
+    width: 100%;
+}
+
+.auth__carousal {
+    height: 100%;
+    width: 70%;
+    background-color: var(--off-white);
+}
+
+.auth__carousal__container { 
+    height: fit-content;
+    width: fit-content;
+}
+
+.auth__carousal__parent {
+    height: 68%;
+}

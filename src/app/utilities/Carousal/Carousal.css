@@ -1,0 +1,39 @@
+.carousal__window {
+    height: 420px;
+    width: 420px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    background-repeat: no-repeat;
+    background-position: center center;
+    transition: 2s ease;
+}
+
+.carousal__slide {
+    height: 100%;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.carousal__slide img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.carousal__dots {
+    width: 50px;
+}
+
+.carousal__dots .dot { 
+    height: 8px;
+    width: 8px;
+    border-radius: 5px;
+    border: 1px solid var(--light-grey)
+}
+
+.selected__dot {
+    border: none !important;
+    height: 10px !important;
+    width: 10px !important;
+    background-color: var(--primary-purple);
+}
