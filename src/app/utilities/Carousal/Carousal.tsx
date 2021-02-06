@@ -2,7 +2,7 @@ import './Carousal.css'
 import illusOne from "../../../assets/carousal/0.svg";
 import illusTwo from "../../../assets/carousal/1.svg";
 import illusThree from "../../../assets/carousal/2.svg";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Subject } from 'rxjs';
 
 export const CarouselDotBroadCaster = new Subject();
@@ -19,13 +19,14 @@ let carouselInterval: any = undefined;
 //Total Carousel Translation
 let translatedCarousel: number = 0;
 
+
 const Carousal = () => {
 
-    //Current X-axis translation in %age
+    //Component Hooks
     const [translationX, setTranslationX] = useState({ index: 0, translation: 0, transitionDuration: "none" });
 
     //Transition Delay In Seconds
-    const transitionDelay: number = 2 * 1000;
+    const transitionDelay: number = 2 * 1100;
 
     //Transition Duration
     let transitionDuration: string = "2s ease";
@@ -33,17 +34,27 @@ const Carousal = () => {
     //Image Width in percentage
     let imageWidth = 100;
 
+    const handleTransitionEnds = (event: any) => {
+        if(translatedCarousel <= (carouselImages.length * imageWidth * -1)) {
+            //Last slide
+            translatedCarousel = 0;
+            setTranslationX({ index: 0, translation: translatedCarousel, transitionDuration: "none" });
+        }
+    }
+
     const carouselIterator = () => {
         if(carouselInterval !== undefined)
         return;
-        
+                
+        let carouselWindow = document.getElementById("carousal-window");
+        carouselWindow?.addEventListener("transitionend", handleTransitionEnds);
+
         carouselInterval = setInterval(() => {
             translatedCarousel -= imageWidth;
             let newIndex = (translatedCarousel / imageWidth) * -1;
-            console.log(translatedCarousel)
-            if(newIndex === carouselImages.length) {
+            
+            if(newIndex >= carouselImages.length) {
                 newIndex = 0;
-                translatedCarousel = 0;
             }
 
             transitionDuration = "2s ease";
@@ -63,7 +74,7 @@ const Carousal = () => {
 
     return (
         <div className="carousal__parent overflow-hidden">
-            <div style={{ transform: `translateX(${translationX.translation}%)`, transition: `${translationX.transitionDuration}` }} className="carousal__window">
+            <div style={{ transform: `translateX(${translationX.translation}%)`, transition: `${translationX.transitionDuration}` }} id="carousal-window" className="carousal__window">
                 {
                     carouselImages.map((illus, index) => (
                         <div key={index} className="carousal__slide">
