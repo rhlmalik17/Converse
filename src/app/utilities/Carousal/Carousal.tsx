@@ -27,16 +27,6 @@ const Carousal = () => {
         if(!carouselWindow || carouselDots.length < 1)
         return;
 
-        carouselWindow.addEventListener('transitionend', () => {
-            if(!carouselWindow)
-            return;
-
-            if(translationX === ((carouselImages.length) * -100)) {
-                translationX = 0;
-                carouselWindow.style.transition = "none";
-                carouselWindow.style.transform = `translateX(${translationX}%)`;
-           }
-        });
         
         setInterval(() => {
             if(!carouselWindow)
@@ -49,10 +39,11 @@ const Carousal = () => {
                 return;
             }
 
-            translationX -= 100;
-            
-            let dotIndex = ((translationX / 100) * -1) - 1;
-            CarouselDotBroadCaster.next(dotIndex);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            translationX -= 100;   
+            let dotIndex = ((translationX / 100));
+            dotIndex = dotIndex * (dotIndex < 0 ? -1 : 1); 
+            CarouselDotBroadCaster.next(dotIndex === carouselImages.length ? 0 : dotIndex);
             carouselWindow.style.transition = "1s ease";
             carouselWindow.style.transform = `translateX(${translationX}%)`;
         }, transitionDelay);

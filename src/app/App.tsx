@@ -14,9 +14,9 @@ const App = () => {
   }
 
   return (
-    <div className="App">
+    <div className="main__container">
         <Switch>
-          <Route exact path={Authentication_Route.default.routeAuthentication} component={Authentication} />
+          <Route path={Authentication_Route.default.routeAuthentication} component={Authentication} />
         </Switch>
     </div>
   );

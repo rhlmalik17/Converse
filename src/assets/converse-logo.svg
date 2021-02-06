@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="249" height="147.684" viewBox="0 0 249 147.684">
+  <defs>
+    <filter id="Path_1470" x="184.767" y="0" width="64.232" height="59.156" filterUnits="userSpaceOnUse">
+      <feOffset dy="10" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feFlood flood-color="#44a6ff" flood-opacity="0.2"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_515" data-name="Group 515" transform="translate(-1260 -230.844)">
+    <text id="Converse_" data-name="Converse
+" transform="translate(1261 308.528)" fill="#8472fc" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="48" font-family="Supermolot-Black, Supermolot" font-weight="800"><tspan x="0" y="0">Converse</tspan><tspan x="0" y="59"></tspan></text>
+    <g id="Group_429" data-name="Group 429" transform="translate(1459.767 235.844)">
+      <g id="logo">
+        <g transform="matrix(1, 0, 0, 1, -199.77, -5)" filter="url(#Path_1470)">
+          <path id="Path_1470-2" data-name="Path 1470" d="M31.5,63.739H2.6a2.611,2.611,0,0,0-2.6,2.6V84.174a2.611,2.611,0,0,0,2.6,2.6H3.9v6.118l6.118-6.118H31.629a2.611,2.611,0,0,0,2.6-2.6V66.342A2.818,2.818,0,0,0,31.5,63.739Z" transform="translate(199.77 -58.74)" fill="#8472fc"/>
+        </g>
+      </g>
+      <rect id="Rectangle_188" data-name="Rectangle 188" width="26.603" height="16.87" rx="5" transform="translate(3.637 2.806)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

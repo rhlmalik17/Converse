@@ -1,8 +1,11 @@
 :root {
+  --secondary-light-purple: #CEC7FF;
   --primary-purple: #8472FC;
   --dark-purple:  #6E41C3;
   --dark-pink: #A555B2;
   --white: #ffff;
   --off-white: #F6F6FD;
   --light-grey: #ABABAF;
+  --heading-font: #585858;
+  --subHeading-font: #4B4B4B
 }

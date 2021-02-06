@@ -7,15 +7,15 @@
   
 
   @font-face {
-  font-family: 'Segoe UI Italic';
+  font-family: 'Segoe UI Bold';
   font-style: normal;
   font-weight: normal;
-  src: url('./assets/fonts/Segoe\ UI\ Italic.woff') format('woff');
+  src: url('./assets/fonts/Segoe\ UI\ Bold.woff') format('woff');
   }
   
 
   @font-face {
-  font-family: 'Segoe UI Bold';
+  font-family: 'Segoe UI Bold Italic';
   font-style: normal;
   font-weight: normal;
   src: url('./assets/fonts/Segoe\ UI\ Bold\ Italic.woff') format('woff');
@@ -23,7 +23,7 @@
   
 
   @font-face {
-  font-family: 'Segoe UI Bold Italic';
+  font-family: 'Segoe UI Italic';
   font-style: normal;
   font-weight: normal;
   src: url('./assets/fonts/Segoe\ UI\ Italic.woff') format('woff');
@@ -64,6 +64,10 @@
     height: 768px;
     overflow: hidden;
     background-color: var(--white);
+  }
+
+  .cursor-pointer{
+    cursor: pointer;
   }
 
   @media screen and (min-height: 769px) and (min-width: 1366px) {
