@@ -6,7 +6,6 @@
     flex-shrink: 0;
     background-repeat: no-repeat;
     background-position: center center;
-    transition: 1s ease;
 }
 
 .carousal__slide {

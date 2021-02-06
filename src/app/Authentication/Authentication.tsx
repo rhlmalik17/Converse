@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Route, useHistory } from "react-router-dom";
 import Carousal from '../utilities/Carousal/Carousal';
-import CarousalDots from '../utilities/Carousal/CarousalDots';
 import ConverseLogo from '../../assets/converse-logo.svg';
 import * as SignIn_Route from '../../routes/Authentication/SignIn'
 import * as SignUp_Route from '../../routes/Authentication/SignUp'
@@ -29,7 +28,6 @@ const Authentication = () => {
                     <div className={"auth__carousal__parent d-flex align-items-end justify-content-center"}>
                         <div className={"auth__carousal__container"}>
                             <Carousal />
-                            <CarousalDots />
                         </div>
                     </div>
                     <div className="auth__heading__parent d-flex flex-column justify-content-center">

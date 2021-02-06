@@ -2,7 +2,7 @@ import './Carousal.css'
 import illusOne from "../../../assets/carousal/0.svg";
 import illusTwo from "../../../assets/carousal/1.svg";
 import illusThree from "../../../assets/carousal/2.svg";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Subject } from 'rxjs';
 
 export const CarouselDotBroadCaster = new Subject();
@@ -13,47 +13,57 @@ export const carouselImages = [
     illusThree
 ];
 
+//Common Carousal Interval
+let carouselInterval: any = undefined;
+
+//Total Carousel Translation
+let translatedCarousel: number = 0;
+
 const Carousal = () => {
 
-    //Transition Delay In Seconds
-    const transitionDelay = 2 * 1000;
-    
     //Current X-axis translation in %age
-    let translationX = 0;
+    const [translationX, setTranslationX] = useState({ index: 0, translation: 0, transitionDuration: "none" });
 
-    useEffect(() => {
-        let carouselWindow = document.getElementById("carousal-window");
-        let carouselDots = document.querySelectorAll(".dot");
-        if(!carouselWindow || carouselDots.length < 1)
+    //Transition Delay In Seconds
+    const transitionDelay: number = 2 * 1000;
+
+    //Transition Duration
+    let transitionDuration: string = "2s ease";
+
+    //Image Width in percentage
+    let imageWidth = 100;
+
+    const carouselIterator = () => {
+        if(carouselInterval !== undefined)
         return;
-
         
-        setInterval(() => {
-            if(!carouselWindow)
-            return;
-
-            if(translationX === ((carouselImages.length) * -100)) {
-                carouselWindow.style.transition = "none";
-                translationX = 0;
-                carouselWindow.style.transform = `translateX(${translationX}%)`;
-                return;
+        carouselInterval = setInterval(() => {
+            translatedCarousel -= imageWidth;
+            let newIndex = (translatedCarousel / imageWidth) * -1;
+            console.log(translatedCarousel)
+            if(newIndex === carouselImages.length) {
+                newIndex = 0;
+                translatedCarousel = 0;
             }
 
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            translationX -= 100;   
-            let dotIndex = ((translationX / 100));
-            dotIndex = dotIndex * (dotIndex < 0 ? -1 : 1); 
-            CarouselDotBroadCaster.next(dotIndex === carouselImages.length ? 0 : dotIndex);
-            carouselWindow.style.transition = "1s ease";
-            carouselWindow.style.transform = `translateX(${translationX}%)`;
+            transitionDuration = "2s ease";
+            setTranslationX({ index: newIndex, translation: translatedCarousel, transitionDuration: transitionDuration });
         }, transitionDelay);
+    }
 
+    useEffect(() => {
+        carouselIterator();
+
+        return () => {
+            if(carouselInterval)
+            clearInterval(carouselInterval);
+        }
     }, []);
 
 
     return (
         <div className="carousal__parent overflow-hidden">
-            <div className="carousal__window " id="carousal-window">
+            <div style={{ transform: `translateX(${translationX.translation}%)`, transition: `${translationX.transitionDuration}` }} className="carousal__window">
                 {
                     carouselImages.map((illus, index) => (
                         <div key={index} className="carousal__slide">
@@ -62,11 +72,21 @@ const Carousal = () => {
                     ))
                 }
 
-                { (carouselImages.length > 0) ? (
+                {(carouselImages.length > 0) ? (
                     <div className="carousal__slide">
                         <img src={carouselImages[0]} alt="" />
                     </div>
-                ) : null }
+                ) : null}
+            </div>
+
+            <div className="d-flex  justify-content-center carousal__dots__container">
+                <div className="carousal__dots align-items-center d-flex justify-content-between">
+                    {
+                        carouselImages.map((illus, index) => (
+                            <div key={index} className={"dot" + ((translationX.index === index) ? " selected__dot" : '')} ></div>
+                        ))
+                    }
+                </div>
             </div>
         </div>
     )
