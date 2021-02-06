@@ -70,6 +70,21 @@
     cursor: pointer;
   }
 
+  .error-message {
+    border: 2px solid var(--error-red);
+  }
+
+  .primary-btn {
+    background-color: var(--primary-purple);
+    border: none;
+    font-weight: 500;
+    border-radius: 50px;
+    color: var(--white);
+    font-size: 12px;
+    transition: 0.2s ease;
+    box-shadow: 0 8px 14px 0px var(--box-shadow-primary);
+  }
+
   @media screen and (min-height: 769px) and (min-width: 1366px) {
     .main__container {
       border-radius: 10px;

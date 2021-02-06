@@ -7,5 +7,9 @@
   --off-white: #F6F6FD;
   --light-grey: #ABABAF;
   --heading-font: #585858;
-  --subHeading-font: #4B4B4B
+  --subHeading-font: #4B4B4B;
+  --input-background: #F0F0FB;
+  --input-text: #B6B9C3;
+  --error-red: #E8230C;
+  --box-shadow-primary: #8472fc6e
 }

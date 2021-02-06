@@ -1,0 +1,27 @@
+.sign__in__container, .text-field-container, .text-field-container input {
+    width: 100%;
+}
+
+.sign__in__container {
+    margin: 50px 0 0 0;
+}
+
+ .auth-btn {
+    margin: 16px 0 0 0;
+    padding: 10px 50px;
+}
+
+ .auth-btn:active {
+    transform: translateY(2px);
+}
+
+@keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }

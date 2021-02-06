@@ -5,7 +5,7 @@
 
 .auth__carousal {
     height: 100%;
-    width: 70%;
+    width: 72%;
     background-color: var(--off-white);
 }
 
@@ -44,7 +44,7 @@
 }
 
 .auth__forms {
-    width: 30%;
+    width: 28%;
     padding: 28px 60px;
 }
 
@@ -78,7 +78,7 @@
     justify-content: space-between;
     position: absolute;
     padding: 4px 8px;
-    top: -1px;
+    top: 0px;
     left: 0;
     font-size: 10px;
     font-weight: 500;
@@ -96,4 +96,50 @@
 
 .toggle__auth__switch {
     transform: translateX(72px);
+}
+
+
+.text-field-container input {
+    border-radius: 6px;
+    outline: none;
+    border: none;
+    font-size: 12px;
+    padding: 10px 55px;
+    min-width: 120px;
+    margin: 0 0 24px 0;
+    transition: 1s ease-out;
+    background-color: var(--input-background);
+    color: var(--input-text);
+}
+
+.input__with__value {
+    padding: 10px 55px !important;
+}
+
+.text-field-container input::placeholder {
+    color: var(--input-text);
+}
+
+.email__field input {
+    background-image: url("../../assets/authentication/user.svg");
+    background-repeat: no-repeat;
+    background-position-x: 18px;
+    background-position-y: center;
+    background-size: 12px;
+}
+
+.password__field input {
+    background-image: url("../../assets/authentication/lock.svg");
+    background-repeat: no-repeat;
+    background-position-x: 18px;
+    background-position-y: center;
+    background-size: 12px;
+}
+
+.name__field input {
+    background-image: url("../../assets/authentication/email.svg");
+    background-repeat: no-repeat;
+    background-position-x: 18px;
+    background-position-y: center;
+    background-size: 18px;
 }
