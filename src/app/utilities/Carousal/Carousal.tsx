@@ -2,7 +2,7 @@ import './Carousal.css'
 import illusOne from "../../../assets/carousal/0.svg";
 import illusTwo from "../../../assets/carousal/1.svg";
 import illusThree from "../../../assets/carousal/2.svg";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Subject } from 'rxjs';
 
 export const CarouselDotBroadCaster = new Subject();
@@ -69,6 +69,7 @@ const Carousal = () => {
             if(carouselInterval)
             clearInterval(carouselInterval);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 

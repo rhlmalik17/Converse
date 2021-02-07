@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Route, useHistory } from "react-router-dom";
+import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import Carousal from '../utilities/Carousal/Carousal';
 import ConverseLogo from '../../assets/converse-logo.svg';
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 import * as SignIn_Route from '../../routes/Authentication/SignIn'
 import * as SignUp_Route from '../../routes/Authentication/SignUp'
 import SignIn from './SignIn/SignIn';
@@ -12,7 +13,8 @@ const Authentication = () => {
     /* COMPONENT HOOKS */
     const [authScreenType, setAuthScreenType] = useState("sign-in");
     const history = useHistory();
-
+    const currentLocation = useLocation();
+ 
     const toggleAuthScreen = (screenType: string) => {
         setAuthScreenType(screenType);
 
@@ -49,9 +51,17 @@ const Authentication = () => {
                                 <span onClick={() => toggleAuthScreen("sign-up")}>Sign Up</span>
                         </div>
                     </div>
-
+                <TransitionGroup>
+                    <CSSTransition key={currentLocation.key} classNames="fade" timeout={500} >
+                        <Switch>
                         <Route exact path={SignIn_Route.default.routeSignIn} component={SignIn} />
                         <Route exact path={SignUp_Route.default.routeSignUp} component={SignUp} />
+                    </Switch>
+                    </CSSTransition>
+                    
+                </TransitionGroup>
+                
+                        
                 </div>
             </div>
     )
