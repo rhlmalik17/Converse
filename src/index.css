@@ -70,8 +70,8 @@
     cursor: pointer;
   }
 
-  .error-message {
-    border: 2px solid var(--error-red);
+  .red-border {
+    border: 1px solid var(--error-red) !important;
   }
 
   .primary-btn {

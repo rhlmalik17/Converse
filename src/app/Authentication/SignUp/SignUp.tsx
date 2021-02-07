@@ -1,28 +1,50 @@
-import React from 'react'
 import './SignUp.css'
+import { useForm } from 'react-hook-form'
 
 function SignUp() {
+    /* COMPONENT HOOKS */
+    const { register, handleSubmit, reset, errors } = useForm();
+
+     /* FORM STATIC DATA */
+    let textFieldOptions = {
+        first_name: { placeholder: 'Enter First Name ', name: 'first_name', validations: { required: 'First Name is required' } },
+        last_name: { placeholder: 'Enter Last Name ', name: 'last_name', validations: { required: 'Last Name is required' } },
+        email: { placeholder: 'Enter Email', name: 'email', validations: { required: 'Email Address is required', pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ } },
+        password: { placeholder: 'Enter Password ', name: 'password', validations: { required: 'Password is required' } }
+    };
+
+    const signUp = (data: any) => {
+        console.log(data);
+        reset();
+    }
+
     return (
         <div className="sign__up__container">
-            <div className="text-field-container name__field">
-                <input placeholder="First Name" type="text" />
-            </div>
+            <form onSubmit={handleSubmit(signUp)}>
+                <div className="text-field-container name__field">
+                    <input name={textFieldOptions.first_name.name} className={`text-field ${errors[textFieldOptions.first_name.name] ? 'red-border' : ''}`} ref={register(textFieldOptions.first_name.validations)} placeholder={textFieldOptions.first_name.placeholder} type="text" />
+                    {errors[textFieldOptions.first_name.name] && <div className="text-field-error"> <div className="error-pointer"></div> <span> {errors[textFieldOptions.first_name.name].message}</span> </div>}
+                </div>
 
-            <div className="text-field-container name__field">
-                <input placeholder="Last Name" type="text" />
-            </div>
+                <div className="text-field-container name__field">
+                    <input name={textFieldOptions.last_name.name} className={`text-field ${errors[textFieldOptions.last_name.name] ? 'red-border' : ''}`} ref={register(textFieldOptions.last_name.validations)} placeholder={textFieldOptions.last_name.placeholder} type="text" />
+                    {errors[textFieldOptions.last_name.name] && <div className="text-field-error"> <div className="error-pointer"></div> <span> {errors[textFieldOptions.last_name.name].message}</span> </div>}
+                </div>
 
-            <div className="text-field-container email__field">
-                <input placeholder="Enter Email" type="email" />
-            </div>
+                <div className="text-field-container email__field">
+                    <input name={textFieldOptions.email.name} className={`text-field ${errors[textFieldOptions.email.name] ? 'red-border' : ''}`} ref={register(textFieldOptions.email.validations)} placeholder={textFieldOptions.email.placeholder} type="email" />
+                    {errors[textFieldOptions.email.name] && <div className="text-field-error"> <div className="error-pointer"></div> <span> {errors[textFieldOptions.email.name].message}</span> <span> {(errors[textFieldOptions.email.name] && !errors[textFieldOptions.email.name].message) ? 'Email is invalid' : ''} </span> </div>}
+                </div>
 
-            <div className="text-field-container password__field">
-                <input placeholder="Enter Password" type="password" />
-            </div>
-            
-            <div className="sign__up__options d-flex justify-content-center">
-                <button className="primary-btn auth-btn"> Sign Up  </button>
-            </div>
+                <div className="text-field-container password__field">
+                    <input name={textFieldOptions.password.name} className={`text-field ${errors[textFieldOptions.password.name] ? 'red-border' : ''}`} ref={register(textFieldOptions.password.validations)} placeholder={textFieldOptions.password.placeholder} type="password" />
+                    {errors[textFieldOptions.password.name] && <div className="text-field-error"> <div className="error-pointer"></div> <span> {errors[textFieldOptions.password.name].message}</span> </div>}
+                </div>
+
+                <div className="sign__up__options d-flex justify-content-center">
+                    <button className="primary-btn auth-btn" type="submit"> Sign Up  </button>
+                </div>
+            </form>
         </div>
     )
 }

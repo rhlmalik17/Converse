@@ -12,8 +12,9 @@ import './Authentication.scss';
 const Authentication = () => {
     /* COMPONENT HOOKS */
     const [authScreenType, setAuthScreenType] = useState("sign-in");
-    const history = useHistory();
     const currentLocation = useLocation();
+    const history = useHistory();
+    
  
     const toggleAuthScreen = (screenType: string) => {
         setAuthScreenType(screenType);

@@ -50,7 +50,10 @@ const Carousal = () => {
         carouselWindow?.addEventListener("transitionend", handleTransitionEnds);
 
         carouselInterval = setInterval(() => {
+
+            if(translatedCarousel > (imageWidth * carouselImages.length * -1))
             translatedCarousel -= imageWidth;
+            
             let newIndex = (translatedCarousel / imageWidth) * -1;
             
             if(newIndex >= carouselImages.length) {
