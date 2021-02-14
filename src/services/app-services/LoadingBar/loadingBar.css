@@ -1,0 +1,10 @@
+.loading-bar div {
+    background-color: var(--white) !important;
+    box-shadow: unset !important;
+}
+
+@media screen and (max-width: 1366px) {
+    .loading-bar div {
+        background-color: var(--primary-purple) !important;
+    }
+}

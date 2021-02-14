@@ -85,6 +85,19 @@
     box-shadow: 0 8px 14px 0px var(--box-shadow-primary);
   }
 
+  /* Toast Notification Stylings */
+  .Toastify__toast--error {
+    background-color: var(--toast-notification-error) !important;
+    box-shadow: 0 2px 10px var(--toast-box-error-shadow) !important;
+    border: none;
+  }
+
+  .Toastify__toast--success {
+    background: var(--primary-purple) !important;
+    box-shadow: 0 2px 10px var(--box-shadow-primary) !important;
+    border: none;
+  }
+
   @media screen and (min-height: 769px) and (min-width: 1366px) {
     .main__container {
       border-radius: 10px;

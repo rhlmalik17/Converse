@@ -1,6 +1,7 @@
 import LoadingBar from 'react-top-loading-bar'
 import React from 'react';
 import LoaderService from './loader-service';
+import './loadingBar.css';
 import { useEffect, useRef } from 'react';
 
 /* Loading Bar Component */

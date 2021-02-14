@@ -8,6 +8,7 @@ class AuthenticationService {
         //Check if user logged In
         return localStorage.getItem("token") ? true : false;
     }
+
 }
 
 let AuthService = new AuthenticationService();

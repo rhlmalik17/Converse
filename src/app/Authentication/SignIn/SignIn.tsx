@@ -1,6 +1,9 @@
 import './SignIn.css'
 import '../Authentication.scss'
 import { useForm } from 'react-hook-form'
+import httpClient from '../../../services/api-services/http-client'
+import { apiUrls } from '../../../services/api-services/api-urls';
+import ToastService from '../../../services/app-services/toast-service';
 
 export default function SignIn() {
     /* COMPONENT HOOKS */
@@ -13,9 +16,30 @@ export default function SignIn() {
         password: { placeholder: 'Enter Password ', name: 'password', validations: { required: 'Password is required' } }
     };
 
-    const signIn = (data: Object) => {
-        console.log(data);
+    const onSuccessfulSignIn = (result: any) => {
+        if(!result || !result.token || Object.keys(result).length < 1)
+        return;
+
+        //show toast
+        ToastService.showToast("success", result.message);
+
+        //Reset the form
         reset();
+
+        //Set token
+        localStorage.setItem("token", result.token);
+
+        //TODO: Navigate to main home screen
+    }
+
+    const signIn = (data: Object) => {
+        /* INTEGRATE SIGN IN API */
+        httpClient.post(apiUrls['sign-in'], data)
+        .then((result: any) => {
+            if(result && result.success) {
+                onSuccessfulSignIn(result);
+            }
+        });
     }
 
     return (
