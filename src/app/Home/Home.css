@@ -1,0 +1,15 @@
+.home__container {
+    animation: pop-up 0.8s;
+}
+
+@keyframes pop-up {
+    0% {
+        opacity: 0;
+        transform: scale(2)
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

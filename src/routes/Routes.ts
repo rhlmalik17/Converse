@@ -5,5 +5,5 @@
  */
 
 export default class Routes {
-    static homeRoute: string = "/";
+    static baseRoute: string = "/";
 }

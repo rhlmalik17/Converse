@@ -24,7 +24,7 @@ const Authentication = () => {
     }
 
     return (
-            <div className={"auth__container d-flex"}>
+            <div className={"auth__container main__container d-flex"}>
 
                 <div className={"auth__carousal d-flex flex-column"}>
 

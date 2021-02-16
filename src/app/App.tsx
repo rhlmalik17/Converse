@@ -1,24 +1,29 @@
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react';
+import Home from './Home/Home';
+import { ToastContainer } from 'react-toastify';
+import { LoaderBar } from '../services/app-services/LoadingBar/LoadingBar';
 import { Route, Switch, useHistory } from "react-router-dom";
 import Authentication from './Authentication/Authentication';
 import AuthService from '../services/app-services/auth-service';
 import SignIn_Route from '../routes/Authentication/SignIn';
-import { LoaderBar } from '../services/app-services/LoadingBar/LoadingBar'
-import * as Authentication_Route from '../routes/Authentication/Authentication';
-import React from 'react';
-import { ToastContainer } from 'react-toastify';
+import Authentication_Route from '../routes/Authentication/Authentication';
+import Home_Route from '../routes/Home/Home';
+import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 const App = () => {
   const history = useHistory();
 
   //Check if user is logged in
-  if(!AuthService.isLoggedIn()) {
+  if(AuthService.isLoggedIn()) {
+    history.push(Home_Route.routeHome);
+  } else {
     history.push(SignIn_Route.routeSignIn);
   }
 
   return (
-    <div className="main__container">
+    <div className="main__app">
         
         {/* Place Loading Bar */}
         <LoaderBar />
@@ -37,7 +42,8 @@ const App = () => {
         />
 
         <Switch>
-          <Route path={Authentication_Route.default.routeAuthentication} component={Authentication} />
+          <Route path={Authentication_Route.routeAuthentication} component={Authentication} />
+          <Route path={Home_Route.routeHome} component={Home} />
         </Switch>
     </div>
   );

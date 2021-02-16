@@ -4,11 +4,13 @@ import { useForm } from 'react-hook-form'
 import httpClient from '../../../services/api-services/http-client'
 import { apiUrls } from '../../../services/api-services/api-urls';
 import ToastService from '../../../services/app-services/toast-service';
+import { useHistory } from 'react-router-dom';
+import Home_Route from '../../../routes/Home/Home';
 
 export default function SignIn() {
     /* COMPONENT HOOKS */
     const { register, handleSubmit, reset, errors } = useForm();
-
+    const history = useHistory();
 
     /* FORM STATIC DATA */
     let textFieldOptions = {
@@ -30,6 +32,7 @@ export default function SignIn() {
         localStorage.setItem("token", result.token);
 
         //TODO: Navigate to main home screen
+        history.push(Home_Route.routeHome);
     }
 
     const signIn = (data: Object) => {
