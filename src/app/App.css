@@ -13,5 +13,7 @@
   --error-red: #E8230C;
   --box-shadow-primary: #8472fc6e;
   --toast-notification-error: #ff6b6b;
-  --toast-box-error-shadow: #ff8b7f7d
+  --toast-box-error-shadow: #ff8b7f7d;
+  --text-grey: #9095A4;
+  --light-shade-black: #495969
 }

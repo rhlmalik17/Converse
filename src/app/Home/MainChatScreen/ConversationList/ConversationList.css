@@ -1,0 +1,156 @@
+.conversation__list__container {
+    width: 25%;
+    background-color: var(--off-white);
+    padding: 14px;
+}
+
+.conversation__switches {
+    border-bottom: 2px solid var(--input-background);
+    height: 40px;
+    margin: 8px 0 0 0;
+}
+
+.switch__seperator {
+    margin: 0 0 0 10px;
+}
+
+.switch__underline {
+    height: 50px;
+    width: 100%;
+    border-radius: 3px;
+    background-color: var(--primary-purple);
+}
+
+.conversation__switch .switch__name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 92%;
+}
+
+.conversation__switch {
+    height: 100%;
+    overflow: hidden;
+    justify-content: center;
+    width: 55px;
+    font-size: 11px;
+    color: var(--text-grey);
+    cursor: pointer;
+}
+
+.selected__conversation__switch {
+    color: var(--primary-purple);
+}
+
+.switch__underline  {
+    display: none;
+}
+
+.selected__conversation__switch .switch__underline {
+    display: block !important;
+} 
+
+.search__box {
+    width: 100%;
+    border: none;
+    background-image: url("../../../../assets/home/search-icon.svg");
+    background-repeat: no-repeat;
+    background-size: 18px;
+    background-position-x: 16px;     
+    background-position-y: center;
+    font-size: 12px;
+    padding: 12px 44px;
+    outline: none;
+    border-radius: 6px;
+    background-size: 14px;
+    color: var(--input-text);
+    background-color: var(--input-background);
+}
+
+.search__box::placeholder {
+    color: var(--input-text);
+}
+
+.conversations__container {
+    margin: 18px 0 0 0;
+}
+
+.conversation {
+    display: flex;
+    margin: 0 0 12px 0;
+    animation: fade-in-up 0.4s ease;
+}
+
+.conversation__card {
+    cursor: pointer;
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    padding: 5px 10px;
+    border-radius: 7px;
+}
+
+.selected__conversation .conversation__card, .conversation__card:hover {
+    background-color: var(--input-background);
+}
+
+.conversation__details {
+    display: flex;
+    flex-grow: 1;
+}
+
+.conversation__img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 0 14px 0 0;
+}
+
+.conversation__img img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.conversation__title {
+    font-size: 12px;
+}
+
+.conversation__details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.conversation__last__message {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-grey)
+}
+
+.conversation__title {
+    color: var(--light-shade-black)
+}
+
+.conversation__last__message .conversation__timestamp {
+    font-size: 12px;
+    color: var(--input-text);
+    font-family: 'Segoe UI Bold';
+}
+
+@keyframes fade-in-up {
+    0% {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

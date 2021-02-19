@@ -1,0 +1,8 @@
+.main__chat__screen {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+    right: 0;
+    background: var(--white);
+}

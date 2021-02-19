@@ -1,5 +1,6 @@
 .home__container {
     animation: pop-up 0.8s;
+    position: relative;
 }
 
 @keyframes pop-up {

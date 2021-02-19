@@ -1,0 +1,14 @@
+.side__bar__container {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  background: linear-gradient(
+    0.25turn,
+    var(--dark-purple) 20%,
+    var(--dark-pink)
+  );
+  border: 2px solid var(--white);
+  border-radius: 12px;
+}
