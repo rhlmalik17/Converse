@@ -1,5 +1,6 @@
 import { useState } from "react";
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
+import onlineUserDate from "../../../../assets/home/user-status/online-light.svg"
 import './ConversationList.css';
 
 const ConversationList = () => {
@@ -55,8 +56,9 @@ const ConversationList = () => {
                             <div onClick={() => setSelectedConversation(value)} key={index} className={"conversation" + ((value.chat_id === selectedConversation.chat_id) ? " selected__conversation" : "") }>
                                 <div className="selected__border"></div>
                                 <div className="conversation__card">
-                                    <div className="conversation__img">
-                                        <img alt="" src={value.profile_image_url || defaultProfileImage} />
+                                    <div className="conversation__img position-relative">
+                                        <img className="profile-img" alt="" src={value.profile_image_url || defaultProfileImage} />
+                                        <img className="" alt="" />
                                     </div>
                                     <div className="conversation__details">
                                         <div className="conversation__title">
@@ -73,8 +75,15 @@ const ConversationList = () => {
                     }
                 </div>
             </div>
+        
+            {/* FLOATING PROFILE ICON */}
+            <div title="Show Profile" className="profile__img__container">
+                <img className="profile__img" alt="" src={defaultProfileImage} />
+                <img className="online__status__dot" alt="" src={onlineUserDate} ></img>
+            </div>
+
         </div>
     )
 }
 
-export default ConversationList
+export default ConversationList;

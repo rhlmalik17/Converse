@@ -1,4 +1,5 @@
 .conversation__list__container {
+    position: relative;
     width: 25%;
     background-color: var(--off-white);
     padding: 14px;
@@ -78,6 +79,7 @@
 .conversation {
     display: flex;
     margin: 0 0 12px 0;
+    position: relative;
     animation: fade-in-up 0.4s ease;
 }
 
@@ -92,6 +94,20 @@
 
 .selected__conversation .conversation__card, .conversation__card:hover {
     background-color: var(--input-background);
+}
+
+.selected__border {
+    display: none;
+    width: 50px;
+    height: 100%;
+    left: -19.2%;
+    position: absolute;
+    border-radius: 8%;
+    background-color: var(--primary-purple);
+}
+
+.selected__conversation .selected__border {
+    display: block !important;
 }
 
 .conversation__details {
@@ -111,7 +127,7 @@
     margin: 0 14px 0 0;
 }
 
-.conversation__img img {
+.conversation__img .profile-img {
     max-width: 100%;
     max-height: 100%;
 }
@@ -143,14 +159,28 @@
     font-family: 'Segoe UI Bold';
 }
 
-@keyframes fade-in-up {
-    0% {
-        transform: translateY(10px);
-        opacity: 0;
-    }
+.profile__img__container {
+    cursor: pointer;
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    height: 60px;
+    width: 60px;
+    border: 1px solid var(--input-background);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.4s ease;
+}
 
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
+.profile__img__container .online__status__dot {
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+}
+
+.profile__img__container:hover {
+    transform: scale(1.2);
+    border: 1px solid var(--text-grey);
 }
