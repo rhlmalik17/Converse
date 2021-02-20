@@ -3,13 +3,11 @@ import ToastService from '../../../services/app-services/toast-service';
 import { useForm } from 'react-hook-form'
 import httpClient from '../../../services/api-services/http-client';
 import { apiUrls } from '../../../services/api-services/api-urls';
-import { useHistory } from 'react-router-dom';
-import SignIn_Route from '../../../routes/Authentication/SignIn';
+import { externalAuthScreenController } from '../Authentication';
 
 function SignUp() {
     /* COMPONENT HOOKS */
     const { register, handleSubmit, reset, errors } = useForm();
-    const history = useHistory();
 
      /* FORM STATIC DATA */
     let textFieldOptions = {
@@ -26,7 +24,11 @@ function SignUp() {
             if(result && result.success) {
                 //show toast
                 ToastService.showToast("success", result.message);
-                history.push(SignIn_Route.routeSignIn);
+
+                //navigate to sign-in screen
+                externalAuthScreenController.next("sign-in");
+
+                //Reset the form
                 reset();
             }
         });

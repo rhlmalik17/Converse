@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import Carousal from '../utilities/Carousal/Carousal';
 import ConverseLogo from '../../assets/converse-logo.svg';
@@ -8,20 +8,36 @@ import * as SignUp_Route from '../../routes/Authentication/SignUp'
 import SignIn from './SignIn/SignIn';
 import SignUp from './SignUp/SignUp';
 import './Authentication.scss';
+import { Subject } from 'rxjs';
+
+export const externalAuthScreenController: Subject<string> = new Subject<string>();
 
 const Authentication = () => {
     /* COMPONENT HOOKS */
     const [authScreenType, setAuthScreenType] = useState("sign-in");
     const currentLocation = useLocation();
     const history = useHistory();
-    
+
+    /* COMPONENT SUBSCRIPTION */
+    const toggleScreenSubscription = externalAuthScreenController.subscribe((screenType: string) => toggleAuthScreen(screenType));
  
     const toggleAuthScreen = (screenType: string) => {
+        if(screenType !== "sign-in" && screenType !== "sign-up")
+        return;
+
         setAuthScreenType(screenType);
 
         let urlToRoute = screenType === "sign-in" ? SignIn_Route.default.routeSignIn : SignUp_Route.default.routeSignUp;
         history.push(urlToRoute);
     }
+
+    useEffect(() => {
+        return () => {
+            //Component cleanup
+            if(toggleScreenSubscription)
+            toggleScreenSubscription.unsubscribe();
+        }
+    },[toggleScreenSubscription]);
 
     return (
             <div className={"auth__container main__container d-flex"}>
