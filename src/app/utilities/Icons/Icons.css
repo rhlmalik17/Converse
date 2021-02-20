@@ -1,0 +1,19 @@
+.ci {
+    stroke: var(--asset-shade);
+}
+
+.ci-active {
+    stroke: var(--primary-purple) !important;
+}
+
+.ci-active-fill {
+    fill: var(--primary-purple) !important;
+}
+
+.ci-hover-stroke:hover .ci-hover-stroke path {
+    stroke: var(--primary-purple) !important;
+}
+
+.ci-hover-fill:hover +  .ci-hover-fill path {
+    fill: var(--primary-purple) !important;
+}

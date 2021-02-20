@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineUserDate from "../../../../assets/home/user-status/online-light.svg"
+import { switchConversation } from "../../../redux/actions/conversations.actions";
 import './ConversationList.css';
 
 const ConversationList = () => {
@@ -16,7 +18,14 @@ const ConversationList = () => {
 
     //Component states
     const [selectedConversationType, setSelectedConversationType] = useState(conversationSwitches[0]);
-    const [selectedConversation, setSelectedConversation] = useState(conversationSwitches[0].conversations[0]);
+    const [selectedConversation, setSelectedConversation] = useState({ chat_id: null });
+    const dispatch = useDispatch();
+
+    //Component handlers
+    const handleConversationChange = (value: any) => {
+        setSelectedConversation(value);
+        dispatch(switchConversation(value));
+    }
 
     return (
         <div className="conversation__list__container">
@@ -53,7 +62,7 @@ const ConversationList = () => {
                 <div className="conversations__container">
                     {
                         selectedConversationType.conversations.map((value: any, index: number) => (
-                            <div onClick={() => setSelectedConversation(value)} key={index} className={"conversation" + ((value.chat_id === selectedConversation.chat_id) ? " selected__conversation" : "") }>
+                            <div onClick={() => handleConversationChange(value)} key={index} className={"conversation" + ((value.chat_id === selectedConversation.chat_id) ? " selected__conversation" : "") }>
                                 <div className="selected__border"></div>
                                 <div className="conversation__card">
                                     <div className="conversation__img position-relative">

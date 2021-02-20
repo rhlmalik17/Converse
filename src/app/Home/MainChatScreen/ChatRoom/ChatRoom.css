@@ -1,3 +1,83 @@
 .chat__room__container {
-    width: 73%;
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+}
+
+.chat__title {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    height: 54px;
+    font-family: 'Segoe UI Bold';
+    border-bottom: 1px solid var(--input-background);
+}
+
+.chat__title span {
+    margin: 0 12px 0 16px;
+    color: var(--text-grey);
+}
+
+.chat__title img {
+    height: 12px;
+}
+
+.conversation__window {
+    flex: 1;
+    /* background-color: red; */
+}
+
+.chatbox__input {
+    padding: 0 14px;
+}
+
+.chatbox__input .chat__box__separator {
+    height: 1px;
+    width: 100%;
+    background-color: var(--input-background);
+}
+
+.chatbox__input input {
+    background-color: var(--input-background);
+    border: none;
+    width: 100%;
+    margin: 14px 0;
+    border-radius: 4px;
+    font-size: 12px;
+    padding: 10px 16px;
+    outline: none;
+    color: var(--input-text);
+    transition: 0.4s ease;
+}
+
+.chatbox__input input::placeholder {
+    color: var(--input-text);
+}
+
+.populated__chat__box {
+    padding: 10px 26px !important;
+}
+
+.chatbox__input svg {
+    height: 17px;
+}
+
+.chat__box__option {
+    position: absolute;
+    right: 30px;
+    top: 35%;
+    display: flex;
+    align-items: center;
+}
+
+.chat__box__option .emoji__icon {
+    height: 18px;
+}
+
+.option__separator {
+    height: 100%;
+    height: 22px;
+    width: 1px;
+    margin: 0 12px;
+    background-color: var(--separator-shade);
 }

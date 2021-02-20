@@ -15,5 +15,7 @@
   --toast-notification-error: #ff6b6b;
   --toast-box-error-shadow: #ff8b7f7d;
   --text-grey: #9095A4;
-  --light-shade-black: #495969
+  --light-shade-black: #495969;
+  --asset-shade: #bec4ca;
+  --separator-shade: #E3E4EE
 }
