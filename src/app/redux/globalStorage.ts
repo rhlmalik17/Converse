@@ -1,12 +1,21 @@
 import { combineReducers, createStore } from "redux";
-import currentLayoutMode from './reducers/layout.modes'
+import sideBarMode from './reducers/layout.modes'
 import currentConversationDetails from './reducers/conversation.switch'
 
 //COMBINE ALL REDUCERS
-const allReducers = combineReducers({
+const allReducer = combineReducers({
     currentConversationDetails,
-    currentLayoutMode
+    sideBarMode
 });
 
-const store = createStore(allReducers);
+const rootReducer = (state: any, action: any) => {
+    // when a logout action is dispatched it will reset redux state
+    if (action.type === 'USER_LOGOUT') {
+      state = undefined;
+    }
+  
+    return allReducer(state, action);
+  };
+
+const store = createStore(rootReducer);
 export default store;

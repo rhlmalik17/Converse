@@ -11,9 +11,25 @@ import Home_Route from '../routes/Home/Home';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useDispatch } from 'react-redux';
+import { logOut } from './redux/actions/auth.actions';
 
 const App = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  //Auth Guard Handler
+  const authGuard = (order: any) => {
+    switch(order.action) {
+      case "USER_LOGOUT":
+        history.push(order.route);
+        dispatch(logOut());
+        break;
+    }
+  }
+
+  //Route where the auth guard demands to
+  AuthService.getAuthGuard().subscribe(authGuard);
 
   //Check if user is logged in
   if(AuthService.isLoggedIn()) {

@@ -12,3 +12,93 @@
   border: 2px solid var(--white);
   border-radius: 12px;
 }
+
+.side__bar__parent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 20%;
+  height: 100%;
+}
+
+.converse__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: fit-content;
+}
+
+.converse__logo img {
+  height: 90px;
+}
+
+.side__bar__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 80%;
+}
+
+.profile__image {
+  height: 130px;
+  width: 130px;
+  background: url("../../../assets/home/default-profile-picture.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+}
+
+.side__bar__options {
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0 0 0;
+}
+
+.selected__option {
+  color: var(--dark-purple) !important;
+  background-color: var(--white) !important;
+}
+
+.selected__option:hover {
+  background-color: var(--white) !important;
+}
+
+.side__bar__options .option {
+  display: flex;
+  align-items: center;
+  margin: 6px 0;
+  width: 60%;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--white);
+  cursor: pointer;
+  border-radius: 14px;
+}
+
+.side__bar__options .option span {
+  margin: 0 0 0 10px;
+}
+
+.side__bar__options .option img {
+  height: 14px;
+}
+
+.side__bar__options .option:hover {
+  background-color: rgba(211, 160, 160, 0.1);
+}
+
+/* Make icons size stationary */
+.manageProfile img {
+  height: 16.5px !important;
+}
+
+.logout img {
+  height: 12px !important;
+}

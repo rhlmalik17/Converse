@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineUserDate from "../../../../assets/home/user-status/online-light.svg"
 import { switchConversation } from "../../../redux/actions/conversations.actions";
+import { toggleLayout } from "../../../redux/actions/layout.actions";
 import './ConversationList.css';
 
 const ConversationList = () => {
@@ -19,6 +22,7 @@ const ConversationList = () => {
     //Component states
     const [selectedConversationType, setSelectedConversationType] = useState(conversationSwitches[0]);
     const [selectedConversation, setSelectedConversation] = useState({ chat_id: null });
+    const [searchInputState, setSearchInputState] = useState({ showDismissIcon: false, searchText: "" });
     const dispatch = useDispatch();
 
     //Component handlers
@@ -27,12 +31,29 @@ const ConversationList = () => {
         dispatch(switchConversation(value));
     }
 
+    //Search on change handler
+    const handleSearchChange = (event: any) => {
+        let searchText = event.target.value;
+        setSearchInputState({
+            showDismissIcon: (String(searchText).length > 0),
+            searchText: searchText
+        });
+    }
+
+    const dismissSearchText = () => {
+        setSearchInputState({ showDismissIcon: false, searchText: "" });
+    }
+
     return (
         <div className="conversation__list__container">
 
             {/* SEARCH CONVERSATION OR PEOPLE */}
-            <div className="search__conversations">
-                <input className="search__box" placeholder="Search people or conversations" />
+            <div className="search__conversations position-relative">
+                <input value={searchInputState.searchText}  onChange={(event: any) => handleSearchChange(event)} className="search__box" placeholder="Search people or conversations" />
+                <FontAwesomeIcon
+                onClick={() => dismissSearchText()}
+                className={"dismiss__search__icon" + ((!searchInputState.showDismissIcon) ? " hide__dismiss__icon" : "")}  
+                icon={faTimes} />
             </div>
 
             <div className="conversations__parent">
@@ -86,7 +107,7 @@ const ConversationList = () => {
             </div>
         
             {/* FLOATING PROFILE ICON */}
-            <div title="Show Profile" className="profile__img__container">
+            <div onClick={() => dispatch(toggleLayout())} title="Show Profile" className="profile__img__container">
                 <img className="profile__img" alt="" src={defaultProfileImage} />
                 <img className="online__status__dot" alt="" src={onlineUserDate} ></img>
             </div>

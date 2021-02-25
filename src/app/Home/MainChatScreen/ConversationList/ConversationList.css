@@ -184,3 +184,16 @@
     transform: scale(1.2);
     border: 1px solid var(--text-grey);
 }
+
+.dismiss__search__icon {
+    cursor: pointer;
+    color: var(--text-grey);
+    transition: 0.4s ease;
+    position: absolute;
+    right: 15px;
+    top: 12px;
+}
+
+.hide__dismiss__icon {
+    transform: rotate(90deg) scale(0);
+}

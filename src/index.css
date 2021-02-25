@@ -50,15 +50,12 @@
   }
   
   body ::-webkit-scrollbar-thumb {
-    background-color: hsla(0,0%,100%,.16);
+    background-color: var(--box-shadow-primary);
   }
-  
-  ::-webkit-scrollbar-thumb {
-    background-color: rgba(0,0,0,.2);
-  }
+
   
   ::-webkit-scrollbar-track {
-    background: hsla(0,0%,100%,.1);
+    background:  rgba(170, 170, 170, 0.288);
   }
 
   .main__container {

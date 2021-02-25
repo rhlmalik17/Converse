@@ -9,7 +9,6 @@ const Home = () => {
            {/* Side Bar When Clicked on profile */}
             <SideBar />
 
-            {/* Side Bar When Clicked on profile */}
             <MainChatScreen />
         </div>
     )

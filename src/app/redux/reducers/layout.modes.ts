@@ -1,6 +1,6 @@
-const currentLayoutMode = (state: boolean = false, action: any) => {
+const sideBarMode = (state: boolean = false, action: any) => {
     switch(action.type) {
-        case "TOGGLE_LAYOUT_MODE":
+        case "TOGGLE_SIDE_BAR":
             return !state;
         
         default:
@@ -8,4 +8,4 @@ const currentLayoutMode = (state: boolean = false, action: any) => {
     }
 }
 
-export default currentLayoutMode;
+export default sideBarMode;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from "react-redux"
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineIcon from "../../../../assets/home/user-status/online-light.svg";
@@ -12,12 +12,29 @@ import IsTypingMessage from './IsTypingMessage/IsTypingMessage';
 const ChatRoom = (props: any) => {
 
     const [populatedChatBox, setPopulatedChatBox] = useState(false);
+    const [messageContent, setMessageContent] = useState("");
     const currentConversationDetails = useSelector((state: any) => state.currentConversationDetails);
 
     //MESSAGE SCHEMA
     const [chatMessages, setChatMessages] = useState<Array<any>>([
         { sender: "abc@gmail.com", body: "Hello, how's It going?!", created_at: new Date() }
     ]);
+
+    const messageBoxChangeHandler = (event: any) => {
+        let messageBody = event.target.value;
+
+        setPopulatedChatBox((String(messageBody).length > 0));
+        setMessageContent(messageBody);
+    }
+
+    const scrollToBottom = () => {
+        //Scroll the chat window to bottom
+        let chatWindow = document.getElementById("conversation__window");
+        if(!chatWindow)
+        return;
+
+        chatWindow.scrollTop = chatWindow.scrollHeight + 1000;
+    }
 
     const pushMessage = (messageBody: string) => {
         let messageDetails = {
@@ -27,6 +44,8 @@ const ChatRoom = (props: any) => {
         }
 
         setChatMessages(chatMessages.concat([messageDetails]));
+        setMessageContent("");
+        setPopulatedChatBox(false);
     }
 
     const handleKeydown = (event: any) => {
@@ -35,11 +54,13 @@ const ChatRoom = (props: any) => {
 
             if(String(event.target.value).length > 0) {
               pushMessage(event.target.value);
-              event.target.value = "";
-              setPopulatedChatBox(false)
             }
         }
     }
+
+    useEffect(() => {
+        scrollToBottom();
+    },[chatMessages])
 
     if(Object.keys(currentConversationDetails).length < 1) {
         //RENDER DEFAULT CHAT SCREEN
@@ -61,7 +82,7 @@ const ChatRoom = (props: any) => {
 
 
             {/* CONVERSATION WINDOW */}
-            <div className="conversation__window">
+            <div className="conversation__window" id="conversation__window">
 
                 {
                     chatMessages.map((messageDetails: any, index: number) => (
@@ -85,30 +106,30 @@ const ChatRoom = (props: any) => {
                         </div>
                     ))
                 }
+            </div>
 
-                {/* DYNAMIC is Typing MESSAGE */}
-                <div className="is__typing__container">
-                    <IsTypingMessage username={currentConversationDetails.first_name + " " + currentConversationDetails.last_name} />
-                </div>
+            {/* DYNAMIC is Typing MESSAGE */}
+            <div className="is__typing__container">
+                <IsTypingMessage username={currentConversationDetails.first_name + " " + currentConversationDetails.last_name} />
             </div>
 
             {/* CHATBOX INPUT */}
             <div className="chatbox__input position-relative">
                 <div className="chat__box__separator"></div>
 
-                <input 
+                <input value={messageContent}
                        // CONDITIONAL RENDERING
                        className={(populatedChatBox) ? "populated__chat__box" : ""}
 
                        //Key Events
                        onKeyDown={(event: any) => handleKeydown(event)}
-                       onChange={(event: any) => setPopulatedChatBox((String(event.target.value).length > 0))}
+                       onChange={(event: any) => messageBoxChangeHandler(event)}
 
                        //Dynamic placeholder
                        placeholder={`Message ${currentConversationDetails.first_name}`} type="text"/>
 
                 <div className="chat__box__option">
-                    <button className="send__btn"  disabled={!populatedChatBox}>
+                    <button onClick={() => pushMessage(messageContent)} className="send__btn"  disabled={!populatedChatBox}>
                         <SendIcon active={populatedChatBox} className={(populatedChatBox) ? "cursor-pointer" : ""} />
                     </button>
                     <div className="option__separator"></div>

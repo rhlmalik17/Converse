@@ -5,4 +5,11 @@
     z-index: 2;
     right: 0;
     background: var(--white);
+    transition: 0.8s ease;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.hide__side__bar {
+    transform: scale(0.8) translateX(169px);
 }
