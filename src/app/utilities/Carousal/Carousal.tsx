@@ -69,8 +69,11 @@ const Carousal = () => {
         carouselIterator();
 
         return () => {
-            if(carouselInterval)
-            clearInterval(carouselInterval);
+            if(carouselInterval) {
+                clearInterval(carouselInterval);
+                carouselInterval = undefined;
+            }
+            
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

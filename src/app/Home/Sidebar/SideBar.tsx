@@ -21,6 +21,11 @@ const SideBar = () => {
         AuthService.logOut();
     }
 
+    const handleAboutDeveloper = (option: string) => {
+        window.open("https://rahul-malik.netlify.app/");
+        setSelectedOption(option);
+    } 
+
     const sideBarConstants: any = {
         //User related sidebar options
         userOptions: [
@@ -31,7 +36,7 @@ const SideBar = () => {
 
         //Application related sidebar options
         appOptions: [
-            { onClick: () => {}, label: "About Developer", icon: aboutDeveloper, activeIcon: aboutDeveloperActive, className: "aboutDeveloper" },
+            { onClick: () => handleAboutDeveloper("Home"), label: "About Developer", icon: aboutDeveloper, activeIcon: aboutDeveloperActive, className: "aboutDeveloper" },
             { onClick: () => {}, label: "Help / Report Bug", icon: reportBug, activeIcon: reportBugActive, className: "reportBug" }
         ]
     }

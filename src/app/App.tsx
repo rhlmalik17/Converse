@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Home from './Home/Home';
 import { ToastContainer } from 'react-toastify';
 import { LoaderBar } from '../services/app-services/LoadingBar/LoadingBar';
@@ -29,7 +29,7 @@ const App = () => {
   }
 
   //Route where the auth guard demands to
-  AuthService.getAuthGuard().subscribe(authGuard);
+  let AuthGuardSubscription = AuthService.getAuthGuard().subscribe(authGuard);
 
   //Check if user is logged in
   if(AuthService.isLoggedIn()) {
@@ -37,6 +37,13 @@ const App = () => {
   } else {
     history.push(SignIn_Route.routeSignIn);
   }
+
+  useEffect(() => {
+    return () => {
+      if(AuthGuardSubscription)
+      AuthGuardSubscription.unsubscribe();
+    }
+  }, [AuthGuardSubscription])
 
   return (
     <div className="main__app">
