@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from "react-redux"
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineIcon from "../../../../assets/home/user-status/online-light.svg";
@@ -14,6 +14,7 @@ const ChatRoom = (props: any) => {
     const [populatedChatBox, setPopulatedChatBox] = useState(false);
     const [messageContent, setMessageContent] = useState("");
     const currentConversationDetails = useSelector((state: any) => state.currentConversationDetails);
+    const chatWindow = useRef(null);
 
     //MESSAGE SCHEMA
     const [chatMessages, setChatMessages] = useState<Array<any>>([
@@ -28,12 +29,12 @@ const ChatRoom = (props: any) => {
     }
 
     const scrollToBottom = () => {
-        //Scroll the chat window to bottom
-        let chatWindow = document.getElementById("conversation__window");
-        if(!chatWindow)
+        if(!chatWindow || !chatWindow.current) 
         return;
 
-        chatWindow.scrollTop = chatWindow.scrollHeight + 1000;
+        //Scroll the chat window to bottom
+        let chatWindowElement: any = chatWindow.current;
+        chatWindowElement.scrollTop = chatWindowElement.scrollHeight + 1000;
     }
 
     const pushMessage = (messageBody: string) => {
@@ -82,7 +83,7 @@ const ChatRoom = (props: any) => {
 
 
             {/* CONVERSATION WINDOW */}
-            <div className="conversation__window" id="conversation__window">
+            <div className="conversation__window" ref={chatWindow} id="conversation__window">
 
                 {
                     chatMessages.map((messageDetails: any, index: number) => (

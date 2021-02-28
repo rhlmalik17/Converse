@@ -2,7 +2,7 @@ import './Carousal.css'
 import illusOne from "../../../assets/carousal/0.svg";
 import illusTwo from "../../../assets/carousal/1.svg";
 import illusThree from "../../../assets/carousal/2.svg";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Subject } from 'rxjs';
 
 export const CarouselDotBroadCaster = new Subject();
@@ -24,6 +24,7 @@ const Carousal = () => {
 
     //Component Hooks
     const [translationX, setTranslationX] = useState({ index: 0, translation: 0, transitionDuration: "none" });
+    const carouselWindow = useRef(null);
 
     //Transition Delay In Seconds
     const transitionDelay: number = 2 * 1100;
@@ -43,11 +44,11 @@ const Carousal = () => {
     }
 
     const carouselIterator = () => {
-        if(carouselInterval !== undefined)
+        if(carouselInterval !== undefined || !carouselWindow.current)
         return;
                 
-        let carouselWindow = document.getElementById("carousal-window");
-        carouselWindow?.addEventListener("transitionend", handleTransitionEnds);
+        let carouselWindowElement: any = carouselWindow.current;
+        carouselWindowElement.addEventListener("transitionend", handleTransitionEnds);
 
         carouselInterval = setInterval(() => {
 
@@ -81,7 +82,7 @@ const Carousal = () => {
 
     return (
         <div className="carousal__parent overflow-hidden">
-            <div style={{ transform: `translateX(${translationX.translation}%)`, transition: `${translationX.transitionDuration}` }} id="carousal-window" className="carousal__window">
+            <div ref={carouselWindow} style={{ transform: `translateX(${translationX.translation}%)`, transition: `${translationX.transitionDuration}` }} id="carousal-window" className="carousal__window">
                 {
                     carouselImages.map((illus, index) => (
                         <div key={index} className="carousal__slide">

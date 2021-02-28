@@ -1,6 +1,7 @@
+import { environment } from "../../environment";
+
 //CONSTANTS
-// export const BASE_URL = "";
-export const BASE_URL = "http://localhost:8080/"
+export const BASE_URL = environment.BASE_URL;
 
 export enum apiUrls {
     "sign-in" = "/sign-in",

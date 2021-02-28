@@ -47,7 +47,6 @@ const App = () => {
 
   return (
     <div className="main__app">
-        
         {/* Place Loading Bar */}
         <LoaderBar />
         

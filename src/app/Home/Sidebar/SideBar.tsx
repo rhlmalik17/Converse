@@ -12,9 +12,74 @@ import reportBug from "../../../assets/sidebar-icons/report-bug.svg"
 import reportBugActive from "../../../assets/sidebar-icons/report-bug-active.svg"
 import AuthService from "../../../services/app-services/auth-service"
 import { useState } from 'react'
-
+import { environment } from '../../../environment'
+import ModalComponent from '../../utilities/ModalComponent/ModalComponent'
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import EmailIcon from "../../../assets/authentication/email.svg";
+import UserIcon from "../../../assets/authentication/user.svg";
 
 const SideBar = () => {
+    //Modal Content
+    const ManageProfileModal = () => {
+        return (
+            <div className="manage__profile__container">
+                <div className="manage__profile__heading">
+                    <span>Manage Profile</span>
+                    <FontAwesomeIcon icon={faTimes} />
+                </div>
+
+                <div className="manage__profile__body">
+                    <div className="profile__content">
+                        <div className="profile__picture">
+                            <div className="profile__img"></div>
+                        </div>
+                    </div>
+
+                    <div className="set__profile__btn flex-column d-flex align-items-center justify-content-center">
+                        <label htmlFor="upload-file-btn">SET PROFILE PHOTO</label>
+                        <input className="d-none" id="upload-file-btn" type="file"/>
+                    </div>
+
+                    <div className="profile__details__container">
+
+                        <div className="profile__details__parent">
+                            <div className="profile__details__icon">
+                                <img src={EmailIcon} alt="" />
+                            </div>
+
+                            <div className="profile__detail__field">
+                                <span>Michael</span>
+                                <label>First Name</label>
+                            </div>
+                        </div>
+
+                        <div className="profile__details__parent">
+                            <div className="profile__details__icon">
+                                <img src={EmailIcon} alt="" />
+                            </div>
+
+                            <div className="profile__detail__field">
+                                <span>Wong</span>
+                                <label>Last Name</label>
+                            </div>
+                        </div>
+
+                        <div className="profile__details__parent user__icon">
+                            <div className="profile__details__icon">
+                                <img src={UserIcon} alt="" />
+                            </div>
+
+                            <div className="profile__detail__field">
+                                <span>wong.michael@gmail.com</span>
+                                <label>Email Address</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     //Icon click handlers
     const handleLogOut = () => {
@@ -22,15 +87,22 @@ const SideBar = () => {
     }
 
     const handleAboutDeveloper = (option: string) => {
-        window.open("https://rahul-malik.netlify.app/");
+        window.open(environment.portfolio_link);
         setSelectedOption(option);
-    } 
+    }
+    
+    const handleManageProfile = () => {
+        setModalOptions({
+            ...modalOptions,
+            manage_profile: { showModal: true, modalContent: ManageProfileModal }
+        });
+    }
 
     const sideBarConstants: any = {
         //User related sidebar options
         userOptions: [
             { onClick: () => {}, label: "Home", icon: home, activeIcon: homeActive, className: "home" },
-            { onClick: () => {}, label: "Manage Profile", icon: manageProfile, activeIcon: manageProfileActive, className: "manageProfile" },
+            { onClick: handleManageProfile, label: "Manage Profile", icon: manageProfile, activeIcon: manageProfileActive, className: "manageProfile" },
             { onClick: handleLogOut, label: "Logout", icon: signOut, activeIcon: signOutActive, className: "logout" }
         ],
 
@@ -42,11 +114,16 @@ const SideBar = () => {
     }
 
     const [selectedOption, setSelectedOption] = useState(sideBarConstants.userOptions[0].label);
+    const [modalOptions, setModalOptions] = useState({ manage_profile: { showModal: false, modalContent: ManageProfileModal }});
 
     return (
         <div className="side__bar__container">
             <div className="side__bar__parent">
                 <div className="side__bar__content">
+
+                    {/* All Models */}
+                    <ModalComponent {...modalOptions.manage_profile} />
+
                     <div className="converse__logo">
                         <img src={SideBarLogo} alt="" />
                     </div>

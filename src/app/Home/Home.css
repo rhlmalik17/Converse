@@ -1,5 +1,5 @@
 .home__container {
-    animation: pop-up 0.8s;
+    animation: pop-up 0.4s ease; 
     position: relative;
 }
 

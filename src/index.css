@@ -97,6 +97,13 @@
     border: none;
   }
 
+  /* Disable all the modals stylings*/
+  .modal-content {
+    align-items: center;
+    background-color: unset !important;
+    border: none !important
+  }
+  
   @media screen and (min-height: 769px) and (min-width: 1366px) {
     .main__container {
       border-radius: 10px;

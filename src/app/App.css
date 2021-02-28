@@ -18,5 +18,7 @@
   --light-shade-black: #495969;
   --asset-shade: #bec4ca;
   --separator-shade: #E3E4EE;
-  --waiting-dots: #DBDBEF
+  --waiting-dots: #DBDBEF;
+  --modal-heading:  #302F2F;
+  --modal-heading-shadow: #cecece
 }
