@@ -3,6 +3,8 @@
     width: 25%;
     background-color: var(--off-white);
     padding: 14px;
+    display: flex;
+    flex-direction: column;
 }
 
 .conversation__switches {
@@ -196,4 +198,8 @@
 
 .hide__dismiss__icon {
     transform: rotate(90deg) scale(0);
+}
+
+.search__list__container {
+    flex-grow: 1;
 }

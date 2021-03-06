@@ -1,4 +1,5 @@
 import './SideBar.css'
+import defaultProfile from "../../../assets/home/default-profile-picture.svg"
 import SideBarLogo from "../../../assets/home/sidebar-logo.svg"
 import home from "../../../assets/sidebar-icons/home.svg"
 import homeActive from "../../../assets/sidebar-icons/home-active.svg"
@@ -20,13 +21,13 @@ import EmailIcon from "../../../assets/authentication/email.svg";
 import UserIcon from "../../../assets/authentication/user.svg";
 
 const SideBar = () => {
-    //Modal Content
+    //Manage Profile Modal
     const ManageProfileModal = () => {
         return (
             <div className="manage__profile__container">
                 <div className="manage__profile__heading">
                     <span>Manage Profile</span>
-                    <FontAwesomeIcon icon={faTimes} />
+                    <FontAwesomeIcon className="cursor-pointer" icon={faTimes} onClick={() => onHideManageProfileModal()} />
                 </div>
 
                 <div className="manage__profile__body">
@@ -81,6 +82,35 @@ const SideBar = () => {
         )
     }
 
+    //View Profile Content
+    const ViewProfileModal = () => {
+        return (
+            <div className="profile__picture__view">
+                <div className="d-flex justify-content-center align-items-center profile__picture__view__dismiss__btn">
+                    <FontAwesomeIcon className="cursor-pointer" icon={faTimes} onClick={() => onHideProfilePictureView()} />
+                </div>
+                <img src={defaultProfile} alt=""/>
+            </div>
+        )
+    }
+
+    //Modal On hide handlers
+    const onHideManageProfileModal = () => {
+        setModalOptions({
+            ...modalOptions,
+            manage_profile: { ...modalOptions.manage_profile, showModal: false }
+        });
+
+        setSelectedOption("Home");
+    }
+
+    const onHideProfilePictureView = () => {
+        setModalOptions({
+            ...modalOptions,
+            view_profile_picture: { ...modalOptions.view_profile_picture, showModal: false }
+        });
+    }
+
     //Icon click handlers
     const handleLogOut = () => {
         AuthService.logOut();
@@ -94,7 +124,14 @@ const SideBar = () => {
     const handleManageProfile = () => {
         setModalOptions({
             ...modalOptions,
-            manage_profile: { showModal: true, modalContent: ManageProfileModal }
+            manage_profile: { ...modalOptions.manage_profile, showModal: true }
+        });
+    }
+
+    const handleViewProfilePicture = () => {
+        setModalOptions({
+            ...modalOptions,
+            view_profile_picture: { ...modalOptions.view_profile_picture, showModal: true }
         });
     }
 
@@ -114,7 +151,10 @@ const SideBar = () => {
     }
 
     const [selectedOption, setSelectedOption] = useState(sideBarConstants.userOptions[0].label);
-    const [modalOptions, setModalOptions] = useState({ manage_profile: { showModal: false, modalContent: ManageProfileModal }});
+    const [modalOptions, setModalOptions] = useState({
+        manage_profile: { showModal: false, modalContent: ManageProfileModal, onHide: () => onHideManageProfileModal() },
+        view_profile_picture: { showModal: false, modalContent: ViewProfileModal, onHide: () => onHideManageProfileModal() }
+    });
 
     return (
         <div className="side__bar__container">
@@ -123,12 +163,13 @@ const SideBar = () => {
 
                     {/* All Models */}
                     <ModalComponent {...modalOptions.manage_profile} />
+                    <ModalComponent {...modalOptions.view_profile_picture} />
 
                     <div className="converse__logo">
                         <img src={SideBarLogo} alt="" />
                     </div>
 
-                    <div className="profile__image"></div>
+                    <div onClick={() => handleViewProfilePicture()} className="cursor-pointer profile__image"></div>
                     <div className="side__bar__options">
                         <div className="user__options d-flex flex-column align-items-center w-100">
                             {

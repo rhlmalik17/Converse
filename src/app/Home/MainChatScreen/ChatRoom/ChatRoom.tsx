@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ChatTimeStampService from "../../../utilities/chat-time-stamp.service";
 import './ChatRoom.css'
 import IsTypingMessage from './IsTypingMessage/IsTypingMessage';
+import DefaultChatScreen from '../../../utilities/DefaultChatScreen/DefaultChatScreen';
 
 const ChatRoom = (props: any) => {
 
@@ -66,9 +67,7 @@ const ChatRoom = (props: any) => {
     if(Object.keys(currentConversationDetails).length < 1) {
         //RENDER DEFAULT CHAT SCREEN
         return (
-            <div>
-                Default Chat Screen
-            </div>
+           <DefaultChatScreen />
         )
     }
 

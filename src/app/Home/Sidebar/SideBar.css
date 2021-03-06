@@ -187,3 +187,17 @@
 .user__icon .profile__detail__field {
   margin: 0 25px !important;
 }
+
+.profile__picture__view img {
+  transform: scale(1.5);
+}
+
+.profile__picture__view__dismiss__btn {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 60px;
+  width: 60px;
+  font-size: 24px;
+  color: var(--light-grey);
+}

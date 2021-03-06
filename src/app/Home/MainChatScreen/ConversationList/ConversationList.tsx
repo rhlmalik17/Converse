@@ -7,22 +7,27 @@ import onlineUserDate from "../../../../assets/home/user-status/online-light.svg
 import { switchConversation } from "../../../redux/actions/conversations.actions";
 import { toggleLayout } from "../../../redux/actions/layout.actions";
 import './ConversationList.css';
+import SearchResults from "./SearchResults/SearchResults";
 
 const ConversationList = () => {
 
     //Component's constants
-    const conversationSwitches = [{ name: "Friends", 
-    conversations: [
-        { first_name: "Michael", last_name: "Wong", chat_id: 'x$135', profile_image_url: "", last_message: { body: "Yeah, we all Loved it!", created_at: "7:47 PM" } },
-        { first_name: "Peter", last_name: "Parker", chat_id: 'x2135', profile_image_url: "", last_message: { body: "You have a metal Arm?!, thats cool!", created_at: "7:48 PM" } } 
-    ]}
-    
-,{ name: "Groups", conversations: []}];
+    const conversationSwitches = [{
+        name: "Friends",
+        conversations: [
+            { first_name: "Michael", last_name: "Wong", chat_id: 'x$135', profile_image_url: "", last_message: { body: "Yeah, we all Loved it!", created_at: "7:47 PM" } },
+            { first_name: "Peter", last_name: "Parker", chat_id: 'x2135', profile_image_url: "", last_message: { body: "You have a metal Arm?!, thats cool!", created_at: "7:48 PM" } }
+        ]
+    }
+
+    , { name: "Groups", conversations: [] }];
+
+    const searchTextThreshold: number = 3;
 
     //Component states
     const [selectedConversationType, setSelectedConversationType] = useState(conversationSwitches[0]);
     const [selectedConversation, setSelectedConversation] = useState({ chat_id: null });
-    const [searchInputState, setSearchInputState] = useState({ showDismissIcon: false, searchText: "" });
+    const [searchInputState, setSearchInputState] = useState({ showDismissIcon: true, searchText: "sfs" });
     const dispatch = useDispatch();
 
     //Component handlers
@@ -56,7 +61,7 @@ const ConversationList = () => {
                 icon={faTimes} />
             </div>
 
-            <div className="conversations__parent">
+            <div className={"conversations__parent"  + (searchInputState.searchText.length < searchTextThreshold ? "d-block" : " d-none")}>
 
                 {/* SWITCH BETWEEN CONVERSATIONS */}
                 <div className="conversation__switches d-flex">
@@ -104,6 +109,12 @@ const ConversationList = () => {
                         ))
                     }
                 </div>
+            </div>
+
+
+            {/* SHOW SEARCH RESULTS */}
+            <div className={"search__list__container " + (searchInputState.searchText.length < searchTextThreshold ? "d-none" : " d-flex")}>
+                <SearchResults searchText={searchInputState.searchText} />    
             </div>
         
             {/* FLOATING PROFILE ICON */}

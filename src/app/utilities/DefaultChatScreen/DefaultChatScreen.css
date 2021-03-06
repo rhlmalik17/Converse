@@ -1,0 +1,51 @@
+.default__chat__screen {
+    flex-grow: 1;
+}
+
+.default__chat__screen .chat__screen__logo {
+   animation: popupLogo 0.1s ease;
+   height: 200px;
+   animation-fill-mode: forwards;
+   animation-delay: .6s;
+   transform: scale(0.6);
+   opacity: 0;
+}
+
+.chat__screen__label {
+    font-size: 19px;
+    position: relative;
+    bottom: 40px;
+    background: #b3b3b340;
+    padding: 10px 28px;
+    border-radius: 22px;
+    margin: 0 !important;
+    opacity: 0;
+    color: #797979;
+    animation: popupTitle 0.1s ease;
+    animation-delay: .6s;
+    animation-fill-mode: forwards;   
+}
+
+@keyframes popupTitle {
+    0% {
+        transform: translateY(15px);
+        opacity: 0;
+    } 
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+@keyframes popupLogo {
+    0% {
+        transform: scale(0.6);
+        opacity: 0;
+    } 
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
