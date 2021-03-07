@@ -24,6 +24,15 @@
     height: 180px;
 }
 
+.search__results__list {
+    overflow: overlay;
+    margin: 14px 0 0 0;
+}
+
+.search__result__container  {
+    overflow-y: overlay;
+}
+
 @keyframes rotation {
     0% {
         transform: rotate(0deg);

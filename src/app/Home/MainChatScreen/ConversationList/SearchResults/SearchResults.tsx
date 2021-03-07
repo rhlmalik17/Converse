@@ -2,11 +2,13 @@ import { useState } from 'react'
 import './SearchResults.css'
 import searchLoader from "../../../../../assets/home/loader.svg"
 import noSearchResults from "../../../../../assets/home/no-search-results.svg"
+import defaultProfileImage from "../../../../../assets/home/default-profile-picture.svg";
 
 const SearchResults = (props: any) => {
-    const [searchResultState, setSearchResultState] = useState<any>({
+    const [searchResultState ] = useState<any>({
         isLoading: false,
-        searchResults: [{ first_name: "Michael", last_name: "Wong", email: "wong.michael@gmail.com" }]
+        searchResults: [{ first_name: "Michael", last_name: "Wong", email: "wong.michael@gmail.com" },
+        { first_name: "Michael", last_name: "Wong", email: "wong.michael@gmail.com" }]
     });
 
     return (
@@ -36,14 +38,28 @@ const SearchResults = (props: any) => {
                  //Render the search results for the user
                  (searchResultState.searchResults.length > 0 && !searchResultState.isLoading) ?
                  (
-                     <div className="search__results__list">
+                     <div className="search__results__list w-100">
                          
                         {
-                            searchResultState.searchResults.map((result: any, index: number) => {
+                            searchResultState.searchResults.map((result: any, index: number) => (
                                 <div className="search__result" key={index}>
-                                    
+                                        <div className="selected__border"></div>
+                                        <div className="conversation__card mb-2">
+                                            <div className="conversation__img position-relative">
+                                                <img className="profile-img" alt="" src={result.profile_image_url || defaultProfileImage} />
+                                                <img className="" alt="" />
+                                            </div>
+                                            <div className="conversation__details">
+                                                <div className="conversation__title">
+                                                    <span>{result.first_name + " " + result.last_name}</span>
+                                                </div>
+                                                <div className="conversation__last__message">
+                                                    <span className="conversation__message">{result.email}</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                 </div>
-                            })
+                            ))
                         }
 
                      </div>

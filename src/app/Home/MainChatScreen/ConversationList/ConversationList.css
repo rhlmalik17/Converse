@@ -169,6 +169,7 @@
     height: 60px;
     width: 60px;
     border: 1px solid var(--input-background);
+    background-color: var(--off-white);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -202,4 +203,5 @@
 
 .search__list__container {
     flex-grow: 1;
+    overflow-y: overlay;
 }

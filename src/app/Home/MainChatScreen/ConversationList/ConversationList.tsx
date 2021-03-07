@@ -27,7 +27,7 @@ const ConversationList = () => {
     //Component states
     const [selectedConversationType, setSelectedConversationType] = useState(conversationSwitches[0]);
     const [selectedConversation, setSelectedConversation] = useState({ chat_id: null });
-    const [searchInputState, setSearchInputState] = useState({ showDismissIcon: true, searchText: "sfs" });
+    const [searchInputState, setSearchInputState] = useState({ showDismissIcon: false, searchText: "" });
     const dispatch = useDispatch();
 
     //Component handlers
