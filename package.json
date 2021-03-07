@@ -27,6 +27,7 @@
     "react-scripts": "4.0.1",
     "react-toastify": "^7.0.3",
     "react-top-loading-bar": "^2.0.1",
+    "react-twemoji-picker": "github:brianhung/emojipicker",
     "redux": "^4.0.5",
     "rxjs": "^6.6.3",
     "sass": "^1.32.5",

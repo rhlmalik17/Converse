@@ -1,5 +1,4 @@
 import './SignUp.css'
-import ToastService from '../../../services/app-services/toast-service';
 import { useForm } from 'react-hook-form'
 import httpClient from '../../../services/api-services/http-client';
 import { apiUrls } from '../../../services/api-services/api-urls';
@@ -19,12 +18,9 @@ function SignUp() {
 
     const signUp = (data: any) => {
         /* INTEGRATE SIGN UP API */
-        httpClient.post(apiUrls['sign-up'], data)
+        httpClient.post(apiUrls['sign-up'].route, data)
         .then((result: any) => {
             if(result && result.success) {
-                //show toast
-                ToastService.showToast("success", result.message);
-
                 //navigate to sign-in screen
                 externalAuthScreenController.next("sign-in");
 

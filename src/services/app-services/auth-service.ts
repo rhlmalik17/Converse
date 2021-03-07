@@ -8,7 +8,6 @@ import LoaderService from "../app-services/LoadingBar/loader-service";
 import ToastService from "../app-services/toast-service";
 
 class AuthenticationService  {
-
     private authGuard: Subject<any> = new Subject<any>();
 
     setToken(token: string): void {
@@ -40,6 +39,10 @@ class AuthenticationService  {
         //Show loader and toast
         LoaderService.complete();
         ToastService.showToast("success", "Logged Out Successfully.")
+    }
+
+    getToken(): string | null {
+        return localStorage.getItem("token") || null;
     }
 
     getAuthGuard(): Observable<any> {

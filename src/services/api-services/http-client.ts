@@ -3,37 +3,55 @@
 /***********************/
 
 import axios from "axios";
+import AuthService from "../app-services/auth-service";
 import LoaderService from "../app-services/LoadingBar/loader-service";
 import ToastService from "../app-services/toast-service";
-import { BASE_URL } from "./api-urls";
+import { apiUrls, BASE_URL } from "./api-urls";
 
 const requestQueue = new Array<any>();
 
 const AXIOS = () => {
   //INTERCEPT REQUEST
   const requestInterceptor = (config: any) => {
-    console.log(config);
-    //Start the loader
+    console.log(config)
+    let requestOptions: any = apiUrls[config.url]["interceptor-options"];
+
+    //Show the loader if required
+    if(requestOptions.loader)
     LoaderService.start();
+
+    //Attach token if required
+    if(requestOptions.token && AuthService.getToken()) {
+      config.headers = {
+        ...config.headers,
+        Authorization: AuthService.getToken()
+      }
+    }
+
+    //Push the request to the queue
     requestQueue.push(1);
     return config;
   };
 
   //INTERCEPT RESPONSE
-  const responseInterceptor = (config: any) => {
-    if (!config || !config.data) return config;
+  const responseInterceptor = (response: any) => {
+    if (!response || !response.data) return response;
 
-    let result = config.data;
+    console.log(response.config);
+    let requestOptions: any = apiUrls[response.config.url]["interceptor-options"];
+
+    let result = response.data;
     requestQueue.pop();
     if (requestQueue.length === 0) {
-      //Stop the loader
       LoaderService.complete();
     }
 
     if(!result.success) {
-      //Show Error toast
       ToastService.showToast("error", result.message);
+    } else if(result.success && result.message && requestOptions.toast) {
+      ToastService.showToast("success", result.message);
     }
+
     return result;
   };
 
