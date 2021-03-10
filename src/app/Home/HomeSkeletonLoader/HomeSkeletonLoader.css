@@ -1,0 +1,15 @@
+.skeleton__conversations {
+    height: 100%;
+    width: 25%;
+    background-color: var(--off-white);
+    padding: 10px;
+}
+
+.skeleton__search {
+    border-radius: 5px;
+}
+
+.skeleton__chat__window {
+    display: flex;
+    flex-grow: 1;
+}

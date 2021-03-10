@@ -11,7 +11,7 @@ import { environment } from "../../environment";
 export const BASE_URL = environment.BASE_URL;
 
 export const apiUrls: any = {
-    "sign-in" : { route: "sign-in", "interceptor-options": { loader: true, toast: true } },
-    "sign-up" : { route: "sign-up", "interceptor-options": { loader: true, toast: true } },
-    "verify-token": { route: "verify-token", "interceptor-options": { loader: true, toast: true, token: true } }
+    "sign-in" : { route: "sign-in", "interceptor-options": { loader: true, successToast: true, errorToast: true } },
+    "sign-up" : { route: "sign-up", "interceptor-options": { loader: true, successToast: true, errorToast: true } },
+    "user-info": { route: "user-info", "interceptor-options": { loader: true, errorToast: true, token: true } }
 }

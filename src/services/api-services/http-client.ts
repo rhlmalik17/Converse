@@ -13,7 +13,6 @@ const requestQueue = new Array<any>();
 const AXIOS = () => {
   //INTERCEPT REQUEST
   const requestInterceptor = (config: any) => {
-    console.log(config)
     let requestOptions: any = apiUrls[config.url]["interceptor-options"];
 
     //Show the loader if required
@@ -37,7 +36,6 @@ const AXIOS = () => {
   const responseInterceptor = (response: any) => {
     if (!response || !response.data) return response;
 
-    console.log(response.config);
     let requestOptions: any = apiUrls[response.config.url]["interceptor-options"];
 
     let result = response.data;
@@ -46,10 +44,14 @@ const AXIOS = () => {
       LoaderService.complete();
     }
 
-    if(!result.success) {
+    if(!result.success && requestOptions.errorToast) {
       ToastService.showToast("error", result.message);
-    } else if(result.success && result.message && requestOptions.toast) {
+    } else if(result.success && result.message && requestOptions.successToast) {
       ToastService.showToast("success", result.message);
+    }
+
+    if(result.message === "Unauthorized" && result.code === 406) {
+      AuthService.logOut();
     }
 
     return result;

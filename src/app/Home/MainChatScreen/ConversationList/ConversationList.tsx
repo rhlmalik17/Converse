@@ -1,7 +1,7 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineUserDate from "../../../../assets/home/user-status/online-light.svg"
 import { switchConversation } from "../../../redux/actions/conversations.actions";
@@ -28,6 +28,7 @@ const ConversationList = () => {
     const [selectedConversationType, setSelectedConversationType] = useState(conversationSwitches[0]);
     const [selectedConversation, setSelectedConversation] = useState({ chat_id: null });
     const [searchInputState, setSearchInputState] = useState({ showDismissIcon: false, searchText: "" });
+    const userData = useSelector((state: any) => state.commonReducer.userData);
     const dispatch = useDispatch();
 
     //Component handlers
@@ -119,7 +120,7 @@ const ConversationList = () => {
         
             {/* FLOATING PROFILE ICON */}
             <div onClick={() => dispatch(toggleLayout())} title="Show Profile" className="profile__img__container">
-                <img className="profile__img" alt="" src={defaultProfileImage} />
+                <img className="profile__img" alt="" src={(userData && userData.profile_img) || defaultProfileImage} />
                 <img className="online__status__dot" alt="" src={onlineUserDate} ></img>
             </div>
 

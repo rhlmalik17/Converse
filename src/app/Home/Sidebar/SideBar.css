@@ -42,7 +42,6 @@
 .profile__image {
   height: 130px;
   width: 130px;
-  background: url("../../../assets/home/default-profile-picture.svg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: contain;
@@ -129,7 +128,6 @@
 .profile__picture .profile__img {
   height: 80px;
   width: 80px;
-  background: url("../../../assets/home/default-profile-picture.svg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: contain;

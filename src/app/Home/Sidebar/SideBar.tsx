@@ -17,79 +17,22 @@ import { environment } from '../../../environment'
 import ModalComponent from '../../utilities/ModalComponent/ModalComponent'
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import EmailIcon from "../../../assets/authentication/email.svg";
-import UserIcon from "../../../assets/authentication/user.svg";
+import { useSelector } from 'react-redux'
+import { ManageProfileModal } from './ManageProfileModal/ManageProfileModal'
 
 const SideBar = () => {
-    //Manage Profile Modal
-    const ManageProfileModal = () => {
-        return (
-            <div className="manage__profile__container">
-                <div className="manage__profile__heading">
-                    <span>Manage Profile</span>
-                    <FontAwesomeIcon className="cursor-pointer" icon={faTimes} onClick={() => onHideManageProfileModal()} />
-                </div>
-
-                <div className="manage__profile__body">
-                    <div className="profile__content">
-                        <div className="profile__picture">
-                            <div className="profile__img"></div>
-                        </div>
-                    </div>
-
-                    <div className="set__profile__btn flex-column d-flex align-items-center justify-content-center">
-                        <label htmlFor="upload-file-btn">SET PROFILE PHOTO</label>
-                        <input className="d-none" id="upload-file-btn" type="file"/>
-                    </div>
-
-                    <div className="profile__details__container">
-
-                        <div className="profile__details__parent">
-                            <div className="profile__details__icon">
-                                <img src={EmailIcon} alt="" />
-                            </div>
-
-                            <div className="profile__detail__field">
-                                <span>Michael</span>
-                                <label>First Name</label>
-                            </div>
-                        </div>
-
-                        <div className="profile__details__parent">
-                            <div className="profile__details__icon">
-                                <img src={EmailIcon} alt="" />
-                            </div>
-
-                            <div className="profile__detail__field">
-                                <span>Wong</span>
-                                <label>Last Name</label>
-                            </div>
-                        </div>
-
-                        <div className="profile__details__parent user__icon">
-                            <div className="profile__details__icon">
-                                <img src={UserIcon} alt="" />
-                            </div>
-
-                            <div className="profile__detail__field">
-                                <span>wong.michael@gmail.com</span>
-                                <label>Email Address</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
+    const userData = useSelector((state: any) => state.commonReducer.userData);
 
     //View Profile Content
-    const ViewProfileModal = () => {
+    const ViewProfileModal = (props: any) => {
+        const userData = props.userData;
+
         return (
             <div className="profile__picture__view">
                 <div className="d-flex justify-content-center align-items-center profile__picture__view__dismiss__btn">
                     <FontAwesomeIcon className="cursor-pointer" icon={faTimes} onClick={() => onHideProfilePictureView()} />
                 </div>
-                <img src={defaultProfile} alt=""/>
+                <img src={(userData && userData.profile_img) || defaultProfile} alt=""/>
             </div>
         )
     }
@@ -128,7 +71,10 @@ const SideBar = () => {
         });
     }
 
-    const handleViewProfilePicture = () => {
+    const handleViewProfilePicture = (profilePicture: any) => {
+        if(profilePicture === defaultProfile)
+        return;
+
         setModalOptions({
             ...modalOptions,
             view_profile_picture: { ...modalOptions.view_profile_picture, showModal: true }
@@ -162,14 +108,18 @@ const SideBar = () => {
                 <div className="side__bar__content">
 
                     {/* All Models */}
-                    <ModalComponent {...modalOptions.manage_profile} />
-                    <ModalComponent {...modalOptions.view_profile_picture} />
+                    <ModalComponent {...modalOptions.manage_profile} modalProps={{userData, onHide: handleViewProfilePicture}} />
+                    <ModalComponent {...modalOptions.view_profile_picture} modalProps={{userData}} />
 
                     <div className="converse__logo">
                         <img src={SideBarLogo} alt="" />
                     </div>
 
-                    <div onClick={() => handleViewProfilePicture()} className="cursor-pointer profile__image"></div>
+                    <div className={ ((userData && userData.profile_img) ? "cursor-pointer" : "") + " profile__image" }
+                        style={{ backgroundImage: `url(${(userData && userData.profile_img) || defaultProfile})` }}
+                        onClick={() => handleViewProfilePicture((userData && userData.profile_img) || defaultProfile)}>
+                    </div>
+
                     <div className="side__bar__options">
                         <div className="user__options d-flex flex-column align-items-center w-100">
                             {

@@ -28,7 +28,7 @@ const Authentication = () => {
         setAuthScreenType(screenType);
 
         let urlToRoute = screenType === "sign-in" ? SignIn_Route.default.routeSignIn : SignUp_Route.default.routeSignUp;
-        history.push(urlToRoute);
+        history.replace(urlToRoute);
     }
 
     useEffect(() => {

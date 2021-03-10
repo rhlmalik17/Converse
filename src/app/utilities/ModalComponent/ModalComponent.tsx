@@ -9,7 +9,7 @@ const ModalComponent = (props: any) => {
 
     return (
       <Modal onHide={props.onHide} show={props.showModal} aria-labelledby="contained-modal-title-vcenter" centered>
-          {<props.modalContent />}
+          {<props.modalContent {...props.modalProps}/>}
       </Modal>
     );
   }

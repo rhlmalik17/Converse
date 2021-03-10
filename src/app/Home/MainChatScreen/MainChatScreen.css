@@ -5,7 +5,7 @@
     z-index: 2;
     right: 0;
     background: var(--white);
-    transition: 0.8s ease;
+    transition: 0.4s ease;
     overflow: hidden;
     border-radius: 12px;
 }

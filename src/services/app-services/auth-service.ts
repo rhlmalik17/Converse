@@ -22,9 +22,6 @@ class AuthenticationService  {
         
         if(!token || token.length < 1)
         return false;
-    
-        //TODO: Integrate to verify the token
-        // httpClient.post(apiUrls.)
         
         return token ? true : false;
     }

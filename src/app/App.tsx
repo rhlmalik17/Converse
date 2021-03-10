@@ -22,7 +22,7 @@ const App = () => {
   const authGuard = (order: any) => {
     switch(order.action) {
       case "USER_LOGOUT":
-        history.push(order.route);
+        history.replace(order.route);
         dispatch(logOut());
         break;
     }
@@ -31,19 +31,20 @@ const App = () => {
   //Route where the auth guard demands to
   let AuthGuardSubscription = AuthService.getAuthGuard().subscribe(authGuard);
 
-  //Check if user is logged in
-  if(AuthService.isLoggedIn()) {
-    history.push(Home_Route.routeHome);
-  } else {
-    history.push(SignIn_Route.routeSignIn);
-  }
-
   useEffect(() => {
+    //Check if user is logged in
+    if (AuthService.isLoggedIn()) {
+      history.push(Home_Route.routeHome);
+    } else {
+      history.push(SignIn_Route.routeSignIn);
+    }
+
     return () => {
       if(AuthGuardSubscription)
       AuthGuardSubscription.unsubscribe();
     }
-  }, [AuthGuardSubscription])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className="main__app">

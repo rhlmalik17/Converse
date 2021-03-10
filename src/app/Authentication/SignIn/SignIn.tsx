@@ -27,8 +27,8 @@ export default function SignIn() {
         //Set token
         localStorage.setItem("token", result.token);
 
-        //TODO: Navigate to main home screen
-        history.push(Home_Route.routeHome);
+        //Navigate to main home screen
+        history.replace(Home_Route.routeHome);
     }
 
     const signIn = (data: Object) => {
