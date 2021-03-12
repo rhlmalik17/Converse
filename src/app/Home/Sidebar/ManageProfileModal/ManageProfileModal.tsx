@@ -1,16 +1,23 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch } from "react-redux";
 import EmailIcon from "../../../../assets/authentication/email.svg";
 import UserIcon from "../../../../assets/authentication/user.svg";
 import defaultProfile from "../../../../assets/home/default-profile-picture.svg"
 import fileUploadService from "../../../../services/app-services/file-upload-service";
+import { setUserData } from "../../../redux/actions/common.actions";
 
 //Manage Profile Modal
 export const ManageProfileModal = (props: any) => {
+    const dispatch = useDispatch();
     const userData = props.userData;
 
     const onSuccessfullUpload = (result: any) => {
+        if(!result || !result.profile_img)
+        return;
+
         //TODO: update profile picture here
+        dispatch(setUserData({ ...userData, profile_img: result.profile_img }));
     }
 
     const handleProfilePictureChange = (event: any) => {

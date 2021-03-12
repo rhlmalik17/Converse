@@ -119,8 +119,9 @@ const ConversationList = () => {
             </div>
         
             {/* FLOATING PROFILE ICON */}
-            <div onClick={() => dispatch(toggleLayout())} title="Show Profile" className="profile__img__container">
-                <img className="profile__img" alt="" src={(userData && userData.profile_img) || defaultProfileImage} />
+            <div style={{ backgroundImage: `url(${(userData && userData.profile_img) || defaultProfileImage})` }}
+                onClick={() => dispatch(toggleLayout())} title="Show Profile" 
+                className={"profile__img__container " + ((userData && userData.profile_img) ? "" : " default__profile__img")}>
                 <img className="online__status__dot" alt="" src={onlineUserDate} ></img>
             </div>
 

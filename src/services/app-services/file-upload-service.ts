@@ -1,3 +1,5 @@
+import { apiUrls } from "../api-services/api-urls";
+import httpClient from "../api-services/http-client";
 import toastService from "./toast-service";
 
 class FileUploadService {
@@ -42,6 +44,8 @@ class FileUploadService {
             }
     
             let encodedBase64String = await this.convertToBase64(file);
+
+            return httpClient.put(apiUrls["upload-profile-image"].route, { profile_img: encodedBase64String });
         } catch {
             toastService.showToast("error", "Unexpected Error Occurred");
         }

@@ -175,6 +175,18 @@
     align-items: center;
     justify-content: center;
     transition: 0.4s ease;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.default__profile__img {
+    background-size: auto !important;
+}
+
+.profile__img__container .profile__img {
+    max-height: 100%;
+    max-width: 100%;
 }
 
 .profile__img__container .online__status__dot {

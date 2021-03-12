@@ -22,7 +22,7 @@ import { ManageProfileModal } from './ManageProfileModal/ManageProfileModal'
 
 const SideBar = () => {
     const userData = useSelector((state: any) => state.commonReducer.userData);
-
+    console.log("Invoked", userData);
     //View Profile Content
     const ViewProfileModal = (props: any) => {
         const userData = props.userData;
@@ -108,7 +108,7 @@ const SideBar = () => {
                 <div className="side__bar__content">
 
                     {/* All Models */}
-                    <ModalComponent {...modalOptions.manage_profile} modalProps={{userData, onHide: handleViewProfilePicture}} />
+                    <ModalComponent {...modalOptions.manage_profile} modalProps={{userData, onHide: onHideManageProfileModal}} />
                     <ModalComponent {...modalOptions.view_profile_picture} modalProps={{userData}} />
 
                     <div className="converse__logo">
