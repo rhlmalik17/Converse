@@ -1,14 +1,20 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import EmailIcon from "../../../../assets/authentication/email.svg";
 import UserIcon from "../../../../assets/authentication/user.svg";
 import defaultProfile from "../../../../assets/home/default-profile-picture.svg"
-import fileUploadService from "../../../../services/app-services/file-upload-service";
 import { setUserData } from "../../../redux/actions/common.actions";
+import ModalComponent from "../../../utilities/ModalComponent/ModalComponent";
+import SetProfilePictureModal from "./SetProfilePictureModal";
 
 //Manage Profile Modal
 export const ManageProfileModal = (props: any) => {
+    const [imageSelectorOptions, setImageSelectorOptions] = useState<any>({
+        file: null, showModal: false, modalContent: SetProfilePictureModal
+    });
+
     const dispatch = useDispatch();
     const userData = props.userData;
 
@@ -16,7 +22,6 @@ export const ManageProfileModal = (props: any) => {
         if(!result || !result.profile_img)
         return;
 
-        //TODO: update profile picture here
         dispatch(setUserData({ ...userData, profile_img: result.profile_img }));
     }
 
@@ -31,16 +36,24 @@ export const ManageProfileModal = (props: any) => {
         event.target.value = null;
         event.target.files = null;
 
-        fileUploadService.uploadProfileImage(fileInstance).then((result: any) => {
-            if(!result)
-            return;
+        setImageSelectorOptions({ ...imageSelectorOptions, file: fileInstance, showModal: true });
+    }
 
-            onSuccessfullUpload(result);
-        });
+    const dimissImageSelector = () => {
+        setImageSelectorOptions({ ...imageSelectorOptions, file: null, showModal: false });
     }
 
     return (
         <div className="manage__profile__container">
+
+            {/* SHOW PROFILE UPLOAD MODAL */}
+            <ModalComponent
+            {...imageSelectorOptions} 
+            backdropClassName="set__profile__backdrop"
+            className="set__profile__modal" 
+            modalProps={{ selectedImage: imageSelectorOptions.file, onHide: dimissImageSelector, onSuccessfullUpload }} 
+            onHide={() => dimissImageSelector()} />
+            
             <div className="manage__profile__heading">
                 <span>Manage Profile</span>
                 <FontAwesomeIcon className="cursor-pointer" icon={faTimes} onClick={() => props.onHide()} />

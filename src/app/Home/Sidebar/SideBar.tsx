@@ -22,7 +22,6 @@ import { ManageProfileModal } from './ManageProfileModal/ManageProfileModal'
 
 const SideBar = () => {
     const userData = useSelector((state: any) => state.commonReducer.userData);
-    console.log("Invoked", userData);
     //View Profile Content
     const ViewProfileModal = (props: any) => {
         const userData = props.userData;
@@ -115,7 +114,7 @@ const SideBar = () => {
                         <img src={SideBarLogo} alt="" />
                     </div>
 
-                    <div className={ ((userData && userData.profile_img) ? "cursor-pointer" : "") + " profile__image" }
+                    <div className={ ((userData && userData.profile_img) ? "cursor-pointer" : " default__profile__image") + " profile__image" }
                         style={{ backgroundImage: `url(${(userData && userData.profile_img) || defaultProfile})` }}
                         onClick={() => handleViewProfilePicture((userData && userData.profile_img) || defaultProfile)}>
                     </div>

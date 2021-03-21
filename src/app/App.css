@@ -20,5 +20,7 @@
   --separator-shade: #E3E4EE;
   --waiting-dots: #DBDBEF;
   --modal-heading:  #302F2F;
-  --modal-heading-shadow: #cecece
+  --modal-heading-shadow: #cecece;
+  --light-primary-purple: #8472fc2c;
+  --skeleton-pulse: rgb(74 74 74 / 6%)
 }

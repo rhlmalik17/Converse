@@ -16,36 +16,30 @@ class FileUploadService {
 
     //Convert file to base64
     public async convertToBase64(file: File) {
+        if(!file)
+        return "";
+
         const toBase64 = (file: File) => new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => resolve(reader.result);
             reader.onerror = error => reject(error);
         });
-
+        
         let encodedString = await toBase64(file);
         return encodedString;
     }
 
     //Upload profile image
-    public async uploadProfileImage(file: File) {
-        if(!file || !file.name) {
+    public async uploadProfileImage(blob: Blob) {
+        if(!blob) {
             toastService.showToast("error", "File not supported");
             return false;
         }
-
         try {
-            let fileName = file.name.split('.');
-            let fileType = (fileName && fileName[fileName.length - 1]) || '';
-    
-            if(!this.supportedFileExtensions.profile_picture[fileType]) {
-                toastService.showToast("error", "Invalid Extension");
-                return false;
-            }
-    
-            let encodedBase64String = await this.convertToBase64(file);
-
-            return httpClient.put(apiUrls["upload-profile-image"].route, { profile_img: encodedBase64String });
+            let formData = new FormData();
+            formData.append("profile_img", blob);
+            return httpClient.put(apiUrls["upload-profile-image"].route, formData);
         } catch {
             toastService.showToast("error", "Unexpected Error Occurred");
         }

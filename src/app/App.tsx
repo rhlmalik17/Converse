@@ -54,7 +54,7 @@ const App = () => {
         {/* Place Toast Container */}
         <ToastContainer
         position="bottom-center"
-        autoClose={5000}
+        autoClose={2500}
         hideProgressBar={false}
         newestOnTop
         closeOnClick

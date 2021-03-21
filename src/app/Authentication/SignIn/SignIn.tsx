@@ -13,7 +13,7 @@ export default function SignIn() {
 
     /* FORM STATIC DATA */
     let textFieldOptions = {
-        email: { placeholder: 'Enter Email', name: 'email', validations: { required: 'Email Address is required', pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ } },
+        email: { placeholder: 'Enter Email', name: 'email', validations: { maxLength: 100, required: 'Email Address is required', pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ } },
         password: { placeholder: 'Enter Password ', name: 'password', validations: { required: 'Password is required' } }
     };
 
@@ -45,9 +45,13 @@ export default function SignIn() {
         <div className="sign__in__container">
             <form onSubmit={handleSubmit(signIn)}>
                 <div className="text-field-container email__field">
-                <input name={textFieldOptions.email.name} className={`text-field ${ errors[textFieldOptions.email.name] ? 'red-border' : ''}`} ref={register(textFieldOptions.email.validations)} placeholder={textFieldOptions.email.placeholder} type="email" />
-                { errors[textFieldOptions.email.name] && <div className="text-field-error"> <div className="error-pointer"></div> <span> { errors[textFieldOptions.email.name].message }</span> <span> { (errors[textFieldOptions.email.name] && !errors[textFieldOptions.email.name].message) ? 'Email is invalid' : '' } </span> </div> }
-            </div>
+                    <input name={textFieldOptions.email.name} className={`text-field ${errors[textFieldOptions.email.name] ? 'red-border' : ''}`} ref={register(textFieldOptions.email.validations)} placeholder={textFieldOptions.email.placeholder} />
+                    {errors[textFieldOptions.email.name] && <div className="text-field-error"> <div className="error-pointer"></div> <span> {errors[textFieldOptions.email.name].message}</span> <span> {(errors[textFieldOptions.email.name] && !errors[textFieldOptions.email.name].message && errors[textFieldOptions.email.name].type !== "maxLength") ? 'Email is invalid' : ''} </span>
+                        {errors[textFieldOptions.email.name] && errors[textFieldOptions.email.name].type === "maxLength" && (
+                            <span role="alert">Max length exceeded</span>
+                        )}
+                    </div>}
+                </div>
 
             <div className="text-field-container password__field">
                 <input name={textFieldOptions.password.name} className={`text-field ${ errors[textFieldOptions.password.name] ? 'red-border' : ''}`} ref={register(textFieldOptions.password.validations)} placeholder={textFieldOptions.password.placeholder} type="password" />

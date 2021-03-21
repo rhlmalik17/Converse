@@ -18,9 +18,11 @@ const ConversationList = () => {
             { first_name: "Michael", last_name: "Wong", chat_id: 'x$135', profile_image_url: "", last_message: { body: "Yeah, we all Loved it!", created_at: "7:47 PM" } },
             { first_name: "Peter", last_name: "Parker", chat_id: 'x2135', profile_image_url: "", last_message: { body: "You have a metal Arm?!, thats cool!", created_at: "7:48 PM" } }
         ]
-    }
+    },
 
-    , { name: "Groups", conversations: [] }];
+        //TODO: Due for next release
+        // { name: "Stories", conversations: [] }
+    ];
 
     const searchTextThreshold: number = 3;
 
@@ -55,7 +57,7 @@ const ConversationList = () => {
 
             {/* SEARCH CONVERSATION OR PEOPLE */}
             <div className="search__conversations position-relative">
-                <input value={searchInputState.searchText}  onChange={(event: any) => handleSearchChange(event)} className="search__box" placeholder="Search people or conversations" />
+                <input value={searchInputState.searchText}  onChange={(event: any) => handleSearchChange(event)} className="search__box" placeholder="Search people using email" />
                 <FontAwesomeIcon
                 onClick={() => dismissSearchText()}
                 className={"dismiss__search__icon" + ((!searchInputState.showDismissIcon) ? " hide__dismiss__icon" : "")}  
@@ -114,8 +116,11 @@ const ConversationList = () => {
 
 
             {/* SHOW SEARCH RESULTS */}
-            <div className={"search__list__container " + (searchInputState.searchText.length < searchTextThreshold ? "d-none" : " d-flex")}>
-                <SearchResults searchText={searchInputState.searchText} />    
+            <div className={"search__list__container d-flex"}>
+                {
+                    (searchInputState.searchText.length >= searchTextThreshold) ? 
+                    <SearchResults searchText={searchInputState.searchText} /> : null
+                }
             </div>
         
             {/* FLOATING PROFILE ICON */}

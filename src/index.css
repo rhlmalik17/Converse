@@ -84,6 +84,10 @@
     box-shadow: 0 8px 14px 0px var(--box-shadow-primary);
   }
 
+  .MuiSkeleton-root {
+    background-color: var(--skeleton-pulse) !important;
+  }
+
   /* Toast Notification Stylings */
   .Toastify__toast--error {
     background-color: var(--toast-notification-error) !important;

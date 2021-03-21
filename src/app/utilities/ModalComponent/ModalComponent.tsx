@@ -8,7 +8,7 @@ const ModalComponent = (props: any) => {
     return null;
 
     return (
-      <Modal onHide={props.onHide} show={props.showModal} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal className={props.className || ''} backdropClassName={props.backdropClassName || ''} onHide={props.onHide} show={props.showModal} aria-labelledby="contained-modal-title-vcenter" centered>
           {<props.modalContent {...props.modalProps}/>}
       </Modal>
     );

@@ -5,7 +5,7 @@ class ToastService {
   private readonly toastOptions: Object | any = {
     error: {
       position: "bottom-right",
-      autoClose: 5000,
+      autoClose: 2500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -15,7 +15,7 @@ class ToastService {
 
     success: {
       position: "bottom-right",
-      autoClose: 5000,
+      autoClose: 2500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
