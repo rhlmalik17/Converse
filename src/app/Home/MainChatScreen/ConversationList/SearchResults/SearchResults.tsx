@@ -104,7 +104,7 @@ const SearchResults = (props: any) => {
                          
                         {
                             searchResultState.searchResults.map((result: any, index: number) => (
-                                <div  className="search__result" key={index}>
+                                <div onClick={() => props.onSearchClick(result)} className="search__result" key={index}>
                                         <div className="selected__border"></div>
                                         <div className="conversation__card mb-3">
                                             <div className="conversation__img position-relative">

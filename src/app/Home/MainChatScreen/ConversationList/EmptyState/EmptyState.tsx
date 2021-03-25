@@ -12,7 +12,7 @@ const EmptyState = (props: any) => {
                 <span>You have no active chats</span>
             </div>
 
-            <button onClick={props.onClick} className="primary-btn empty__state__btn"> State a new Chat</button>
+            <button onClick={props.onClick} className="primary-btn empty__state__btn"> Search People</button>
         </div>
     )
 }

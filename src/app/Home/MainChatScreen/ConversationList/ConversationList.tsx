@@ -1,10 +1,16 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { AxiosRequestConfig } from "axios";
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineUserDate from "../../../../assets/home/user-status/online-light.svg"
-import { Conversation, ConversationSwitch } from "../../../../models/conversations.model";
+import { Conversation, CONVERSATION_TYPES } from "../../../../models/ConversationModels/Conversation.model";
+import { ConversationSwitch } from "../../../../models/ConversationModels/ConversationSwitch.model";
+import { User } from "../../../../models/ConversationModels/User.model";
+import { InitiateConversationResponse } from "../../../../models/ResponseModels/InitiateConversationResponse.model";
+import { apiUrls } from "../../../../services/api-services/api-urls";
+import httpClient from "../../../../services/api-services/http-client";
 import { switchConversation } from "../../../redux/actions/conversations.actions";
 import { toggleLayout } from "../../../redux/actions/layout.actions";
 import './ConversationList.css';
@@ -48,6 +54,31 @@ const ConversationList = () => {
 
     const dismissSearchText = () => {
         setSearchInputState({ showDismissIcon: false, searchText: "" });
+    }
+
+    /* SEARCH RESULT CLICK FLOW */
+    const handlerSearchResultClick = (searchResult: any) => {
+        let userInstance: User = new User(searchResult);
+        let initiateConversationQuery: AxiosRequestConfig = { params: { participant: userInstance.email } };
+
+        //Initiate the conversation
+        httpClient.get(apiUrls["initiate-conversation"].route, initiateConversationQuery)
+        .then((result: any) => handleSearchResultClickResponse(result, searchResult));
+    }
+
+    const handleSearchResultClickResponse = (result: any, receiverDetails: any) => {
+        let response = new InitiateConversationResponse(result);
+             
+        let existingConvo = response.existing_conversation;
+        if(existingConvo.length < 1) {
+        //Add to the conversations
+          let participants: Array<User> = new Array<User>();
+          participants.push(new User(receiverDetails));
+          participants.push(new User(receiverDetails));
+          let conversation = new Conversation({ conversation_type: CONVERSATION_TYPES.p_to_p, participants });
+          selectedConversationType.conversations.push(conversation);
+          handleConversationChange(conversation);
+        }
     }
 
     return (
@@ -126,7 +157,7 @@ const ConversationList = () => {
             <div className={"search__list__container d-flex"}>
                 {
                     (searchInputState.searchText.length >= searchTextThreshold) ? 
-                    <SearchResults searchText={searchInputState.searchText} /> : null
+                    <SearchResults onSearchClick={handlerSearchResultClick} searchText={searchInputState.searchText} /> : null
                 }
             </div>
         
