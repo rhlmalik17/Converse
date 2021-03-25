@@ -100,6 +100,7 @@
 
 .selected__border {
     display: none;
+    transition: 2s;
     width: 50px;
     height: 100%;
     left: -19.2%;
@@ -197,7 +198,6 @@
 
 .profile__img__container:hover {
     transform: scale(1.2);
-    border: 1px solid var(--text-grey);
 }
 
 .dismiss__search__icon {
@@ -216,4 +216,9 @@
 .search__list__container {
     flex-grow: 1;
     overflow-y: overlay;
+}
+
+.empty__state__container {
+    width: 100%;
+    height: 74%;
 }

@@ -1,35 +1,28 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineUserDate from "../../../../assets/home/user-status/online-light.svg"
+import { Conversation, ConversationSwitch } from "../../../../models/conversations.model";
 import { switchConversation } from "../../../redux/actions/conversations.actions";
 import { toggleLayout } from "../../../redux/actions/layout.actions";
 import './ConversationList.css';
+import EmptyState from "./EmptyState/EmptyState";
 import SearchResults from "./SearchResults/SearchResults";
 
 const ConversationList = () => {
-
     //Component's constants
-    const conversationSwitches = [{
-        name: "Friends",
-        conversations: [
-            { first_name: "Michael", last_name: "Wong", chat_id: 'x$135', profile_image_url: "", last_message: { body: "Yeah, we all Loved it!", created_at: "7:47 PM" } },
-            { first_name: "Peter", last_name: "Parker", chat_id: 'x2135', profile_image_url: "", last_message: { body: "You have a metal Arm?!, thats cool!", created_at: "7:48 PM" } }
-        ]
-    },
-
-        //TODO: Due for next release
-        // { name: "Stories", conversations: [] }
-    ];
-
     const searchTextThreshold: number = 3;
-
+    let conversationSwitches: any = {
+        "Friends": new ConversationSwitch("Friends")
+    };
+    
     //Component states
-    const [selectedConversationType, setSelectedConversationType] = useState(conversationSwitches[0]);
-    const [selectedConversation, setSelectedConversation] = useState({ chat_id: null });
+    const [selectedConversationType, setSelectedConversationType] = useState<ConversationSwitch>(conversationSwitches["Friends"]);
+    const [selectedConversation, setSelectedConversation] = useState<Conversation>();
     const [searchInputState, setSearchInputState] = useState({ showDismissIcon: false, searchText: "" });
+    const searchInputRef = useRef(null);
     const userData = useSelector((state: any) => state.commonReducer.userData);
     const dispatch = useDispatch();
 
@@ -48,6 +41,11 @@ const ConversationList = () => {
         });
     }
 
+    const focusOnSearch = () => {
+        if(!searchInputRef.current) return;
+        (searchInputRef.current as any).focus();
+    }
+
     const dismissSearchText = () => {
         setSearchInputState({ showDismissIcon: false, searchText: "" });
     }
@@ -57,7 +55,7 @@ const ConversationList = () => {
 
             {/* SEARCH CONVERSATION OR PEOPLE */}
             <div className="search__conversations position-relative">
-                <input value={searchInputState.searchText}  onChange={(event: any) => handleSearchChange(event)} className="search__box" placeholder="Search people using email" />
+                <input ref={searchInputRef} value={searchInputState.searchText}  onChange={(event: any) => handleSearchChange(event)} className="search__box" placeholder="Search people using email" />
                 <FontAwesomeIcon
                 onClick={() => dismissSearchText()}
                 className={"dismiss__search__icon" + ((!searchInputState.showDismissIcon) ? " hide__dismiss__icon" : "")}  
@@ -70,15 +68,15 @@ const ConversationList = () => {
                 <div className="conversation__switches d-flex">
                     
                     {
-                       conversationSwitches.map((value: any, index: number) => (
+                       Object.keys(conversationSwitches).map((conversation_type: string, index: number) => (
                         <div key={index}
-                            onClick={() => setSelectedConversationType(value)}
+                            onClick={() => setSelectedConversationType(conversationSwitches[conversation_type])}
                             className={'conversation__switch' 
                             //Conditional Class rendering
-                            + ((value.name === selectedConversationType.name) ? ' selected__conversation__switch' : '')
+                            + ((conversationSwitches[conversation_type].conversationType === selectedConversationType.conversationType) ? ' selected__conversation__switch' : '')
                             + ((index > 0) ? ' switch__seperator' : '') }>
                                <div className="switch__name">
-                                   <span>{value.name}</span>
+                                   <span>{conversationSwitches[conversation_type].conversationType}</span>
                                </div>
                             <div className="switch__underline"></div>
                         </div>
@@ -91,7 +89,8 @@ const ConversationList = () => {
                 <div className="conversations__container">
                     {
                         selectedConversationType.conversations.map((value: any, index: number) => (
-                            <div onClick={() => handleConversationChange(value)} key={index} className={"conversation" + ((value.chat_id === selectedConversation.chat_id) ? " selected__conversation" : "") }>
+                            <div onClick={() => handleConversationChange(value)} key={index} 
+                                 className={"conversation" + ((value.chat_id === selectedConversation?.chat_id) ? " selected__conversation" : "") }>
                                 <div className="selected__border"></div>
                                 <div className="conversation__card">
                                     <div className="conversation__img position-relative">
@@ -114,6 +113,14 @@ const ConversationList = () => {
                 </div>
             </div>
 
+            {
+                /* RENDER EMPTY STATE */
+                (selectedConversationType.conversations.length < 1 
+                && (searchInputState.searchText.length < searchTextThreshold)) ?
+                (<div className="d-flex align-items-center justify-content-center empty__state__container">
+                    <EmptyState onClick={() => focusOnSearch()}/>
+                </div>) : null
+            }
 
             {/* SHOW SEARCH RESULTS */}
             <div className={"search__list__container d-flex"}>
@@ -129,7 +136,6 @@ const ConversationList = () => {
                 className={"profile__img__container " + ((userData && userData.profile_img) ? "" : " default__profile__img")}>
                 <img className="online__status__dot" alt="" src={onlineUserDate} ></img>
             </div>
-
         </div>
     )
 }

@@ -1,0 +1,29 @@
+.empty__state__messages {
+    margin: 30px 0px;
+}
+
+.empty__state__messages label {
+    margin: 0 !important;
+    font-family: 'Segoe UI Bold';
+    font-size: 18px;
+    color: var(--modal-heading);
+}
+
+.empty__state__messages span {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--subHeading-font);
+}
+
+.empty__state__parent .empty__state__logo {
+    height: 4.4em;
+}
+
+.empty__state__btn {
+    padding: 9px 50px;
+    font-weight: 400;
+}
+
+.empty__state__btn:active {
+    transform: translateY(2px);
+}
