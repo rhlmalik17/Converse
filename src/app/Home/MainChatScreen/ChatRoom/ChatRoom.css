@@ -48,7 +48,7 @@
     margin: 14px 0;
     border-radius: 4px;
     font-size: 12px;
-    padding: 10px 16px;
+    padding: 10px 16px 10px 16px;
     outline: none;
     color: var(--input-text);
     transition: 0.4s ease;
@@ -59,7 +59,7 @@
 }
 
 .populated__chat__box {
-    padding: 10px 26px !important;
+    padding: 10px 86px 10px 26px !important;
 }
 
 .chatbox__input svg {

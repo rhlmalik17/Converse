@@ -11,6 +11,7 @@ export class Message implements MessageDetails {
     public chat_id: string;
     public updated_at: Date;
     public body: string;
+    public initial_message_to?: string;
 
     constructor(message_details?: MessageDetails) {
         this.sender = message_details?.sender || "";
