@@ -1,12 +1,21 @@
-const commonReducer = (commonState: any = {}, action: any) => {
+import { SkeletonLoader } from "../../../models/SkeletonModels/SkeletonLoader.model";
+
+export const getUserData = (commonState: any = {}, action: any) => {
     switch(action.type) {
         case "SET_USER_DATA":
-            commonState.userData = action.userData;
-            return commonState;
+            return action.userData;
 
         default:
             return commonState;
     }
 }
 
-export default commonReducer;
+export const skeletonLoader = (state: SkeletonLoader = new SkeletonLoader(), action: any) => {
+    switch(action.type) {
+        case "SHOW_SKELETON_LOADER":
+            return action.showState || state;
+
+        default:
+            return state;
+    }
+}

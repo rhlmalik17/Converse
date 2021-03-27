@@ -8,6 +8,10 @@ import { apiUrls } from '../../../../../services/api-services/api-urls';
 import { SearchUsers } from '../../../../../models/request.models';
 import { AxiosRequestConfig } from 'axios';
 import { SearchResultPaginator } from '../../../../../models/app.model';
+import { User } from '../../../../../models/ConversationModels/User.model';
+import { useDispatch, useSelector } from 'react-redux';
+import { SkeletonLoader } from '../../../../../models/SkeletonModels/SkeletonLoader.model';
+import { showSkeletonLoader } from '../../../../redux/actions/common.actions';
 
 /* Paginate Records */
 const no_of_records: number = 12;
@@ -15,10 +19,14 @@ let paginationOptions: SearchResultPaginator = new SearchResultPaginator(no_of_r
 
 const SearchResults = (props: any) => {
     const skeletonRows: Array<any> = new Array(4).fill(4);
-    const [ searchResultState, setSearchResultState ] = useState<any>({
-        isLoading: true,
-        searchResults: []
-    });
+    const [searchResults, setSearchResults] = useState<Array<User>>([]);
+    const skeletonLoader: SkeletonLoader = useSelector((state: any) => state.skeletonLoader); 
+    const dispatch = useDispatch();
+
+    const toggleConversationListSkeleton = () => {
+        skeletonLoader.conversationList = !skeletonLoader.conversationList;
+        dispatch(showSkeletonLoader({...skeletonLoader}))
+    }
 
     const searchApplicants = () => {
         if(paginationOptions.halt_lazy_loading)
@@ -27,24 +35,25 @@ const SearchResults = (props: any) => {
         paginationOptions['ongoing_request'] = true;
         let searchApplicantQueryParams: AxiosRequestConfig = { params: new SearchUsers(props.searchText, paginationOptions.page_number) };
         
+        toggleConversationListSkeleton();
         httpClient.get(apiUrls['search-users'].route, searchApplicantQueryParams)
         .then((response: any) => {
             let allResults = response.search_results || [];
-            let searchResults = (paginationOptions.page_number > 1) ? 
-                                searchResultState.searchResults.concat(allResults)
-                                : allResults;
+            let results = (paginationOptions.page_number > 1) ? 
+                          searchResults.concat(allResults) : allResults;
 
             /* Increment Page for Pagination */
             paginationOptions.page_number++;
-            setSearchResultState({ isLoading: false, searchResults: searchResults });
+            setSearchResults(results.map((user: any) => new User(user)));
 
             if(allResults.length < paginationOptions.per_page_record)
             paginationOptions.halt_lazy_loading = true;
         })
         /*Handle Error and stop loading*/
         .catch((reason: any) => {
-            setSearchResultState({ isLoading: false, searchResults: [] });
-        }).finally(() => { 
+            setSearchResults([]);
+        }).finally(() => {
+            toggleConversationListSkeleton();
             paginationOptions['ongoing_request'] = false; 
         });
     }
@@ -75,7 +84,7 @@ const SearchResults = (props: any) => {
 
             {
                 //Render the loader if API hit is ongoing
-                (searchResultState.isLoading) ?
+                (skeletonLoader.conversationList) ?
 
                 skeletonRows.map((skeleton: any, index: number) => (
                     <div key={index} className="search__loader">
@@ -88,7 +97,7 @@ const SearchResults = (props: any) => {
            
             {
                 //Render the no results found if no search results found
-                (searchResultState.searchResults.length < 1 && !searchResultState.isLoading) ?
+                (searchResults.length < 1 && !skeletonLoader.conversationList) ?
                     (
                         <div className="no__search__results align-items-center h-100">
                             <img src={noSearchResults} alt=""/>
@@ -98,12 +107,12 @@ const SearchResults = (props: any) => {
 
             {
                  //Render the search results for the user
-                 (searchResultState.searchResults.length > 0 && !searchResultState.isLoading) ?
+                 (searchResults.length > 0 && !skeletonLoader.conversationList) ?
                  (
                      <div onScroll={(event: any) => lazyLoadConversationList(event)} className="search__results__list w-100">
                          
                         {
-                            searchResultState.searchResults.map((result: any, index: number) => (
+                            searchResults.map((result: any, index: number) => (
                                 <div onClick={() => props.onSearchClick(result)} className="search__result" key={index}>
                                         <div className="selected__border"></div>
                                         <div className="conversation__card mb-3">

@@ -21,7 +21,7 @@ import { useSelector } from 'react-redux'
 import { ManageProfileModal } from './ManageProfileModal/ManageProfileModal'
 
 const SideBar = () => {
-    const userData = useSelector((state: any) => state.commonReducer.userData);
+    const userData = useSelector((state: any) => state.userData);
     //View Profile Content
     const ViewProfileModal = (props: any) => {
         const userData = props.userData;

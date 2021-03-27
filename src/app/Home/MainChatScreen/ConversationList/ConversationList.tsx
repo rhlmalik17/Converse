@@ -1,7 +1,7 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AxiosRequestConfig } from "axios";
-import React, { useRef, useState } from "react";
+import  { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineUserDate from "../../../../assets/home/user-status/online-light.svg"
@@ -11,11 +11,15 @@ import { User } from "../../../../models/ConversationModels/User.model";
 import { InitiateConversationResponse } from "../../../../models/ResponseModels/InitiateConversationResponse.model";
 import { apiUrls } from "../../../../services/api-services/api-urls";
 import httpClient from "../../../../services/api-services/http-client";
+import { showSkeletonLoader } from "../../../redux/actions/common.actions";
 import { switchConversation } from "../../../redux/actions/conversations.actions";
 import { toggleLayout } from "../../../redux/actions/layout.actions";
+import chatTimeStampService from "../../../utilities/chat-time-stamp.service";
 import './ConversationList.css';
 import EmptyState from "./EmptyState/EmptyState";
 import SearchResults from "./SearchResults/SearchResults";
+
+const temporarySearchResult: any = {};
 
 const ConversationList = () => {
     //Component's constants
@@ -26,15 +30,13 @@ const ConversationList = () => {
     
     //Component states
     const [selectedConversationType, setSelectedConversationType] = useState<ConversationSwitch>(conversationSwitches["Friends"]);
-    const [selectedConversation, setSelectedConversation] = useState<Conversation>();
     const [searchInputState, setSearchInputState] = useState({ showDismissIcon: false, searchText: "" });
+    const { userData, currentConversationDetails, skeletonLoader } = useSelector((state: any) => state);
     const searchInputRef = useRef(null);
-    const userData = useSelector((state: any) => state.commonReducer.userData);
     const dispatch = useDispatch();
 
     //Component handlers
     const handleConversationChange = (value: any) => {
-        setSelectedConversation(value);
         dispatch(switchConversation(value));
     }
 
@@ -45,6 +47,11 @@ const ConversationList = () => {
             showDismissIcon: (String(searchText).length > 0),
             searchText: searchText
         });
+    }
+
+    const toggleConversationListSkeleton = () => {
+        skeletonLoader.conversationList = !skeletonLoader.conversationList;
+        dispatch(showSkeletonLoader({...skeletonLoader}))
     }
 
     const focusOnSearch = () => {
@@ -58,28 +65,58 @@ const ConversationList = () => {
 
     /* SEARCH RESULT CLICK FLOW */
     const handlerSearchResultClick = (searchResult: any) => {
+        //Clear search pattern
+        dismissSearchText();
         let userInstance: User = new User(searchResult);
         let initiateConversationQuery: AxiosRequestConfig = { params: { participant: userInstance.email } };
+        
+        if(temporarySearchResult[userInstance.email]) {
+            //User already in temporary search result
+            searchConversationByEmail(userInstance.email);
+            return;
+        }
 
+        toggleConversationListSkeleton();
         //Initiate the conversation
         httpClient.get(apiUrls["initiate-conversation"].route, initiateConversationQuery)
-        .then((result: any) => handleSearchResultClickResponse(result, searchResult));
+        .then((result: any) => handleSearchResultClickResponse(result, searchResult))
+        .finally(() => { 
+            toggleConversationListSkeleton();
+         });
+    }
+
+    const searchConversationByEmail = (participantEmail: string) => {
+        if(!participantEmail) return;
+
+        for(let conversation of selectedConversationType.conversations) {
+            if(conversation.participants[0].email 
+                && conversation.conversation_type === CONVERSATION_TYPES.p_to_p) {
+                    handleConversationChange(conversation);
+                    return;
+                }
+        }
     }
 
     const handleSearchResultClickResponse = (result: any, receiverDetails: any) => {
         let response = new InitiateConversationResponse(result);
-             
+
         let existingConvo = response.existing_conversation;
         if(existingConvo.length < 1) {
         //Add to the conversations
           let participants: Array<User> = new Array<User>();
+          temporarySearchResult[receiverDetails.email] = true;
           participants.push(new User(receiverDetails));
-          participants.push(new User(receiverDetails));
-          let conversation = new Conversation({ conversation_type: CONVERSATION_TYPES.p_to_p, participants });
+
+          let conversation = new Conversation({ conversation_type: CONVERSATION_TYPES.p_to_p, participants }, (userData.email || ''));
           selectedConversationType.conversations.push(conversation);
           handleConversationChange(conversation);
+        } else {
+            //Search the conversation and select it
+            searchConversationByEmail(receiverDetails.email);
         }
     }
+
+
 
     return (
         <div className="conversation__list__container">
@@ -97,7 +134,7 @@ const ConversationList = () => {
 
                 {/* SWITCH BETWEEN CONVERSATIONS */}
                 <div className="conversation__switches d-flex">
-                    
+
                     {
                        Object.keys(conversationSwitches).map((conversation_type: string, index: number) => (
                         <div key={index}
@@ -113,30 +150,34 @@ const ConversationList = () => {
                         </div>
                        ))
                     }
-
                 </div>
            
                 {/* SELECTED CONVERSATIONS */}
                 <div className="conversations__container">
                     {
-                        selectedConversationType.conversations.map((value: any, index: number) => (
+                        selectedConversationType.conversations.map((value: Conversation, index: number) => (
                             <div onClick={() => handleConversationChange(value)} key={index} 
-                                 className={"conversation" + ((value.chat_id === selectedConversation?.chat_id) ? " selected__conversation" : "") }>
+                                 className={"conversation" + ((value.chat_id === currentConversationDetails?.chat_id) ? " selected__conversation" : "") }>
                                 <div className="selected__border"></div>
                                 <div className="conversation__card">
+
                                     <div className="conversation__img position-relative">
-                                        <img className="profile-img" alt="" src={value.profile_image_url || defaultProfileImage} />
+                                        <img className="profile-img" alt="" src={value.participants[0].profile_img || defaultProfileImage} />
                                         <img className="" alt="" />
                                     </div>
+
                                     <div className="conversation__details">
                                         <div className="conversation__title">
-                                            <span>{value.first_name + " " + value.last_name}</span>
+                                            <span>{value.participants[0].first_name + " " + value.participants[0].last_name}</span>
                                         </div>
                                         <div className="conversation__last__message">
-                                            <span className="conversation__message">{value.last_message.body}</span>
-                                            <span className="conversation__timestamp">{value.last_message.created_at}</span>
+                                            <span className="conversation__message">{value.last_message.body || value.participants[0].email}</span>
+                                            <span className="conversation__timestamp">
+                                                {chatTimeStampService.getChatMessageTimeStamp(value.updated_at)}
+                                            </span>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         ))

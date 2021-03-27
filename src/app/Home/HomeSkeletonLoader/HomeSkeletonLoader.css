@@ -13,3 +13,10 @@
     display: flex;
     flex-grow: 1;
 }
+
+.skeleton__parent {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}

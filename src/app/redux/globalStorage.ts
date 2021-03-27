@@ -1,13 +1,14 @@
 import { combineReducers, createStore } from "redux";
 import sideBarMode from './reducers/layout.modes'
 import currentConversationDetails from './reducers/conversation.switch'
-import commonReducer from './reducers/common.reducer'
+import { skeletonLoader, getUserData } from './reducers/common.reducer'
 
 //COMBINE ALL REDUCERS
 const allReducer = combineReducers({
     currentConversationDetails,
     sideBarMode,
-    commonReducer
+    skeletonLoader,
+    userData: getUserData
 });
 
 const rootReducer = (state: any, action: any) => {
