@@ -19,7 +19,7 @@ import './ConversationList.css';
 import EmptyState from "./EmptyState/EmptyState";
 import SearchResults from "./SearchResults/SearchResults";
 
-const temporarySearchResult: any = {};
+let temporarySearchResult: any = {};
 
 const ConversationList = () => {
     //Component's constants
@@ -47,6 +47,9 @@ const ConversationList = () => {
             showDismissIcon: (String(searchText).length > 0),
             searchText: searchText
         });
+
+        if(searchText.length >= searchTextThreshold)
+        temporarySearchResult = {};
     }
 
     const toggleConversationListSkeleton = () => {
