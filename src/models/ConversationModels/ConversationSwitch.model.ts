@@ -1,5 +1,10 @@
 import { Conversation } from "./Conversation.model";
 
+/* CONVERSATION TYPE */
+export type ConversationType = {
+    [key: string]: Conversation
+}
+
 /* A CONVERSATION TYPE SWITCH */
 export class ConversationSwitch {
     public conversationType: string = "";

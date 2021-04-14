@@ -7,6 +7,7 @@ import { setUserData, showSkeletonLoader } from '../../redux/actions/common.acti
 import HomeSkeletonLoader from '../HomeSkeletonLoader/HomeSkeletonLoader'
 import ChatRoom from './ChatRoom/ChatRoom'
 import ConversationList from './ConversationList/ConversationList'
+import SocketController from '../../../services/api-services/sockets'
 import './MainChatScreen.css'
 
 const MainChatScreen = () => {
@@ -26,6 +27,8 @@ const MainChatScreen = () => {
            let userData = await httpClient.get(apiUrls["user-info"].route);
            dispatch(setUserData(userData));
 
+          //Attach the socket and it's handlers
+          SocketController.connectSocket();
         } catch(err: any) {} finally {
             toggleMainScreenSkeleton();
         }

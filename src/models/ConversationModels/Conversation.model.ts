@@ -11,7 +11,8 @@ interface ConversationDetails {
     participants: Array<User>;
     last_message?: Message;
     conversation_type: string;
-    updated_at?: Date
+    updated_at?: Date,
+    messages: Array<Message>
 }
 
 /* CONVERSATION TYPE */
@@ -20,7 +21,8 @@ export class Conversation implements ConversationDetails{
     public participants: Array<User>;
     public last_message: Message;
     public conversation_type: string;
-    public updated_at: Date
+    public updated_at: Date;
+    public messages: Array<Message>
     constructor(conversation_details: ConversationDetails, excludeParticipant?: string) {
         this.chat_id = conversation_details.chat_id || "";
         this.participants = (conversation_details.participants || [])
@@ -28,5 +30,6 @@ export class Conversation implements ConversationDetails{
         this.last_message =  conversation_details.last_message ? new Message(conversation_details.last_message) : new Message();
         this.conversation_type = conversation_details.conversation_type || "";
         this.updated_at = new Date(conversation_details.updated_at || new Date());
+        this.messages = conversation_details.messages.map((value: any) => new Message(value));
     }
 }

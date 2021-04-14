@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from "react-redux"
+import { useRef, useState } from 'react'
+import { useDispatch, useSelector } from "react-redux"
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineIcon from "../../../../assets/home/user-status/online-light.svg";
 import { SendIcon } from '../../../utilities/Icons/Icons';
@@ -9,18 +9,15 @@ import ChatTimeStampService from "../../../utilities/chat-time-stamp.service";
 import './ChatRoom.css'
 import DefaultChatScreen from '../../../utilities/DefaultChatScreen/DefaultChatScreen';
 import { Message } from '../../../../models/ConversationModels/Message.model';
+import { addNewMessage } from '../../../redux/actions/conversations.actions';
 
 const ChatRoom = (props: any) => {
 
     const [populatedChatBox, setPopulatedChatBox] = useState(false);
     const [messageContent, setMessageContent] = useState("");
-    const { currentConversationDetails, userData } = useSelector((state: any) => state);
+    const { userData, currentConversationId, allConversations } = useSelector((state: any) => state);
     const chatWindow = useRef(null);
-
-    //MESSAGE LIST
-    const [chatMessages, setChatMessages] = useState<Array<Message>>([
-        new Message({ sender: "", chat_id: "", body: "Hi", updated_at: new Date()})
-    ]);
+    const dispatch = useDispatch();
 
     const messageBoxChangeHandler = (event: any) => {
         let messageBody = event.target.value;
@@ -43,12 +40,14 @@ const ChatRoom = (props: any) => {
         messageDetails.sender = userData.email;
         messageDetails.updated_at = new Date();
         messageDetails.body = messageBody;
+        messageDetails.chat_id = allConversations[currentConversationId].chat_id;
 
-        if(!currentConversationDetails.chat_id) {
-            messageDetails.initial_message_to = currentConversationDetails.participants[0].email;
+        if(allConversations[currentConversationId].chat_id === allConversations[currentConversationId].participants[0].email) {
+            messageDetails.initial_message_to = allConversations[currentConversationId].participants[0].email;
         }
 
-        setChatMessages(chatMessages.concat([messageDetails]));
+        dispatch(addNewMessage(messageDetails, allConversations));
+        scrollToBottom();
         setMessageContent("");
         setPopulatedChatBox(false);
     }
@@ -63,11 +62,7 @@ const ChatRoom = (props: any) => {
         }
     }
 
-    useEffect(() => {
-        scrollToBottom();
-    },[chatMessages])
-
-    if(Object.keys(currentConversationDetails).length < 1) {
+    if(Object.keys(allConversations[currentConversationId] || {}).length < 1) {
         //RENDER DEFAULT CHAT SCREEN
         return (
            <DefaultChatScreen />
@@ -79,7 +74,7 @@ const ChatRoom = (props: any) => {
         <div className="chat__room__container">
             {/* CONVERSATION TITLE */}
             <div className="chat__title">
-                <span>{`${currentConversationDetails.participants[0].first_name} ${currentConversationDetails.participants[0].last_name}`}</span>
+                <span>{`${allConversations[currentConversationId].participants[0].first_name} ${allConversations[currentConversationId].participants[0].last_name}`}</span>
                 <img src={onlineIcon} alt=""/>
             </div>
 
@@ -88,7 +83,7 @@ const ChatRoom = (props: any) => {
             <div className="conversation__window" ref={chatWindow} id="conversation__window">
 
                 {
-                    chatMessages.map((messageDetails: any, index: number) => (
+                    allConversations[currentConversationId].messages.map((messageDetails: any, index: number) => (
                         <div key={index} className={ "message__container"
                              //Render Conditionally
                             + ((messageDetails.sender === userData.email) ? " self__message" : "") }>
@@ -129,7 +124,7 @@ const ChatRoom = (props: any) => {
                        onChange={(event: any) => messageBoxChangeHandler(event)}
 
                        //Dynamic placeholder
-                       placeholder={`Message ${currentConversationDetails.participants[0].first_name}`} type="text"/>
+                       placeholder={`Message ${allConversations[currentConversationId].participants[0].first_name}`} type="text"/>
 
                 <div className="chat__box__option">
                     <button onClick={() => pushMessage(messageContent)} className="send__btn"  disabled={!populatedChatBox}>
