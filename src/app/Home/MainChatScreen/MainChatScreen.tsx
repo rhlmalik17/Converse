@@ -1,37 +1,64 @@
-import React, { useEffect } from 'react'
+import  { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { SkeletonLoader } from '../../../models/SkeletonModels/SkeletonLoader.model'
 import { apiUrls } from '../../../services/api-services/api-urls'
 import httpClient from '../../../services/api-services/http-client'
 import { setUserData, showSkeletonLoader } from '../../redux/actions/common.actions'
 import HomeSkeletonLoader from '../HomeSkeletonLoader/HomeSkeletonLoader'
 import ChatRoom from './ChatRoom/ChatRoom'
 import ConversationList from './ConversationList/ConversationList'
-import SocketController from '../../../services/api-services/sockets'
+import SocketController, { SOCKET_CONSTANT_EVENTS } from '../../../services/api-services/sockets'
 import './MainChatScreen.css'
+import { User } from '../../../models/ConversationModels/User.model'
+import { switchConversation, updateAllConversations } from '../../redux/actions/conversations.actions'
+import { Conversation } from '../../../models/ConversationModels/Conversation.model'
 
 const MainChatScreen = () => {
-    const sideBarMode = useSelector((state: any) => state.sideBarMode);
-    const showSkeleton: SkeletonLoader = useSelector((state: any) => state.skeletonLoader);
+    const { sideBarMode, skeletonLoader, allConversations } = useSelector((state: any) => state);
     const dispatch = useDispatch();
 
     const toggleMainScreenSkeleton = () => {
-        showSkeleton.mainChatScreen = !showSkeleton.mainChatScreen;
-        dispatch(showSkeletonLoader({...showSkeleton}));
+        skeletonLoader.mainChatScreen = !skeletonLoader.mainChatScreen;
+        dispatch(showSkeletonLoader({...skeletonLoader}));
+    }
+
+    const socketHandlers = (userData: User) => {
+        //Attach the socket and it's handlers
+        SocketController.connectSocket();
+
+        SocketController.socket?.on(SOCKET_CONSTANT_EVENTS.UPDATE_INITIAL_STATE, (data: any) => updateInitialState(data));
+        SocketController.socket?.on(String(userData.email), () => {
+
+        });
     }
 
     const fetchComponentData =  async () => {
         toggleMainScreenSkeleton(); 
         try {
-          //Fetch user data
-           let userData = await httpClient.get(apiUrls["user-info"].route);
+           //Fetch user data
+           let userData: User = await httpClient.get(apiUrls["user-info"].route);
            dispatch(setUserData(userData));
 
-          //Attach the socket and it's handlers
-          SocketController.connectSocket();
+           socketHandlers(userData);
         } catch(err: any) {} finally {
             toggleMainScreenSkeleton();
         }
+    }
+
+    /**
+     * SOCKET HANDLERS
+     */
+    const updateInitialState = (conversationDetails: any) => {
+        let initialConversationId = conversationDetails.initial_message_to;
+        if(!allConversations[initialConversationId])
+        return;
+        
+        let conversationToBeUpdated: Conversation = {...allConversations[initialConversationId]};
+        delete allConversations[initialConversationId];
+
+        conversationToBeUpdated.chat_id = conversationDetails._id;
+        allConversations[conversationToBeUpdated.chat_id] = conversationToBeUpdated;
+        dispatch(updateAllConversations({...allConversations}));
+        dispatch(switchConversation(conversationToBeUpdated.chat_id));
     }
 
     useEffect(() => {

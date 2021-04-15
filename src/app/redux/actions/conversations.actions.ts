@@ -18,6 +18,13 @@ export const addNewConversation = (conversation: Conversation, allConversations:
     }
 }
 
+export const updateAllConversations = (allConversations: ConversationType) => {
+    return {
+        type: "UPDATE_ALL_CONVERSATIONS",
+        allConversations
+    }
+}
+
 export const addNewMessage = (message: Message, allConversations: ConversationType) => {
     return {
         type: "ADD_MESSAGE",

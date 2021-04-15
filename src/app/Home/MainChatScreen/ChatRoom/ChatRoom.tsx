@@ -1,15 +1,16 @@
-import { useRef, useState } from 'react'
-import { useDispatch, useSelector } from "react-redux"
+import { useRef, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { faLaughBeam } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineIcon from "../../../../assets/home/user-status/online-light.svg";
 import { SendIcon } from '../../../utilities/Icons/Icons';
-import { faLaughBeam } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ChatTimeStampService from "../../../utilities/chat-time-stamp.service";
-import './ChatRoom.css'
 import DefaultChatScreen from '../../../utilities/DefaultChatScreen/DefaultChatScreen';
 import { Message } from '../../../../models/ConversationModels/Message.model';
-import { addNewMessage } from '../../../redux/actions/conversations.actions';
+import { addNewMessage, updateAllConversations } from '../../../redux/actions/conversations.actions';
+import SocketController from '../../../../services/api-services/sockets'
+import './ChatRoom.css'
 
 const ChatRoom = (props: any) => {
 
@@ -36,17 +37,24 @@ const ChatRoom = (props: any) => {
     }
 
     const pushMessage = (messageBody: string) => {
+        /* CREATE MESSAGE INSTANCE */
         let messageDetails: Message = new Message();
         messageDetails.sender = userData.email;
         messageDetails.updated_at = new Date();
         messageDetails.body = messageBody;
         messageDetails.chat_id = allConversations[currentConversationId].chat_id;
 
+        /* SET IF AN INITIAL CONVERSATION MESSAGE */
         if(allConversations[currentConversationId].chat_id === allConversations[currentConversationId].participants[0].email) {
             messageDetails.initial_message_to = allConversations[currentConversationId].participants[0].email;
         }
 
+        SocketController.emitChatMessage(messageDetails);
         dispatch(addNewMessage(messageDetails, allConversations));
+        
+        allConversations[currentConversationId].last_message = messageDetails;
+        allConversations[currentConversationId].updated_at = messageDetails.updated_at;
+        dispatch(updateAllConversations({...allConversations}));
         scrollToBottom();
         setMessageContent("");
         setPopulatedChatBox(false);
