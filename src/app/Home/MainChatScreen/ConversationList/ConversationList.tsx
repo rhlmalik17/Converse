@@ -86,8 +86,9 @@ const ConversationList = () => {
           handleConversationChange(conversation.chat_id);
         } else {
             //Search the conversation and select it
-            if(allConversations[existingConvo[0].chat_id] !== undefined)
-            handleConversationChange(allConversations[existingConvo[0].chat_id]);
+            if(allConversations[existingConvo[0].chat_id]) {
+                handleConversationChange(existingConvo[0].chat_id);
+            }
         }
     }
 
@@ -100,7 +101,7 @@ const ConversationList = () => {
 
             {/* SEARCH CONVERSATION OR PEOPLE */}
             <div className="search__conversations position-relative">
-                <input ref={searchInputRef} value={searchInputState.searchText}  onChange={(event: any) => handleSearchChange(event)} className="search__box" placeholder="Search people using email" />
+                <input ref={searchInputRef} value={searchInputState.searchText}  onChange={(event: any) => handleSearchChange(event)} className="search__box" placeholder="Search people using email or name" />
                 <FontAwesomeIcon
                 onClick={() => dismissSearchText()}
                 className={"dismiss__search__icon" + ((!searchInputState.showDismissIcon) ? " hide__dismiss__icon" : "")}  
@@ -128,9 +129,9 @@ const ConversationList = () => {
                                 <div className="selected__border"></div>
                                 <div className="conversation__card">
 
-                                    <div className="conversation__img position-relative">
-                                        <img className="profile-img" alt="" src={allConversations[chat_id].participants[0].profile_img || defaultProfileImage} />
-                                        <img className="" alt="" />
+                                    <div className="conversation__img"
+                                        style={{ backgroundImage: `url(${allConversations[chat_id].participants[0].profile_img || defaultProfileImage})`, 
+                                                 backgroundSize: (allConversations[chat_id].participants[0].profile_img) ? 'cover': 'auto' }}>
                                     </div>
 
                                     <div className="conversation__details">

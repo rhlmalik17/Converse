@@ -11,6 +11,7 @@ import './MainChatScreen.css'
 import { User } from '../../../models/ConversationModels/User.model'
 import { switchConversation, updateAllConversations } from '../../redux/actions/conversations.actions'
 import { Conversation } from '../../../models/ConversationModels/Conversation.model'
+import { ConversationType } from '../../../models/ConversationModels/ConversationSwitch.model'
 
 const MainChatScreen = () => {
     const { sideBarMode, skeletonLoader, allConversations } = useSelector((state: any) => state);
@@ -38,10 +39,26 @@ const MainChatScreen = () => {
            let userData: User = await httpClient.get(apiUrls["user-info"].route);
            dispatch(setUserData(userData));
 
+           //Fetch all conversations
+           let conversationsList = await httpClient.get(apiUrls["conversations"].route);
+           setAllConversations(conversationsList, userData);
+
            socketHandlers(userData);
         } catch(err: any) {} finally {
             toggleMainScreenSkeleton();
         }
+    }
+
+    const setAllConversations = ({ conversations_list } : any,userData: User) => {
+        if(!conversations_list || !userData || conversations_list.length < 1) return;
+
+        let allConversationsInstance: ConversationType = {...allConversations};
+        for(let conversation of conversations_list) {
+            let newConversation: Conversation = new Conversation(conversation, userData.email);
+            allConversationsInstance[newConversation.chat_id] = newConversation;
+        }
+
+        dispatch(updateAllConversations(allConversationsInstance));
     }
 
     /**

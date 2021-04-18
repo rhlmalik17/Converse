@@ -17,4 +17,5 @@ export const apiUrls: any = {
     "upload-profile-image": { route: "upload-profile-image", "interceptor-options": { loader: true, successToast: true, errorToast: true, token: true }},
     "search-users": { route: "search-users" , "interceptor-options": { errorToast: true, token: true } },
     "initiate-conversation": { route: "initiate-conversation" , "interceptor-options": { loader: true, errorToast: true, token: true } },
+    "conversations": { route: "conversations" , "interceptor-options": { loader: true, errorToast: true, token: true } },
 }
