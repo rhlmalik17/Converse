@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { faLaughBeam } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,17 +8,20 @@ import { SendIcon } from '../../../utilities/Icons/Icons';
 import ChatTimeStampService from "../../../utilities/chat-time-stamp.service";
 import DefaultChatScreen from '../../../utilities/DefaultChatScreen/DefaultChatScreen';
 import { Message } from '../../../../models/ConversationModels/Message.model';
-import { addNewMessage, updateAllConversations } from '../../../redux/actions/conversations.actions';
+import { updateAllConversations } from '../../../redux/actions/conversations.actions';
 import SocketController from '../../../../services/api-services/sockets'
 import './ChatRoom.css'
+import { Subscription } from 'rxjs';
+import chatRoomService, { chatRoomEvents, ChatRoomUpdate } from '../../../../services/app-services/chatroom.service';
 
 const ChatRoom = (props: any) => {
-
     const [populatedChatBox, setPopulatedChatBox] = useState(false);
     const [messageContent, setMessageContent] = useState("");
     const { userData, currentConversationId, allConversations } = useSelector((state: any) => state);
     const chatWindow = useRef(null);
     const dispatch = useDispatch();
+
+    let chatServiceSubscription: Subscription = chatRoomService.chatRoomBroadCaster.subscribe((data: any) => chatRoomServiceHandler(data));
 
     const messageBoxChangeHandler = (event: any) => {
         let messageBody = event.target.value;
@@ -50,12 +53,10 @@ const ChatRoom = (props: any) => {
         }
 
         SocketController.emitChatMessage(messageDetails);
-        dispatch(addNewMessage(messageDetails, allConversations));
-        
+        allConversations[currentConversationId].messages.push(messageDetails);
         allConversations[currentConversationId].last_message = messageDetails;
         allConversations[currentConversationId].updated_at = messageDetails.updated_at;
         dispatch(updateAllConversations({...allConversations}));
-        scrollToBottom();
         setMessageContent("");
         setPopulatedChatBox(false);
     }
@@ -69,6 +70,25 @@ const ChatRoom = (props: any) => {
             }
         }
     }
+
+    const chatRoomServiceHandler = (data: ChatRoomUpdate) => {
+        switch(data.mode){
+            case chatRoomEvents.SCROLL_TO_BOTTOM: 
+            scrollToBottom();
+            break;
+        }
+    }
+
+    useEffect(() => {
+        return () => {
+            if(chatServiceSubscription)
+            chatServiceSubscription.unsubscribe();
+        }
+    }, [chatServiceSubscription]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [allConversations]);
 
     if(Object.keys(allConversations[currentConversationId] || {}).length < 1) {
         //RENDER DEFAULT CHAT SCREEN

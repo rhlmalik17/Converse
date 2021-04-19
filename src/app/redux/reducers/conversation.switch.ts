@@ -18,10 +18,6 @@ export const allConversations = (state: ConversationType = {}, action: any) => {
       case "UPDATE_ALL_CONVERSATIONS":
         return action.allConversations;
 
-      case "ADD_MESSAGE":
-        action.allConversations[action.message.chat_id].messages.push(action.message);
-        return state;
-
       default:
           return state;
     }

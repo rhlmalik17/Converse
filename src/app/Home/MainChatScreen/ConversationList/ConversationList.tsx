@@ -11,7 +11,7 @@ import { InitiateConversationResponse } from "../../../../models/ResponseModels/
 import { apiUrls } from "../../../../services/api-services/api-urls";
 import httpClient from "../../../../services/api-services/http-client";
 import { showSkeletonLoader } from "../../../redux/actions/common.actions";
-import { switchConversation, addNewConversation } from "../../../redux/actions/conversations.actions";
+import { switchConversation, updateAllConversations } from "../../../redux/actions/conversations.actions";
 import { toggleLayout } from "../../../redux/actions/layout.actions";
 import chatTimeStampService from "../../../utilities/chat-time-stamp.service";
 import './ConversationList.css';
@@ -93,7 +93,8 @@ const ConversationList = () => {
     }
 
     const addConversation = (conversation: Conversation) => {
-        dispatch(addNewConversation(conversation, allConversations));
+        allConversations[conversation.chat_id] = conversation;
+        dispatch(updateAllConversations({...allConversations}));
     }
 
     return (

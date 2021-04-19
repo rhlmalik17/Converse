@@ -1,5 +1,6 @@
 import socketIOClient,{ Socket } from "socket.io-client";
 import { environment } from "../../environment";
+import { ConversationType } from "../../models/ConversationModels/ConversationSwitch.model";
 import { Message } from "../../models/ConversationModels/Message.model";
 import toastService from "../app-services/toast-service";
 
@@ -11,10 +12,23 @@ export const SOCKET_CONSTANT_EVENTS = {
 }
 
 class SocketController {  
-    public socket: Socket | undefined;
-    connectSocket(): void {
+    public socket: Socket;
+    private allConversations: ConversationType = {};
+
+    constructor() {
         this.socket = socketIOClient(environment.BASE_URL);
+    }
+
+    connectSocket(): void {
         this.socket.on(SOCKET_CONSTANT_EVENTS.UNKNOWN_ERROR, this.handleUnknownServerSideError);
+    }
+
+    set setAllConversations(allConversations: ConversationType) {
+        this.allConversations = allConversations;
+    }
+
+    get getAllConversations(): ConversationType {
+        return this.allConversations;
     }
 
     /**

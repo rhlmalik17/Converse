@@ -16,7 +16,7 @@ export class Message implements MessageDetails {
     constructor(message_details?: MessageDetails) {
         this.sender = message_details?.sender || "";
         this.chat_id = message_details?.chat_id || "";
-        this.updated_at = message_details?.updated_at || new Date();
+        this.updated_at = new Date(message_details?.updated_at || new Date());
         this.body = message_details?.body || "";
     }
 }

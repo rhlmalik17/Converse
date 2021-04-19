@@ -12,6 +12,7 @@ import { User } from '../../../models/ConversationModels/User.model'
 import { switchConversation, updateAllConversations } from '../../redux/actions/conversations.actions'
 import { Conversation } from '../../../models/ConversationModels/Conversation.model'
 import { ConversationType } from '../../../models/ConversationModels/ConversationSwitch.model'
+import { Message } from '../../../models/ConversationModels/Message.model'
 
 const MainChatScreen = () => {
     const { sideBarMode, skeletonLoader, allConversations } = useSelector((state: any) => state);
@@ -56,6 +57,7 @@ const MainChatScreen = () => {
         for(let conversation of conversations_list) {
             let newConversation: Conversation = new Conversation(conversation, userData.email);
             allConversationsInstance[newConversation.chat_id] = newConversation;
+            SocketController.socket.on(newConversation.chat_id, (data: any) => pushConversationMessage(data, userData));
         }
 
         dispatch(updateAllConversations(allConversationsInstance));
@@ -76,6 +78,15 @@ const MainChatScreen = () => {
         allConversations[conversationToBeUpdated.chat_id] = conversationToBeUpdated;
         dispatch(updateAllConversations({...allConversations}));
         dispatch(switchConversation(conversationToBeUpdated.chat_id));
+    }
+
+    const pushConversationMessage = (messageDetails: any,userData: User) => {
+        let message: Message = new Message(messageDetails);
+        let allConversationsInstance: ConversationType = SocketController.getAllConversations;
+        if(!allConversationsInstance[message.chat_id] || message.sender === userData.email) return;
+
+        allConversationsInstance[message.chat_id].messages.push(message);
+        dispatch(updateAllConversations({...allConversationsInstance}));
     }
 
     useEffect(() => {
