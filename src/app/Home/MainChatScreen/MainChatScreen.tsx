@@ -28,9 +28,7 @@ const MainChatScreen = () => {
         SocketController.connectSocket();
 
         SocketController.socket?.on(SOCKET_CONSTANT_EVENTS.UPDATE_INITIAL_STATE, (data: any) => updateInitialState(data));
-        SocketController.socket?.on(String(userData.email), () => {
-
-        });
+        SocketController.socket?.on(String(userData.email), (data: any) => getNewMessageFromForeignUser(data, userData));
     }
 
     const fetchComponentData =  async () => {
@@ -78,6 +76,20 @@ const MainChatScreen = () => {
         allConversations[conversationToBeUpdated.chat_id] = conversationToBeUpdated;
         dispatch(updateAllConversations({...allConversations}));
         dispatch(switchConversation(conversationToBeUpdated.chat_id));
+    }
+
+    const getNewMessageFromForeignUser = (conversationDetails: any, userData: User) => {
+        let conversation: Conversation = new Conversation(conversationDetails);
+        let allConversationsInstance: ConversationType = SocketController.getAllConversations;
+
+        console.log(conversationDetails, conversation);
+
+        if(!allConversationsInstance[conversation.chat_id]) {
+            allConversationsInstance[conversation.chat_id] = conversation;
+            dispatch(updateAllConversations({...allConversationsInstance}));
+        } else {
+            dispatch(switchConversation(conversation.chat_id));
+        }
     }
 
     const pushConversationMessage = (messageDetails: any,userData: User) => {
