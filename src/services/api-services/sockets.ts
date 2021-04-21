@@ -2,6 +2,7 @@ import socketIOClient,{ Socket } from "socket.io-client";
 import { environment } from "../../environment";
 import { ConversationType } from "../../models/ConversationModels/ConversationSwitch.model";
 import { Message } from "../../models/ConversationModels/Message.model";
+import { User } from "../../models/ConversationModels/User.model";
 import toastService from "../app-services/toast-service";
 
 export const SOCKET_CONSTANT_EVENTS = {
@@ -43,6 +44,22 @@ class SocketController {
       }
 
       this.socket?.emit(SOCKET_CONSTANT_EVENTS.CONVERSATION_MESSAGE, message);
+    }
+
+    /**
+     * @param eventName - Event name to be attached
+     * @param callBack  - Callback function to be invoked for that event 
+     * @param userData  - Optional Parameter for complex callback functions
+     */
+    attachEventToSocket(eventName: string, listener: (...args: any[]) => void, userData?: User): void {
+        if(this.socket.hasListeners(eventName))
+        return;
+
+        if(!userData) {
+            this.socket.on(eventName, listener);
+        } else {
+            this.socket.on(eventName, (data: any) => listener(data, userData));
+        }
     }
 
     handleUnknownServerSideError(error: any): void {

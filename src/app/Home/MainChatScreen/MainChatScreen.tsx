@@ -27,7 +27,7 @@ const MainChatScreen = () => {
         //Attach the socket and it's handlers
         SocketController.connectSocket();
 
-        SocketController.socket?.on(SOCKET_CONSTANT_EVENTS.UPDATE_INITIAL_STATE, (data: any) => updateInitialState(data));
+        SocketController.socket?.on(SOCKET_CONSTANT_EVENTS.UPDATE_INITIAL_STATE, (data: any) => updateInitialState(data, userData));
         SocketController.socket?.on(String(userData.email), (data: any) => getNewMessageFromForeignUser(data, userData));
     }
 
@@ -55,7 +55,7 @@ const MainChatScreen = () => {
         for(let conversation of conversations_list) {
             let newConversation: Conversation = new Conversation(conversation, userData.email);
             allConversationsInstance[newConversation.chat_id] = newConversation;
-            SocketController.socket.on(newConversation.chat_id, (data: any) => pushConversationMessage(data, userData));
+            SocketController.attachEventToSocket(newConversation.chat_id, pushConversationMessage, userData)
         }
 
         dispatch(updateAllConversations(allConversationsInstance));
@@ -64,7 +64,7 @@ const MainChatScreen = () => {
     /**
      * SOCKET HANDLERS
      */
-    const updateInitialState = (conversationDetails: any) => {
+    const updateInitialState = (conversationDetails: any, userData: User) => {
         let initialConversationId = conversationDetails.initial_message_to;
         if(!allConversations[initialConversationId])
         return;
@@ -74,6 +74,7 @@ const MainChatScreen = () => {
 
         conversationToBeUpdated.chat_id = conversationDetails._id;
         allConversations[conversationToBeUpdated.chat_id] = conversationToBeUpdated;
+        SocketController.attachEventToSocket(conversationToBeUpdated.chat_id, pushConversationMessage, userData)
         dispatch(updateAllConversations({...allConversations}));
         dispatch(switchConversation(conversationToBeUpdated.chat_id));
     }
@@ -86,7 +87,9 @@ const MainChatScreen = () => {
 
         if(!allConversationsInstance[conversation.chat_id]) {
             allConversationsInstance[conversation.chat_id] = conversation;
+            SocketController.attachEventToSocket(conversation.chat_id, pushConversationMessage, userData)
             dispatch(updateAllConversations({...allConversationsInstance}));
+            dispatch(switchConversation(conversation.chat_id));
         } else {
             dispatch(switchConversation(conversation.chat_id));
         }
@@ -98,6 +101,8 @@ const MainChatScreen = () => {
         if(!allConversationsInstance[message.chat_id] || message.sender === userData.email) return;
 
         allConversationsInstance[message.chat_id].messages.push(message);
+        allConversationsInstance[message.chat_id].last_message = message;
+        allConversationsInstance[message.chat_id].updated_at = message.updated_at;
         dispatch(updateAllConversations({...allConversationsInstance}));
     }
 
