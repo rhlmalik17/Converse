@@ -1,3 +1,4 @@
+import { PAGINATION_OPTIONS, ScrollPaginator } from "../app.model";
 import { Message } from "./Message.model";
 import { User } from "./User.model";
 
@@ -23,7 +24,8 @@ export class Conversation implements ConversationDetails{
     public last_message: Message;
     public conversation_type: string;
     public updated_at: Date;
-    public messages: Array<Message>
+    public messages: Array<Message>;
+    public scrollPaginator: ScrollPaginator = new ScrollPaginator(PAGINATION_OPTIONS.messages);
     constructor(conversation_details: ConversationDetails, excludeParticipant?: string) {
         this.chat_id = conversation_details.chat_id || (conversation_details._id) || "";
         this.participants = (conversation_details.participants || [])

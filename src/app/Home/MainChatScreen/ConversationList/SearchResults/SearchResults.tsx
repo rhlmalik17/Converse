@@ -7,15 +7,14 @@ import httpClient from '../../../../../services/api-services/http-client';
 import { apiUrls } from '../../../../../services/api-services/api-urls';
 import { SearchUsers } from '../../../../../models/request.models';
 import { AxiosRequestConfig } from 'axios';
-import { SearchResultPaginator } from '../../../../../models/app.model';
+import { PAGINATION_OPTIONS, ScrollPaginator } from '../../../../../models/app.model';
 import { User } from '../../../../../models/ConversationModels/User.model';
 import { useDispatch, useSelector } from 'react-redux';
 import { SkeletonLoader } from '../../../../../models/SkeletonModels/SkeletonLoader.model';
 import { showSkeletonLoader } from '../../../../redux/actions/common.actions';
 
 /* Paginate Records */
-const no_of_records: number = 12;
-let paginationOptions: SearchResultPaginator = new SearchResultPaginator(no_of_records);
+let paginationOptions: ScrollPaginator = new ScrollPaginator(PAGINATION_OPTIONS.search_users);
 
 const SearchResults = (props: any) => {
     const skeletonRows: Array<any> = new Array(4).fill(4);
@@ -72,7 +71,7 @@ const SearchResults = (props: any) => {
 
     useEffect(() => {
         //Reset page number
-        paginationOptions = new SearchResultPaginator(no_of_records);
+        paginationOptions = new ScrollPaginator(PAGINATION_OPTIONS.search_users);
 
         //Search for applicants
         searchApplicants();

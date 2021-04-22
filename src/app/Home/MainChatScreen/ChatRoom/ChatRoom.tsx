@@ -13,11 +13,19 @@ import SocketController from '../../../../services/api-services/sockets'
 import './ChatRoom.css'
 import { Subscription } from 'rxjs';
 import chatRoomService, { chatRoomEvents, ChatRoomUpdate } from '../../../../services/app-services/chatroom.service';
+import { Conversation } from '../../../../models/ConversationModels/Conversation.model';
+import { AxiosRequestConfig } from 'axios';
+import { FetchMessages } from '../../../../models/request.models';
+import { ScrollPaginator } from '../../../../models/app.model';
+import httpClient from '../../../../services/api-services/http-client';
+import { apiUrls } from '../../../../services/api-services/api-urls';
+import { showSkeletonLoader } from '../../../redux/actions/common.actions';
+import MessagesSkeleton from '../../../utilities/MessagesSkeleton/MessagesSkeleton';
 
 const ChatRoom = (props: any) => {
     const [populatedChatBox, setPopulatedChatBox] = useState(false);
     const [messageContent, setMessageContent] = useState("");
-    const { userData, currentConversationId, allConversations } = useSelector((state: any) => state);
+    const { userData, currentConversationId, allConversations, skeletonLoader } = useSelector((state: any) => state);
     const chatWindow = useRef(null);
     const dispatch = useDispatch();
 
@@ -61,6 +69,51 @@ const ChatRoom = (props: any) => {
         setPopulatedChatBox(false);
     }
 
+    const fetchConversationMessages = () => {
+        let paginationOptions: ScrollPaginator = allConversations[currentConversationId].scrollPaginator;
+
+        if(paginationOptions.halt_lazy_loading || paginationOptions['ongoing_request'])
+        return;
+
+        paginationOptions['ongoing_request'] = true;
+        let fetchMessagesPayload: AxiosRequestConfig = { params: new FetchMessages(currentConversationId, paginationOptions.page_number) };
+        
+        if(paginationOptions.page_number === 1)
+        toggleMessagesSkeleton();
+
+        httpClient.get(apiUrls['messages'].route, fetchMessagesPayload)
+        .then((response: any) => {
+            let messagesList: Array<Message> = response.message_list || [];
+            concatConversationMessages(messagesList);
+
+            /* Increment Page for Pagination */
+            paginationOptions.page_number++;
+
+            if(messagesList.length < paginationOptions.per_page_record)
+            paginationOptions.halt_lazy_loading = true;
+        })
+        .finally(() => {
+            if(paginationOptions.page_number === 2)
+            toggleMessagesSkeleton();
+            paginationOptions['ongoing_request'] = false; 
+        });
+    }
+
+    const toggleMessagesSkeleton = () => {
+        skeletonLoader.messagesList = !skeletonLoader.messagesList;
+        dispatch(showSkeletonLoader({...skeletonLoader}));
+    }
+
+    const concatConversationMessages = (messages: Array<Message>) => {
+        if(!messages || messages.length < 1)
+        return;
+
+        let allMessages = ((messages).map((message: any) => new Message(message))).concat(allConversations[currentConversationId].messages);
+        allConversations[currentConversationId].messages = allMessages;
+
+        dispatch(updateAllConversations({...allConversations}));
+    }
+
     const handleKeydown = (event: any) => {
         if(event.keyCode === 13) {
             //Enter key pressed
@@ -87,6 +140,16 @@ const ChatRoom = (props: any) => {
     }, [chatServiceSubscription]);
 
     useEffect(() => {
+        let conversation: Conversation = allConversations[currentConversationId];
+        if(!conversation) return;
+
+        if(conversation.messages.length < 1) {
+            fetchConversationMessages();
+        }
+        //eslint-disable-next-line
+    }, [currentConversationId]);
+
+    useEffect(() => {
         scrollToBottom();
     }, [allConversations]);
 
@@ -109,8 +172,12 @@ const ChatRoom = (props: any) => {
 
             {/* CONVERSATION WINDOW */}
             <div className="conversation__window" ref={chatWindow} id="conversation__window">
-
                 {
+                    (skeletonLoader.messagesList) ? 
+                    (
+                        <MessagesSkeleton />
+                    )
+                    :
                     allConversations[currentConversationId].messages.map((messageDetails: any, index: number) => (
                         <div key={index} className={ "message__container"
                              //Render Conditionally

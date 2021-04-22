@@ -1,4 +1,9 @@
-export class SearchResultPaginator {
+export const PAGINATION_OPTIONS = {
+    search_users: 12,
+    messages: 15
+}
+
+export class ScrollPaginator {
     page_number: number;
     per_page_record: string | number;
     ongoing_request: boolean;

@@ -18,4 +18,5 @@ export const apiUrls: any = {
     "search-users": { route: "search-users" , "interceptor-options": { errorToast: true, token: true } },
     "initiate-conversation": { route: "initiate-conversation" , "interceptor-options": { loader: true, errorToast: true, token: true } },
     "conversations": { route: "conversations" , "interceptor-options": { loader: true, errorToast: true, token: true } },
+    "messages": { route: "messages" , "interceptor-options": { loader: true, errorToast: true, token: true } },
 }
