@@ -83,6 +83,9 @@ const ChatRoom = (props: any) => {
 
         httpClient.get(apiUrls['messages'].route, fetchMessagesPayload)
         .then((response: any) => {
+            if(paginationOptions.page_number === 1)
+            toggleMessagesSkeleton();
+
             let messagesList: Array<Message> = response.message_list || [];
             concatConversationMessages(messagesList);
 
@@ -93,10 +96,20 @@ const ChatRoom = (props: any) => {
             paginationOptions.halt_lazy_loading = true;
         })
         .finally(() => {
-            if(paginationOptions.page_number === 2)
-            toggleMessagesSkeleton();
             paginationOptions['ongoing_request'] = false; 
         });
+    }
+
+    const onChatWindowScroll = (event: React.UIEvent<HTMLElement>) => {
+        let paginationOptions: ScrollPaginator = allConversations[currentConversationId].scrollPaginator;
+        if(paginationOptions.ongoing_request ||
+            paginationOptions.halt_lazy_loading ||
+            !((event.currentTarget.scrollTop) <= 1))
+        return;
+        
+        console.log("invoked")
+        //Scrolled at bottom
+        fetchConversationMessages();
     }
 
     const toggleMessagesSkeleton = () => {
@@ -151,6 +164,7 @@ const ChatRoom = (props: any) => {
 
     useEffect(() => {
         scrollToBottom();
+        //eslint-disable-next-line
     }, [allConversations]);
 
     if(Object.keys(allConversations[currentConversationId] || {}).length < 1) {
@@ -171,7 +185,7 @@ const ChatRoom = (props: any) => {
 
 
             {/* CONVERSATION WINDOW */}
-            <div className="conversation__window" ref={chatWindow} id="conversation__window">
+            <div className="conversation__window" onScroll={(event: any) => onChatWindowScroll(event)} ref={chatWindow} id="conversation__window">
                 {
                     (skeletonLoader.messagesList) ? 
                     (
