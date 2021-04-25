@@ -104,10 +104,9 @@ const ChatRoom = (props: any) => {
         let paginationOptions: ScrollPaginator = allConversations[currentConversationId].scrollPaginator;
         if(paginationOptions.ongoing_request ||
             paginationOptions.halt_lazy_loading ||
-            !((event.currentTarget.scrollTop) <= 1))
+            !((event.currentTarget.scrollTop) <= 200))
         return;
         
-        console.log("invoked")
         //Scrolled at bottom
         fetchConversationMessages();
     }
@@ -163,6 +162,9 @@ const ChatRoom = (props: any) => {
     }, [currentConversationId]);
 
     useEffect(() => {
+        let paginationOptions: ScrollPaginator = allConversations[currentConversationId]?.scrollPaginator;
+
+        if(paginationOptions && paginationOptions.page_number <= 2)
         scrollToBottom();
         //eslint-disable-next-line
     }, [allConversations]);
