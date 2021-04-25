@@ -13,6 +13,20 @@
     margin: 8px 0 0 0;
 }
 
+.conversation__unread__count {
+    background-color: var(--primary-purple);
+    color: var(--white);
+    height: 16px;
+    width: 16px;
+    font-size: 10px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 9px;
+}
+
 .switch__seperator {
     margin: 0 0 0 10px;
 }

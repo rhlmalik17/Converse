@@ -1,8 +1,11 @@
 import { ConversationType } from "../../../models/ConversationModels/ConversationSwitch.model"
+import { Message } from "../../../models/ConversationModels/Message.model";
 import SocketController from '../../../services/api-services/sockets'
 
 //Action to swtich conversation
-export const switchConversation = (conversationId: string) => {
+export const switchConversation = (conversationId: string, allConversations: ConversationType, dispatchCallback: Function) => {
+    allConversations[conversationId].unreadMessages = new Array<Message>();
+    dispatchCallback(updateAllConversations(allConversations));
     return {
         type: "SWITCH_CONVERSATION",
         conversationId

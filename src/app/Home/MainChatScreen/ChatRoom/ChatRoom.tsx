@@ -61,10 +61,9 @@ const ChatRoom = (props: any) => {
         }
 
         SocketController.emitChatMessage(messageDetails);
-        allConversations[currentConversationId].messages.push(messageDetails);
-        allConversations[currentConversationId].last_message = messageDetails;
-        allConversations[currentConversationId].updated_at = messageDetails.updated_at;
-        dispatch(updateAllConversations({...allConversations}));
+
+        chatRoomService.pushMessageToConversation(messageDetails, allConversations, currentConversationId, dispatch, updateAllConversations);
+
         setMessageContent("");
         setPopulatedChatBox(false);
     }

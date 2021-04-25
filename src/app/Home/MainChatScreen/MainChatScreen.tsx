@@ -13,9 +13,10 @@ import { switchConversation, updateAllConversations } from '../../redux/actions/
 import { Conversation } from '../../../models/ConversationModels/Conversation.model'
 import { ConversationType } from '../../../models/ConversationModels/ConversationSwitch.model'
 import { Message } from '../../../models/ConversationModels/Message.model'
+import chatRoomService from '../../../services/app-services/chatroom.service'
 
 const MainChatScreen = () => {
-    const { sideBarMode, skeletonLoader, allConversations } = useSelector((state: any) => state);
+    const { sideBarMode, skeletonLoader, allConversations, currentConversationId } = useSelector((state: any) => state);
     const dispatch = useDispatch();
 
     const toggleMainScreenSkeleton = () => {
@@ -76,22 +77,20 @@ const MainChatScreen = () => {
         allConversations[conversationToBeUpdated.chat_id] = conversationToBeUpdated;
         SocketController.attachEventToSocket(conversationToBeUpdated.chat_id, pushConversationMessage, userData)
         dispatch(updateAllConversations({...allConversations}));
-        dispatch(switchConversation(conversationToBeUpdated.chat_id));
+        dispatch(switchConversation(conversationToBeUpdated.chat_id, allConversations, dispatch));
     }
 
     const getNewMessageFromForeignUser = (conversationDetails: any, userData: User) => {
         let conversation: Conversation = new Conversation(conversationDetails);
         let allConversationsInstance: ConversationType = SocketController.getAllConversations;
 
-        console.log(conversationDetails, conversation);
-
         if(!allConversationsInstance[conversation.chat_id]) {
             allConversationsInstance[conversation.chat_id] = conversation;
             SocketController.attachEventToSocket(conversation.chat_id, pushConversationMessage, userData)
             dispatch(updateAllConversations({...allConversationsInstance}));
-            dispatch(switchConversation(conversation.chat_id));
+            dispatch(switchConversation(conversation.chat_id, allConversations, dispatch));
         } else {
-            dispatch(switchConversation(conversation.chat_id));
+            dispatch(switchConversation(conversation.chat_id, allConversations, dispatch));
         }
     }
 
@@ -99,11 +98,7 @@ const MainChatScreen = () => {
         let message: Message = new Message(messageDetails);
         let allConversationsInstance: ConversationType = SocketController.getAllConversations;
         if(!allConversationsInstance[message.chat_id] || message.sender === userData.email) return;
-
-        allConversationsInstance[message.chat_id].messages.push(message);
-        allConversationsInstance[message.chat_id].last_message = message;
-        allConversationsInstance[message.chat_id].updated_at = message.updated_at;
-        dispatch(updateAllConversations({...allConversationsInstance}));
+        chatRoomService.pushMessageToConversation(message, allConversationsInstance, currentConversationId, dispatch, updateAllConversations);
     }
 
     useEffect(() => {

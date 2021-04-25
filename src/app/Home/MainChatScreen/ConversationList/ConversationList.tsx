@@ -30,7 +30,7 @@ const ConversationList = () => {
 
     //Component handlers
     const handleConversationChange = (chat_id: string) => {
-        dispatch(switchConversation(chat_id));
+        dispatch(switchConversation(chat_id, allConversations, dispatch));
     }
 
     //Search on change handler
@@ -129,6 +129,8 @@ const ConversationList = () => {
                                  className={"conversation" + ((chat_id === currentConversationId) ? " selected__conversation" : "") }>
                                 <div className="selected__border"></div>
                                 <div className="conversation__card">
+                                    
+                                    <div className={'conversation__unread__count ' + ((allConversations[chat_id]?.unreadMessages?.length) ? 'd-flex' : 'd-none')}> {allConversations[chat_id]?.unreadMessages?.length} </div>
 
                                     <div className="conversation__img"
                                         style={{ backgroundImage: `url(${allConversations[chat_id].participants[0].profile_img || defaultProfileImage})`, 
