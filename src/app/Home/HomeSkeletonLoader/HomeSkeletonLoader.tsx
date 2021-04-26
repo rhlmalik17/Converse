@@ -11,9 +11,10 @@ const HomeSkeletonLoader = () => {
     return null;
 
     return (
-        <div className="skeleton__parent d-flex h-100 w-100">
+        <div className={"skeleton__parent d-flex h-100 w-100 " +((showSkeleton.conversationList) ? 'hide__search__skeleton' : '')}>
             <div className="skeleton__conversations">
-                    <Skeleton className="skeleton__search" variant="rect" width={'100%'} height={40} />
+                    <Skeleton 
+                    className={"skeleton__search " + ((showSkeleton.conversationList) ? 'd-none' : 'd-block')} variant="rect" width={'100%'} height={40} />
                    
                 <div className="skeleton__conversation__list mt-5">
                     {

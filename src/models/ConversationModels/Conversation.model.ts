@@ -2,6 +2,7 @@ import { PAGINATION_OPTIONS, ScrollPaginator } from "../app.model";
 import { Message } from "./Message.model";
 import { User } from "./User.model";
 
+/* CONVERSATION TYPES */
 export const CONVERSATION_TYPES = {
     p_to_p: "peer-to-peer",
     p_to_m: "peer-to-many"
@@ -13,11 +14,17 @@ interface ConversationDetails {
     participants: Array<User>;
     last_message?: Message;
     conversation_type: string;
-    updated_at?: Date,
-    messages: Array<Message>
+    updated_at?: Date;
+    messages: Array<Message>;
+    conversationState?: ConversationState;
 }
 
-/* CONVERSATION TYPE */
+/* CONVERSATION USER STATES */
+interface ConversationState {
+    [key: string]: {
+        unread_count: number;
+    }
+}
 export class Conversation implements ConversationDetails{
     public chat_id: string;
     public participants: Array<User>;
@@ -25,7 +32,7 @@ export class Conversation implements ConversationDetails{
     public conversation_type: string;
     public updated_at: Date;
     public messages: Array<Message>;
-    public unreadMessages: Array<Message> = new Array<Message>();
+    public conversationState: ConversationState;
     public scrollPaginator: ScrollPaginator = new ScrollPaginator(PAGINATION_OPTIONS.messages);
     constructor(conversation_details: ConversationDetails, excludeParticipant?: string) {
         this.chat_id = conversation_details.chat_id || (conversation_details._id) || "";
@@ -35,5 +42,6 @@ export class Conversation implements ConversationDetails{
         this.conversation_type = conversation_details.conversation_type || "";
         this.updated_at = new Date(conversation_details.updated_at || new Date());
         this.messages = (conversation_details.messages || []).map((value: any) => new Message(value));
+        this.conversationState = (conversation_details.conversationState) || {};
     }
 }

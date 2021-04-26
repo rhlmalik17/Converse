@@ -6,6 +6,12 @@ interface MessageDetails {
     initial_message_to?: string;
 }
 
+export type UnreadCountUpdate = {
+    chat_id: string;
+    participant: string;
+    unread_count: number;
+}
+
 /* MESSAGE TYPE */
 export class Message implements MessageDetails {
     public sender: string;

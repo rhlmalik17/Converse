@@ -4,6 +4,8 @@
 import { Subject } from "rxjs";
 import { ConversationType } from "../../models/ConversationModels/ConversationSwitch.model";
 import { Message } from "../../models/ConversationModels/Message.model";
+import { User } from "../../models/ConversationModels/User.model";
+import SocketController from '../../services/api-services/sockets'
 
 export const chatRoomEvents = {
     SCROLL_TO_BOTTOM: 'SCROLL_TO_BOTTOM'
@@ -34,12 +36,18 @@ export type ChatRoomUpdate = {
      * @param callBackAction - Redux Action Function
      */
     pushMessageToConversation(message: Message, allConversations: ConversationType, currentConversationId: String,
-                              callBackDispatch: Function, callBackAction: Function): void {
+                              callBackDispatch: Function, callBackAction: Function, userData: User): void {
         allConversations[message.chat_id].last_message = message;
         allConversations[message.chat_id].updated_at = message.updated_at;     
         
         if(currentConversationId !== message.chat_id) {
-            allConversations[message.chat_id].unreadMessages.push(message);
+            if(allConversations[message.chat_id].conversationState[userData.email]) {
+                allConversations[message.chat_id].conversationState[userData.email].unread_count++;
+            } else {
+                allConversations[message.chat_id].conversationState[userData.email] = { unread_count: 1 };
+            }
+
+            SocketController.updateUnreadCount(message.chat_id, allConversations[message.chat_id].conversationState[userData.email].unread_count, userData.email);
         } else {
             allConversations[message.chat_id].messages.push(message);
         }

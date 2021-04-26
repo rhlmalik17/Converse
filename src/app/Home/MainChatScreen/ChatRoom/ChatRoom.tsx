@@ -62,7 +62,7 @@ const ChatRoom = (props: any) => {
 
         SocketController.emitChatMessage(messageDetails);
 
-        chatRoomService.pushMessageToConversation(messageDetails, allConversations, currentConversationId, dispatch, updateAllConversations);
+        chatRoomService.pushMessageToConversation(messageDetails, allConversations, currentConversationId, dispatch, updateAllConversations, userData);
 
         setMessageContent("");
         setPopulatedChatBox(false);
@@ -154,7 +154,9 @@ const ChatRoom = (props: any) => {
         let conversation: Conversation = allConversations[currentConversationId];
         if(!conversation) return;
 
-        if(conversation.messages.length < 1) {
+        if(conversation.messages.length < 1 
+            && conversation.participants.length > 0
+            && conversation.participants[0].email !== conversation.chat_id) {
             fetchConversationMessages();
         }
         //eslint-disable-next-line

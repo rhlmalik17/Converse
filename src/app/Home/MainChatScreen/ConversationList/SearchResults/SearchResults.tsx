@@ -22,8 +22,8 @@ const SearchResults = (props: any) => {
     const skeletonLoader: SkeletonLoader = useSelector((state: any) => state.skeletonLoader); 
     const dispatch = useDispatch();
 
-    const toggleConversationListSkeleton = () => {
-        skeletonLoader.conversationList = !skeletonLoader.conversationList;
+    const toggleConversationListSkeleton = (loaderStatus: boolean) => {
+        skeletonLoader.conversationList = loaderStatus;
         dispatch(showSkeletonLoader({...skeletonLoader}))
     }
 
@@ -34,7 +34,7 @@ const SearchResults = (props: any) => {
         paginationOptions['ongoing_request'] = true;
         let searchApplicantQueryParams: AxiosRequestConfig = { params: new SearchUsers(props.searchText, paginationOptions.page_number) };
         
-        toggleConversationListSkeleton();
+        toggleConversationListSkeleton(true);
         httpClient.get(apiUrls['search-users'].route, searchApplicantQueryParams)
         .then((response: any) => {
             let allResults = response.search_results || [];
@@ -52,7 +52,7 @@ const SearchResults = (props: any) => {
         .catch((reason: any) => {
             setSearchResults([]);
         }).finally(() => {
-            toggleConversationListSkeleton();
+            toggleConversationListSkeleton(false);
             paginationOptions['ongoing_request'] = false; 
         });
     }

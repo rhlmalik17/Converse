@@ -1,10 +1,11 @@
 import { ConversationType } from "../../../models/ConversationModels/ConversationSwitch.model"
-import { Message } from "../../../models/ConversationModels/Message.model";
+import { User } from "../../../models/ConversationModels/User.model";
 import SocketController from '../../../services/api-services/sockets'
 
 //Action to swtich conversation
-export const switchConversation = (conversationId: string, allConversations: ConversationType, dispatchCallback: Function) => {
-    allConversations[conversationId].unreadMessages = new Array<Message>();
+export const switchConversation = (conversationId: string, allConversations: ConversationType, dispatchCallback: Function, userData: User) => {
+    if(allConversations[conversationId] && allConversations[conversationId].conversationState !== undefined)
+    allConversations[conversationId].conversationState[userData.email] = { unread_count: 0 };
     dispatchCallback(updateAllConversations(allConversations));
     return {
         type: "SWITCH_CONVERSATION",

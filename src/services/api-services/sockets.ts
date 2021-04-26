@@ -1,7 +1,7 @@
 import socketIOClient,{ Socket } from "socket.io-client";
 import { environment } from "../../environment";
 import { ConversationType } from "../../models/ConversationModels/ConversationSwitch.model";
-import { Message } from "../../models/ConversationModels/Message.model";
+import { Message, UnreadCountUpdate } from "../../models/ConversationModels/Message.model";
 import { User } from "../../models/ConversationModels/User.model";
 import toastService from "../app-services/toast-service";
 
@@ -9,9 +9,9 @@ export const SOCKET_CONSTANT_EVENTS = {
     INITIAL_MESSAGE: 'INITIAL_MESSAGE',
     CONVERSATION_MESSAGE: 'CONVERSATION_MESSAGE',
     UPDATE_INITIAL_STATE: 'UPDATE_INITIAL_STATE',
-    UNKNOWN_ERROR: 'UNKNOWN_ERROR'
+    UNKNOWN_ERROR: 'UNKNOWN_ERROR',
+    UNREAD_COUNT_UPDATE: 'UNREAD_COUNT_UPDATE'
 }
-
 class SocketController {  
     public socket: Socket;
     private allConversations: ConversationType = {};
@@ -60,6 +60,16 @@ class SocketController {
         } else {
             this.socket.on(eventName, (data: any) => listener(data, userData));
         }
+    }
+
+    /**
+     * Update the unread count of a conversation
+     * @param chatId - Conversation ID to edit the unread count of
+     * @param unreadCount - New Conversation Unread Count
+     */
+    updateUnreadCount(chatId: string, unreadCount: number, sender: string): void {
+        let unreadCountUpdate: UnreadCountUpdate = { chat_id: chatId, unread_count: unreadCount, participant: sender };
+        this.socket.emit(SOCKET_CONSTANT_EVENTS.UNREAD_COUNT_UPDATE, unreadCountUpdate);
     }
 
     handleUnknownServerSideError(error: any): void {

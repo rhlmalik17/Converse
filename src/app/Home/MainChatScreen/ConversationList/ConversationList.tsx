@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineUserDate from "../../../../assets/home/user-status/online-light.svg"
 import { Conversation, CONVERSATION_TYPES } from "../../../../models/ConversationModels/Conversation.model";
+import { ConversationType } from "../../../../models/ConversationModels/ConversationSwitch.model";
 import { User } from "../../../../models/ConversationModels/User.model";
 import { InitiateConversationResponse } from "../../../../models/ResponseModels/InitiateConversationResponse.model";
 import { apiUrls } from "../../../../services/api-services/api-urls";
@@ -30,7 +31,7 @@ const ConversationList = () => {
 
     //Component handlers
     const handleConversationChange = (chat_id: string) => {
-        dispatch(switchConversation(chat_id, allConversations, dispatch));
+        dispatch(switchConversation(chat_id, allConversations, dispatch, userData));
     }
 
     //Search on change handler
@@ -42,8 +43,8 @@ const ConversationList = () => {
         });
     }
 
-    const toggleConversationListSkeleton = () => {
-        skeletonLoader.conversationList = !skeletonLoader.conversationList;
+    const toggleConversationListSkeleton = (loaderStatus: boolean) => {
+        skeletonLoader.conversationList = loaderStatus;
         dispatch(showSkeletonLoader({...skeletonLoader}))
     }
 
@@ -63,12 +64,12 @@ const ConversationList = () => {
         let userInstance: User = new User(searchResult);
         let initiateConversationQuery: AxiosRequestConfig = { params: { participant: userInstance.email } };
 
-        toggleConversationListSkeleton();
+        toggleConversationListSkeleton(true);
         //Initiate the conversation
         httpClient.get(apiUrls["initiate-conversation"].route, initiateConversationQuery)
         .then((result: any) => handleSearchResultClickResponse(result, userInstance))
         .finally(() => { 
-            toggleConversationListSkeleton();
+            toggleConversationListSkeleton(false);
          });
     }
 
@@ -95,6 +96,14 @@ const ConversationList = () => {
     const addConversation = (conversation: Conversation) => {
         allConversations[conversation.chat_id] = conversation;
         dispatch(updateAllConversations({...allConversations}));
+    }
+
+    const getUserUnreadCount = (userData: User, allConversations: ConversationType, conversationId: string): number => {
+        if(allConversations[conversationId]?.conversationState[userData.email]) {
+            return allConversations[conversationId]?.conversationState[userData.email].unread_count;
+        } else {
+            return 0;
+        }
     }
 
     return (
@@ -130,7 +139,7 @@ const ConversationList = () => {
                                 <div className="selected__border"></div>
                                 <div className="conversation__card">
                                     
-                                    <div className={'conversation__unread__count ' + ((allConversations[chat_id]?.unreadMessages?.length) ? 'd-flex' : 'd-none')}> {allConversations[chat_id]?.unreadMessages?.length} </div>
+                                    <div className={'conversation__unread__count ' + ((getUserUnreadCount(userData, allConversations, chat_id)) ? 'd-flex' : 'd-none')}> {getUserUnreadCount(userData, allConversations, chat_id)} </div>
 
                                     <div className="conversation__img"
                                         style={{ backgroundImage: `url(${allConversations[chat_id].participants[0].profile_img || defaultProfileImage})`, 

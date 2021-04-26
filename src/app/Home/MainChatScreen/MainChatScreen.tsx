@@ -77,7 +77,7 @@ const MainChatScreen = () => {
         allConversations[conversationToBeUpdated.chat_id] = conversationToBeUpdated;
         SocketController.attachEventToSocket(conversationToBeUpdated.chat_id, pushConversationMessage, userData)
         dispatch(updateAllConversations({...allConversations}));
-        dispatch(switchConversation(conversationToBeUpdated.chat_id, allConversations, dispatch));
+        dispatch(switchConversation(conversationToBeUpdated.chat_id, allConversations, dispatch, userData));
     }
 
     const getNewMessageFromForeignUser = (conversationDetails: any, userData: User) => {
@@ -88,9 +88,9 @@ const MainChatScreen = () => {
             allConversationsInstance[conversation.chat_id] = conversation;
             SocketController.attachEventToSocket(conversation.chat_id, pushConversationMessage, userData)
             dispatch(updateAllConversations({...allConversationsInstance}));
-            dispatch(switchConversation(conversation.chat_id, allConversations, dispatch));
+            dispatch(switchConversation(conversation.chat_id, allConversations, dispatch, userData));
         } else {
-            dispatch(switchConversation(conversation.chat_id, allConversations, dispatch));
+            dispatch(switchConversation(conversation.chat_id, allConversations, dispatch, userData));
         }
     }
 
@@ -98,7 +98,7 @@ const MainChatScreen = () => {
         let message: Message = new Message(messageDetails);
         let allConversationsInstance: ConversationType = SocketController.getAllConversations;
         if(!allConversationsInstance[message.chat_id] || message.sender === userData.email) return;
-        chatRoomService.pushMessageToConversation(message, allConversationsInstance, currentConversationId, dispatch, updateAllConversations);
+        chatRoomService.pushMessageToConversation(message, allConversationsInstance, currentConversationId, dispatch, updateAllConversations, userData);
     }
 
     useEffect(() => {

@@ -20,3 +20,7 @@
     right: 0;
     z-index: 1;
 }
+
+.hide__search__skeleton {
+    top: 58px;
+}
