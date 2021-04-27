@@ -15,6 +15,7 @@ export const SOCKET_CONSTANT_EVENTS = {
 class SocketController {  
     public socket: Socket;
     private allConversations: ConversationType = {};
+    private currentConversationId: string = "";
 
     constructor() {
         this.socket = socketIOClient(environment.BASE_URL);
@@ -30,6 +31,14 @@ class SocketController {
 
     get getAllConversations(): ConversationType {
         return this.allConversations;
+    }
+
+    set setCurrentConversationId(currentConversationId: string) {
+        this.currentConversationId = currentConversationId;
+    }
+
+    get getCurrentConversationId(): string {
+        return this.currentConversationId;
     }
 
     /**

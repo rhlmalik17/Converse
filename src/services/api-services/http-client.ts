@@ -50,7 +50,7 @@ const AXIOS = () => {
       ToastService.showToast("success", result.message);
     }
 
-    if(result.message === "Unauthorized" && result.code === 406) {
+    if(result.message === "Unauthorized" && result.code === 406 && AuthService.isLoggedIn()) {
       AuthService.logOut();
     }
 
