@@ -52,7 +52,19 @@ export type ChatRoomUpdate = {
             allConversations[message.chat_id].messages.push(message);
         }
 
+        this.playAudioOnMessage(message, userData);
         callBackDispatch(callBackAction({...allConversations}));
+    }
+
+    playAudioOnMessage(message: Message, userData: User): void {
+        let { sender  } = message;
+        let { email } = userData;
+
+        let audioSource = (sender === email) ? "/send-message-sound.mp3" : "/receive-message-sound.mp3";
+
+        let audio = new Audio(audioSource);
+        audio.crossOrigin = 'anonymous';
+        audio.play();
     }
  }
  
