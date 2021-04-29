@@ -10,6 +10,16 @@ const currentConversationId = (state: string = '', action: any) => {
     }
 }
 
+export const isTyping = (state: boolean = false, action: any): boolean => {
+  switch(action.type) {
+    case "SHOW_TYPING_MESSAGE": 
+      return action.isTyping;
+
+    default:
+      return state;
+  }
+}
+
 export const allConversations = (state: ConversationType = {}, action: any) => {
     switch (action.type) {
       case "ADD_NEW_CONVERSATION":

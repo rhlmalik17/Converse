@@ -9,8 +9,8 @@ import ConversationList from './ConversationList/ConversationList'
 import SocketController, { SOCKET_CONSTANT_EVENTS } from '../../../services/api-services/sockets'
 import './MainChatScreen.css'
 import { User } from '../../../models/ConversationModels/User.model'
-import { switchConversation, updateAllConversations } from '../../redux/actions/conversations.actions'
-import { Conversation } from '../../../models/ConversationModels/Conversation.model'
+import { showTypingMessage, switchConversation, updateAllConversations } from '../../redux/actions/conversations.actions'
+import { Conversation, ConversationEvents, ConversationTypingEvent } from '../../../models/ConversationModels/Conversation.model'
 import { ConversationType } from '../../../models/ConversationModels/ConversationSwitch.model'
 import { Message } from '../../../models/ConversationModels/Message.model'
 import chatRoomService from '../../../services/app-services/chatroom.service'
@@ -56,7 +56,7 @@ const MainChatScreen = () => {
         for(let conversation of conversations_list) {
             let newConversation: Conversation = new Conversation(conversation, userData.email);
             allConversationsInstance[newConversation.chat_id] = newConversation;
-            SocketController.attachEventToSocket(newConversation.chat_id, pushConversationMessage, userData)
+            SocketController.attachEventToSocket(newConversation.chat_id, handleConversationEvents, userData)
         }
 
         dispatch(updateAllConversations(allConversationsInstance));
@@ -76,7 +76,7 @@ const MainChatScreen = () => {
 
         conversationToBeUpdated.chat_id = conversationDetails._id;
         allConversationsInstance[conversationToBeUpdated.chat_id] = conversationToBeUpdated;
-        SocketController.attachEventToSocket(conversationToBeUpdated.chat_id, pushConversationMessage, userData)
+        SocketController.attachEventToSocket(conversationToBeUpdated.chat_id, handleConversationEvents, userData)
         dispatch(updateAllConversations({...allConversationsInstance}));
         dispatch(switchConversation(conversationToBeUpdated.chat_id, allConversationsInstance, dispatch, userData));
     }
@@ -95,9 +95,36 @@ const MainChatScreen = () => {
             
 
             allConversationsInstance[conversation.chat_id] = conversation;
-            SocketController.attachEventToSocket(conversation.chat_id, pushConversationMessage, userData)
+            SocketController.attachEventToSocket(conversation.chat_id, handleConversationEvents, userData)
             dispatch(updateAllConversations({...allConversationsInstance}));
         } 
+    }
+
+    const handleConversationEvents = (conversationEvent: ConversationEvents, userData: User) => {
+        switch (conversationEvent.eventType) {
+            case 'CONVERSATION_MESSAGE':
+                pushConversationMessage(conversationEvent.eventData, userData);
+                break;
+        
+            case 'TYPING_STATE':
+                handleTypingState(conversationEvent.eventData as ConversationTypingEvent, userData);
+                break;
+        }
+    }
+
+    const handleTypingState = (typingEvent: ConversationTypingEvent, userData: User) => {
+        if(typingEvent.sender.email === userData.email
+           || SocketController.getCurrentConversationId !== typingEvent.conversationId)
+           return;
+        
+        chatRoomService.isTypingMessageQueue.push(0);
+        dispatch(showTypingMessage(true));
+        setTimeout(() => { 
+            chatRoomService.isTypingMessageQueue.pop();
+            if(chatRoomService.isTypingMessageQueue.length < 1) {
+                dispatch(showTypingMessage(false));
+            }   
+         }, 500);
     }
 
     const pushConversationMessage = (messageDetails: any,userData: User) => {

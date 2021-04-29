@@ -10,7 +10,8 @@ export const SOCKET_CONSTANT_EVENTS = {
     CONVERSATION_MESSAGE: 'CONVERSATION_MESSAGE',
     UPDATE_INITIAL_STATE: 'UPDATE_INITIAL_STATE',
     UNKNOWN_ERROR: 'UNKNOWN_ERROR',
-    UNREAD_COUNT_UPDATE: 'UNREAD_COUNT_UPDATE'
+    UNREAD_COUNT_UPDATE: 'UNREAD_COUNT_UPDATE',
+    IS_TYPING: 'IS_TYPING'
 }
 class SocketController {  
     public socket: Socket;
@@ -79,6 +80,15 @@ class SocketController {
     updateUnreadCount(chatId: string, unreadCount: number, sender: string): void {
         let unreadCountUpdate: UnreadCountUpdate = { chat_id: chatId, unread_count: unreadCount, participant: sender };
         this.socket.emit(SOCKET_CONSTANT_EVENTS.UNREAD_COUNT_UPDATE, unreadCountUpdate);
+    }
+
+    /**
+     * 
+     * @param conversationId - Conversation ID the signal is intended for
+     * @param userData - Sender's Info
+     */
+    sendTypingSignal(conversationId: string, sender: User): void {
+        this.socket.emit(SOCKET_CONSTANT_EVENTS.IS_TYPING, { conversationId, sender });
     }
 
     handleUnknownServerSideError(error: any): void {

@@ -21,11 +21,12 @@ import httpClient from '../../../../services/api-services/http-client';
 import { apiUrls } from '../../../../services/api-services/api-urls';
 import { showSkeletonLoader } from '../../../redux/actions/common.actions';
 import MessagesSkeleton from '../../../utilities/MessagesSkeleton/MessagesSkeleton';
+import IsTypingMessage from './IsTypingMessage/IsTypingMessage';
 
 const ChatRoom = (props: any) => {
     const [populatedChatBox, setPopulatedChatBox] = useState(false);
     const [messageContent, setMessageContent] = useState("");
-    const { userData, currentConversationId, allConversations, skeletonLoader } = useSelector((state: any) => state);
+    const { userData, currentConversationId, allConversations, skeletonLoader, isTyping } = useSelector((state: any) => state);
     const chatWindow = useRef(null);
     const dispatch = useDispatch();
 
@@ -36,6 +37,8 @@ const ChatRoom = (props: any) => {
 
         setPopulatedChatBox((String(messageBody).length > 0));
         setMessageContent(messageBody);
+
+        SocketController.sendTypingSignal(currentConversationId, userData);
     }
 
     const scrollToBottom = () => {
@@ -219,9 +222,9 @@ const ChatRoom = (props: any) => {
             </div>
 
             {/* DYNAMIC is Typing MESSAGE */}
-            {/* <div className="is__typing__container">
-                <IsTypingMessage username={currentConversationDetails.participants[0].first_name + " " + currentConversationDetails.participants[0].last_name} />
-            </div> */}
+            <div className={"is__typing__container "+((!isTyping) ? " d-none" : "")}>
+                <IsTypingMessage username={allConversations[currentConversationId].participants[0].first_name + " " + allConversations[currentConversationId].participants[0].last_name} />
+            </div>
 
             {/* CHATBOX INPUT */}
             <div className="chatbox__input position-relative">

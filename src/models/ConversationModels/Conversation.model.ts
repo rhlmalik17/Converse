@@ -25,6 +25,28 @@ interface ConversationState {
         unread_count: number;
     }
 }
+
+/* CONVERSATION EVENTS */
+export class ConversationEvents {
+    public eventType: 'CONVERSATION_MESSAGE' | 'TYPING_STATE';
+    public eventData: ConversationTypingEvent | Message;
+    constructor(eventType: 'CONVERSATION_MESSAGE' | 'TYPING_STATE',
+                eventData: ConversationTypingEvent | Message) {
+        this.eventType = eventType;
+        this.eventData = eventData;
+    }
+}
+
+/* CONVERSATION TYPING EVENT */
+export class ConversationTypingEvent {
+    public conversationId: string;
+    public sender: User;
+    constructor(eventDetails: { conversationId: string, sender: User }) {
+        this.conversationId = eventDetails?.conversationId || "";
+        this.sender = new User(eventDetails?.sender || {});
+    }
+}
+
 export class Conversation implements ConversationDetails{
     public chat_id: string;
     public participants: Array<User>;

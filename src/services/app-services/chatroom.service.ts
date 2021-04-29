@@ -17,6 +17,7 @@ export type ChatRoomUpdate = {
 }
 
  class ChatRoomService  {
+    public isTypingMessageQueue: Array<number> = new Array<number>();
     public chatRoomBroadCaster: Subject<ChatRoomUpdate> = new Subject<ChatRoomUpdate>();
 
     /**
@@ -52,11 +53,13 @@ export type ChatRoomUpdate = {
             allConversations[message.chat_id].messages.push(message);
         }
 
-        this.playAudioOnMessage(message, userData);
+        this.playAudioOnMessage(message, userData, currentConversationId);
         callBackDispatch(callBackAction({...allConversations}));
     }
 
-    playAudioOnMessage(message: Message, userData: User): void {
+    playAudioOnMessage(message: Message, userData: User,currentConversationId: String): void {
+        if(message.chat_id !== currentConversationId) return;
+
         let { sender  } = message;
         let { email } = userData;
 
