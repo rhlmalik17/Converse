@@ -4,12 +4,13 @@ import { faLaughBeam } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineIcon from "../../../../assets/home/user-status/online-light.svg";
+import offLineIcon from "../../../../assets/home/user-status/offline-light.svg";
 import { SendIcon } from '../../../utilities/Icons/Icons';
 import ChatTimeStampService from "../../../utilities/chat-time-stamp.service";
 import DefaultChatScreen from '../../../utilities/DefaultChatScreen/DefaultChatScreen';
 import { Message } from '../../../../models/ConversationModels/Message.model';
 import { updateAllConversations } from '../../../redux/actions/conversations.actions';
-import SocketController from '../../../../services/api-services/sockets'
+import SocketController, { SOCKET_CONSTANT_EVENTS } from '../../../../services/api-services/sockets'
 import './ChatRoom.css'
 import { Subscription } from 'rxjs';
 import chatRoomService, { chatRoomEvents, ChatRoomUpdate } from '../../../../services/app-services/chatroom.service';
@@ -22,13 +23,16 @@ import { apiUrls } from '../../../../services/api-services/api-urls';
 import { showSkeletonLoader } from '../../../redux/actions/common.actions';
 import MessagesSkeleton from '../../../utilities/MessagesSkeleton/MessagesSkeleton';
 import IsTypingMessage from './IsTypingMessage/IsTypingMessage';
+import { User, UserActiveStatus } from '../../../../models/ConversationModels/User.model';
 
 const ChatRoom = (props: any) => {
     const [populatedChatBox, setPopulatedChatBox] = useState(false);
     const [messageContent, setMessageContent] = useState("");
+    const [isUserOnline, setIsUserOnline] = useState<boolean>(false);
     const { userData, currentConversationId, allConversations, skeletonLoader, isTyping } = useSelector((state: any) => state);
     const chatWindow = useRef(null);
     const dispatch = useDispatch();
+
 
     let chatServiceSubscription: Subscription = chatRoomService.chatRoomBroadCaster.subscribe((data: any) => chatRoomServiceHandler(data));
 
@@ -38,6 +42,7 @@ const ChatRoom = (props: any) => {
         setPopulatedChatBox((String(messageBody).length > 0));
         setMessageContent(messageBody);
 
+        if(!chatRoomService.isInitialConversation(allConversations, currentConversationId))
         SocketController.sendTypingSignal(currentConversationId, userData);
     }
 
@@ -59,8 +64,8 @@ const ChatRoom = (props: any) => {
         messageDetails.chat_id = allConversations[currentConversationId].chat_id;
 
         /* SET IF AN INITIAL CONVERSATION MESSAGE */
-        if(allConversations[currentConversationId].chat_id === allConversations[currentConversationId].participants[0].email) {
-            messageDetails.initial_message_to = allConversations[currentConversationId].participants[0].email;
+        if(allConversations[currentConversationId].chat_id === allConversations[currentConversationId].participants[0]?.email) {
+            messageDetails.initial_message_to = allConversations[currentConversationId].participants[0]?.email;
         }
 
         SocketController.emitChatMessage(messageDetails);
@@ -146,6 +151,24 @@ const ChatRoom = (props: any) => {
         }
     }
 
+    const handleUserStatus = (userStatus: UserActiveStatus) => {
+        let conversation: Conversation = SocketController.getAllConversations[SocketController.getCurrentConversationId];
+        console.log(userStatus, conversation);
+        if(!conversation) return;
+
+        let [participant]: Array<User> = conversation.participants;
+        if(participant.email !== userStatus.userEmail) return;
+
+        setIsUserOnline(userStatus?.isUserActive || false);
+    }
+
+    const getUserActiveStatus = () => {
+        SocketController.attachEventToSocket(SOCKET_CONSTANT_EVENTS.GET_USER_STATUS, handleUserStatus);
+        if (!currentConversationId || !(allConversations[currentConversationId]?.participants?.length > 0)) return;
+        let participant: User = allConversations[currentConversationId]?.participants[0];
+        SocketController.socket.emit(SOCKET_CONSTANT_EVENTS.GET_USER_STATUS, { userEmail: participant.email });
+    }
+
     useEffect(() => {
         return () => {
             if(chatServiceSubscription)
@@ -154,6 +177,8 @@ const ChatRoom = (props: any) => {
     }, [chatServiceSubscription]);
 
     useEffect(() => {
+        setIsUserOnline(false);
+        getUserActiveStatus();
         let conversation: Conversation = allConversations[currentConversationId];
         if(!conversation) return;
 
@@ -185,8 +210,8 @@ const ChatRoom = (props: any) => {
         <div className="chat__room__container">
             {/* CONVERSATION TITLE */}
             <div className="chat__title">
-                <span>{`${allConversations[currentConversationId].participants[0].first_name} ${allConversations[currentConversationId].participants[0].last_name}`}</span>
-                <img src={onlineIcon} alt=""/>
+                <span>{`${allConversations[currentConversationId].participants[0]?.first_name} ${allConversations[currentConversationId].participants[0]?.last_name}`}</span>
+                <img src={ ((isUserOnline) ? onlineIcon : offLineIcon) } alt=""/>
             </div>
 
 
@@ -223,7 +248,7 @@ const ChatRoom = (props: any) => {
 
             {/* DYNAMIC is Typing MESSAGE */}
             <div className={"is__typing__container "+((!isTyping) ? " d-none" : "")}>
-                <IsTypingMessage username={allConversations[currentConversationId].participants[0].first_name + " " + allConversations[currentConversationId].participants[0].last_name} />
+                <IsTypingMessage username={allConversations[currentConversationId].participants[0]?.first_name + " " + allConversations[currentConversationId].participants[0]?.last_name} />
             </div>
 
             {/* CHATBOX INPUT */}
@@ -239,7 +264,7 @@ const ChatRoom = (props: any) => {
                        onChange={(event: any) => messageBoxChangeHandler(event)}
 
                        //Dynamic placeholder
-                       placeholder={`Message ${allConversations[currentConversationId].participants[0].first_name}`} type="text"/>
+                       placeholder={`Message ${allConversations[currentConversationId].participants[0]?.first_name}`} type="text"/>
 
                 <div className="chat__box__option">
                     <button onClick={() => pushMessage(messageContent)} className="send__btn"  disabled={!populatedChatBox}>

@@ -11,18 +11,17 @@ export const SOCKET_CONSTANT_EVENTS = {
     UPDATE_INITIAL_STATE: 'UPDATE_INITIAL_STATE',
     UNKNOWN_ERROR: 'UNKNOWN_ERROR',
     UNREAD_COUNT_UPDATE: 'UNREAD_COUNT_UPDATE',
-    IS_TYPING: 'IS_TYPING'
+    IS_TYPING: 'IS_TYPING',
+    GET_USER_STATUS: 'GET_USER_STATUS'
 }
 class SocketController {  
-    public socket: Socket;
+    public socket!: Socket;
+    public userData: User = new User();
     private allConversations: ConversationType = {};
     private currentConversationId: string = "";
 
-    constructor() {
-        this.socket = socketIOClient(environment.BASE_URL);
-    }
-
-    connectSocket(): void {
+    connectSocket(userData: User): void {
+        this.socket = socketIOClient(environment.BASE_URL, { query: { userEmail: userData.email }});
         this.socket.on(SOCKET_CONSTANT_EVENTS.UNKNOWN_ERROR, this.handleUnknownServerSideError);
     }
 
@@ -62,7 +61,7 @@ class SocketController {
      * @param userData  - Optional Parameter for complex callback functions
      */
     attachEventToSocket(eventName: string, listener: (...args: any[]) => void, userData?: User): void {
-        if(this.socket.hasListeners(eventName))
+        if(!this.socket || this.socket.hasListeners(eventName))
         return;
 
         if(!userData) {
@@ -89,6 +88,14 @@ class SocketController {
      */
     sendTypingSignal(conversationId: string, sender: User): void {
         this.socket.emit(SOCKET_CONSTANT_EVENTS.IS_TYPING, { conversationId, sender });
+    }
+
+    disconnectSocket = () => {
+        this.socket.disconnect();
+        this.allConversations = {};
+        this.userData = new User();
+        this.currentConversationId = "";
+        console.log(this.socket)
     }
 
     handleUnknownServerSideError(error: any): void {

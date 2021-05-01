@@ -26,7 +26,7 @@ const MainChatScreen = () => {
 
     const socketHandlers = (userData: User) => {
         //Attach the socket and it's handlers
-        SocketController.connectSocket();
+        SocketController.connectSocket(userData);
 
         SocketController.socket?.on(SOCKET_CONSTANT_EVENTS.UPDATE_INITIAL_STATE, (data: any) => updateInitialState(data, userData));
         SocketController.socket?.on(String(userData.email), (data: any) => getNewMessageFromForeignUser(data, userData));
@@ -38,12 +38,14 @@ const MainChatScreen = () => {
            //Fetch user data
            let userData: User = await httpClient.get(apiUrls["user-info"].route);
            dispatch(setUserData(userData));
+           SocketController.userData = userData;
+
+           //Connect Socket
+           socketHandlers(userData);
 
            //Fetch all conversations
            let conversationsList = await httpClient.get(apiUrls["conversations"].route);
            setAllConversations(conversationsList, userData);
-
-           socketHandlers(userData);
         } catch(err: any) {} finally {
             toggleMainScreenSkeleton();
         }
@@ -85,15 +87,11 @@ const MainChatScreen = () => {
         let conversation: Conversation = new Conversation(conversationDetails);
         let allConversationsInstance: ConversationType = SocketController.getAllConversations;
 
-        if(!allConversationsInstance[conversation.chat_id]) {
-
-            if(conversation.participants.length > 0) {
+        if(!allConversationsInstance[conversation.chat_id] && conversation.participants.length > 0) {
                 conversation.conversationState = {
                     [userData.email] : { unread_count : 1 }
                 }
-            }
-            
-
+                
             allConversationsInstance[conversation.chat_id] = conversation;
             SocketController.attachEventToSocket(conversation.chat_id, handleConversationEvents, userData)
             dispatch(updateAllConversations({...allConversationsInstance}));

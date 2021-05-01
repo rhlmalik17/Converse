@@ -6,6 +6,7 @@ import { Subject, Observable } from "rxjs";
 import SignIn_Route from '../../routes/Authentication/SignIn';
 import LoaderService from "../app-services/LoadingBar/loader-service";
 import ToastService from "../app-services/toast-service";
+import SocketController from '../api-services/sockets'
 
 class AuthenticationService  {
     private authGuard: Subject<any> = new Subject<any>();
@@ -32,6 +33,8 @@ class AuthenticationService  {
 
         //Broadcast to route out of the application
         this.authGuard.next({ action: "USER_LOGOUT", route: SignIn_Route.routeSignIn });
+
+        SocketController.disconnectSocket();
 
         //Show loader and toast
         LoaderService.complete();

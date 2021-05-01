@@ -142,16 +142,16 @@ const ConversationList = () => {
                                     <div className={'conversation__unread__count ' + ((getUserUnreadCount(userData, allConversations, chat_id)) ? 'd-flex' : 'd-none')}> {getUserUnreadCount(userData, allConversations, chat_id)} </div>
 
                                     <div className="conversation__img"
-                                        style={{ backgroundImage: `url(${allConversations[chat_id].participants[0].profile_img || defaultProfileImage})`, 
-                                                 backgroundSize: (allConversations[chat_id].participants[0].profile_img) ? 'cover': 'auto' }}>
+                                        style={{ backgroundImage: `url(${allConversations[chat_id].participants[0]?.profile_img || defaultProfileImage})`, 
+                                                 backgroundSize: (allConversations[chat_id].participants[0]?.profile_img) ? 'cover': 'auto' }}>
                                     </div>
 
                                     <div className="conversation__details">
                                         <div className="conversation__title">
-                                            <span>{allConversations[chat_id].participants[0].first_name + " " + allConversations[chat_id].participants[0].last_name}</span>
+                                            <span>{allConversations[chat_id].participants[0]?.first_name + " " + allConversations[chat_id].participants[0]?.last_name}</span>
                                         </div>
                                         <div className="conversation__last__message">
-                                            <span className="conversation__message">{allConversations[chat_id].last_message.body || allConversations[chat_id].participants[0].email}</span>
+                                            <span className="conversation__message">{allConversations[chat_id].last_message.body || allConversations[chat_id].participants[0]?.email}</span>
                                             <span className="conversation__timestamp">
                                                 {chatTimeStampService.getChatMessageTimeStamp(allConversations[chat_id].updated_at)}
                                             </span>

@@ -69,6 +69,12 @@ export type ChatRoomUpdate = {
         audio.crossOrigin = 'anonymous';
         audio.play();
     }
+
+    isInitialConversation(allConversations: ConversationType, currentConversationId: string) {
+        if(!allConversations || !allConversations[currentConversationId]) return true;
+        return (allConversations[currentConversationId].participants[0]?.email 
+                === currentConversationId);
+    }
  }
  
  let chatRoomService = new ChatRoomService();
