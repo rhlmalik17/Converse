@@ -177,6 +177,10 @@ const ChatRoom = (props: any) => {
     }, [chatServiceSubscription]);
 
     useEffect(() => {
+        let paginationOptions: ScrollPaginator = allConversations[currentConversationId]?.scrollPaginator;
+        if(paginationOptions && paginationOptions.page_number >= 2)
+        scrollToBottom();
+
         setIsUserOnline(false);
         getUserActiveStatus();
         let conversation: Conversation = allConversations[currentConversationId];
@@ -193,7 +197,7 @@ const ChatRoom = (props: any) => {
     useEffect(() => {
         let paginationOptions: ScrollPaginator = allConversations[currentConversationId]?.scrollPaginator;
 
-        if(paginationOptions && paginationOptions.page_number <= 2)
+        if(paginationOptions && paginationOptions.page_number >= 2)
         scrollToBottom();
         //eslint-disable-next-line
     }, [allConversations]);
