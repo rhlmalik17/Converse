@@ -41,12 +41,16 @@ const SearchResults = (props: any) => {
             let results = (paginationOptions.page_number > 1) ? 
                           searchResults.concat(allResults) : allResults;
 
+            console.log(paginationOptions.page_number, allResults, results);
+
             /* Increment Page for Pagination */
-            paginationOptions.page_number++;
             setSearchResults(results.map((user: any) => new User(user)));
 
-            if(allResults.length < paginationOptions.per_page_record)
-            paginationOptions.halt_lazy_loading = true;
+            if(allResults.length < paginationOptions.per_page_record) {
+                paginationOptions.halt_lazy_loading = true;
+            } else {
+                paginationOptions.page_number++;
+            }
         })
         /*Handle Error and stop loading*/
         .catch((reason: any) => {
@@ -70,6 +74,9 @@ const SearchResults = (props: any) => {
     }
 
     useEffect(() => {
+        //Reset search results
+        setSearchResults([]);
+
         //Reset page number
         paginationOptions = new ScrollPaginator(PAGINATION_OPTIONS.search_users);
 
