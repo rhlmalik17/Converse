@@ -138,6 +138,13 @@
     align-items: center;
     justify-content: center;
     margin: 35px 15px 0 0;
+    overflow: hidden;
+}
+
+.user__avatar__container .online__status__dot {
+    position: absolute;
+    bottom: 0px;
+    right: 9px;
 }
 
 .user__avatar img {

@@ -232,9 +232,13 @@ const ChatRoom = (props: any) => {
                              //Render Conditionally
                             + ((messageDetails.sender === userData.email) ? " self__message" : "") }>
                             
-                            <div className={"user__avatar " + ((messageDetails.sender !== userData.email) ? " d-none" : "")}>
-                                <img src={defaultProfileImage} alt="" />
+                            <div className={"user__avatar__container position-relative "  + ((messageDetails.sender !== userData.email) ? " d-none" : "")}>
+                                <div className={"user__avatar "}>
+                                    <img src={(userData && userData.profile_img) || defaultProfileImage} alt="" />
+                                </div>
+                                <img className="online__status__dot" alt="" src={onlineIcon} ></img>
                             </div>
+                            
                             
                             <div className="message__body position-relative">
                               <div className="message__timestamp">

@@ -1,7 +1,7 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AxiosRequestConfig } from "axios";
-import  { useRef, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineUserDate from "../../../../assets/home/user-status/online-light.svg"
@@ -25,6 +25,7 @@ const ConversationList = () => {
     
     //Component states
     const [searchInputState, setSearchInputState] = useState({ showDismissIcon: false, searchText: "" });
+    const [conversationListKeys, setConversationListKeys] = useState<Array<string>>([]);
     const { userData, currentConversationId, skeletonLoader, allConversations } = useSelector((state: any) => state);
     const searchInputRef = useRef(null);
     const dispatch = useDispatch();
@@ -106,6 +107,12 @@ const ConversationList = () => {
         }
     }
 
+    /* SORT THE CONVERSATIONS ARRAY ON CONVERSATION CHANGE */
+    useEffect(() => {
+        let allConversationKeys = chatTimeStampService.sortConversationListUsingTimeStamp(allConversations);
+        setConversationListKeys(allConversationKeys);
+    }, [allConversations])
+
     return (
         <div className="conversation__list__container">
 
@@ -133,7 +140,7 @@ const ConversationList = () => {
                 {/* SELECTED CONVERSATIONS */}
                 <div className="conversations__container">
                     {
-                        Object.keys(allConversations).map((chat_id: string, index: number) => (
+                        conversationListKeys.map((chat_id: string, index: number) => (
                             <div onClick={() => handleConversationChange(chat_id)} key={index} 
                                  className={"conversation" + ((chat_id === currentConversationId) ? " selected__conversation" : "") }>
                                 <div className="selected__border"></div>
@@ -142,16 +149,16 @@ const ConversationList = () => {
                                     <div className={'conversation__unread__count ' + ((getUserUnreadCount(userData, allConversations, chat_id)) ? 'd-flex' : 'd-none')}> {getUserUnreadCount(userData, allConversations, chat_id)} </div>
 
                                     <div className="conversation__img"
-                                        style={{ backgroundImage: `url(${allConversations[chat_id].participants[0]?.profile_img || defaultProfileImage})`, 
-                                                 backgroundSize: (allConversations[chat_id].participants[0]?.profile_img) ? 'cover': 'auto' }}>
+                                        style={{ backgroundImage: `url(${allConversations[chat_id]?.participants[0]?.profile_img || defaultProfileImage})`, 
+                                                 backgroundSize: (allConversations[chat_id]?.participants[0]?.profile_img) ? 'cover': 'auto' }}>
                                     </div>
 
                                     <div className="conversation__details">
                                         <div className="conversation__title">
-                                            <span>{allConversations[chat_id].participants[0]?.first_name + " " + allConversations[chat_id].participants[0]?.last_name}</span>
+                                            <span>{allConversations[chat_id]?.participants[0]?.first_name + " " + allConversations[chat_id]?.participants[0]?.last_name}</span>
                                         </div>
                                         <div className="conversation__last__message">
-                                            <span className="conversation__message">{allConversations[chat_id].last_message.body || allConversations[chat_id].participants[0]?.email}</span>
+                                            <span className="conversation__message">{allConversations[chat_id].last_message.body || allConversations[chat_id]?.participants[0]?.email}</span>
                                             <span className="conversation__timestamp">
                                                 {chatTimeStampService.getChatMessageTimeStamp(allConversations[chat_id].updated_at)}
                                             </span>
