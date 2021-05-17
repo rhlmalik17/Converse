@@ -70,6 +70,19 @@ export type ChatRoomUpdate = {
         audio.play();
     }
 
+    selfMessageMargin(messages: Array<Message>, index: number): boolean {
+        if(!messages || index === undefined) return false;
+
+        let previousIndex = (index - 1), nextIndex = (index + 1),
+            previousMessage = messages[index - 1], currentMessage = messages[index],
+            nextMessage = messages[index + 1];
+        if(previousIndex < 0 || nextIndex >= messages.length) return true;
+
+        console.log(previousMessage.sender === currentMessage.sender || currentMessage.sender === nextMessage.sender)
+
+        return previousMessage.sender === currentMessage.sender || currentMessage.sender === nextMessage.sender;
+    }
+
     isInitialConversation(allConversations: ConversationType, currentConversationId: string) {
         if(!allConversations || !allConversations[currentConversationId]) return true;
         return (allConversations[currentConversationId].participants[0]?.email 

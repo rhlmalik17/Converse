@@ -1,4 +1,5 @@
 import { ConversationType } from "../../models/ConversationModels/ConversationSwitch.model";
+import { Message } from "../../models/ConversationModels/Message.model";
 
 class ChatTimeStampService {
     sameDay(dateOne: Date, dateTwo: Date): boolean {
@@ -35,6 +36,22 @@ class ChatTimeStampService {
             return messageDate.getDate() + "/" + ("0" + (messageDate.getMonth()+1)).slice(-2) 
                    + "/"+ messageDate.getFullYear() 
         }
+    }
+
+    showSegregator(messages: Array<Message>, index: number): boolean {
+        if(!messages || index === undefined || index < 1 || index >= messages.length) return false;
+        return !this.sameDay(new Date(messages[index - 1].updated_at),
+                    new Date(messages[index].updated_at));
+    }
+
+    invalidTimeStamp(messages: Array<Message>, index: number): boolean {
+        if(!messages || index === undefined) return false;
+
+        let previousIndex = (index - 1), previousMessage = messages[index - 1], currentMessage = messages[index];
+        if(previousIndex < 0) return false;
+
+        return (this.getChatMessageTimeStamp(previousMessage.updated_at)
+            === this.getChatMessageTimeStamp(currentMessage.updated_at)) && previousMessage.sender === currentMessage.sender;
     }
 
     dateTimeStamp(date: Date): string {

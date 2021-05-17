@@ -227,27 +227,43 @@ const ChatRoom = (props: any) => {
                         <MessagesSkeleton />
                     )
                     :
-                    allConversations[currentConversationId].messages.map((messageDetails: any, index: number) => (
+                    allConversations[currentConversationId].messages.map((messageDetails: Message, index: number) => (
                         <div key={index} className={ "message__container"
                              //Render Conditionally
-                            + ((messageDetails.sender === userData.email) ? " self__message" : "") }>
-                            
-                            <div className={"user__avatar__container position-relative "  + ((messageDetails.sender !== userData.email) ? " d-none" : "")}>
-                                <div className={"user__avatar "}>
-                                    <img src={(userData && userData.profile_img) || defaultProfileImage} alt="" />
-                                </div>
-                                <img className="online__status__dot" alt="" src={onlineIcon} ></img>
+                            + ((chatRoomService.selfMessageMargin(allConversations[currentConversationId].messages, index)) ? " self__message__margin" : "") 
+                            + ((ChatTimeStampService.invalidTimeStamp(allConversations[currentConversationId].messages, index) ? 
+                                '' : ' timestamp__margin'))}>
+
+                            <div className={
+                                ((ChatTimeStampService.showSegregator(allConversations[currentConversationId].messages, index) ? " message__day__segregator" : " d-none"))
+                            }>
+                                <div className="segregator"></div>
+                                <span> { ChatTimeStampService.getChatMessageTimeStamp(messageDetails.updated_at) } </span>
                             </div>
                             
-                            
-                            <div className="message__body position-relative">
-                              <div className="message__timestamp">
-                                  <span>{ChatTimeStampService.getChatMessageTimeStamp(messageDetails.updated_at)}</span>
-                              </div>
+                            <div className={ "d-flex w-100 align-items-start"
+                                            + ((messageDetails.sender === userData.email) ? " self__message" : "")
+                                        }>
+                                <div className={"user__avatar__container position-relative " + ((messageDetails.sender !== userData.email) ? " d-none" : "")}>
+                                    <div className={"user__avatar "}>
+                                        <img src={(userData && userData.profile_img) || defaultProfileImage} alt="" />
+                                    </div>
+                                    <img className="online__status__dot" alt="" src={onlineIcon} ></img>
+                                </div>
 
-                              <div className="message__text">
-                                  <span>{messageDetails.body}</span>
-                              </div>
+
+                                <div className="message__body position-relative">
+
+                                    <div className={"message__timestamp "
+                                        + ((ChatTimeStampService.invalidTimeStamp(allConversations[currentConversationId].messages, index) ?
+                                            "d-none" : ''))}>
+                                        <span>{ChatTimeStampService.getChatMessageTimeStamp(messageDetails.updated_at)}</span>
+                                    </div>
+
+                                    <div className="message__text">
+                                        <span>{messageDetails.body}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))
