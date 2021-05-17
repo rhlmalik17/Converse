@@ -237,7 +237,7 @@ const ChatRoom = (props: any) => {
                                 ((ChatTimeStampService.showSegregator(allConversations[currentConversationId].messages, index) ? " message__day__segregator" : " d-none"))
                             }>
                                 <div className="segregator"></div>
-                                <span> { ChatTimeStampService.getChatMessageTimeStamp(messageDetails.updated_at) } </span>
+                                <span> { ChatTimeStampService.showSegregator(allConversations[currentConversationId].messages, index) } </span>
                             </div>
                             
                             <div className={ "d-flex w-100 align-items-start"
