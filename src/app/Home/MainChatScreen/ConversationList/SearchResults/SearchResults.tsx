@@ -41,8 +41,6 @@ const SearchResults = (props: any) => {
             let results = (paginationOptions.page_number > 1) ? 
                           searchResults.concat(allResults) : allResults;
 
-            console.log(paginationOptions.page_number, allResults, results);
-
             /* Increment Page for Pagination */
             setSearchResults(results.map((user: any) => new User(user)));
 

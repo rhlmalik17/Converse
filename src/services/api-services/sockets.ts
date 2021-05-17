@@ -95,7 +95,6 @@ class SocketController {
         this.allConversations = {};
         this.userData = new User();
         this.currentConversationId = "";
-        console.log(this.socket)
     }
 
     handleUnknownServerSideError(error: any): void {

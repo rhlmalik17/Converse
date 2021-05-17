@@ -153,7 +153,6 @@ const ChatRoom = (props: any) => {
 
     const handleUserStatus = (userStatus: UserActiveStatus) => {
         let conversation: Conversation = SocketController.getAllConversations[SocketController.getCurrentConversationId];
-        console.log(userStatus, conversation);
         if(!conversation) return;
 
         let [participant]: Array<User> = conversation.participants;

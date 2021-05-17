@@ -78,8 +78,6 @@ export type ChatRoomUpdate = {
             nextMessage = messages[index + 1];
         if(previousIndex < 0 || nextIndex >= messages.length) return true;
 
-        console.log(previousMessage.sender === currentMessage.sender || currentMessage.sender === nextMessage.sender)
-
         return previousMessage.sender === currentMessage.sender || currentMessage.sender === nextMessage.sender;
     }
 
