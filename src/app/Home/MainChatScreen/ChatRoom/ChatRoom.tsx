@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineIcon from "../../../../assets/home/user-status/online-light.svg";
 import offLineIcon from "../../../../assets/home/user-status/offline-light.svg";
+import messagesSpinner from "../../../../assets/home/loader.svg"
 import { SendIcon } from '../../../utilities/Icons/Icons';
 import ChatTimeStampService from "../../../utilities/chat-time-stamp.service";
 import DefaultChatScreen from '../../../utilities/DefaultChatScreen/DefaultChatScreen';
@@ -18,6 +19,7 @@ import { Conversation } from '../../../../models/ConversationModels/Conversation
 import { AxiosRequestConfig } from 'axios';
 import { FetchMessages } from '../../../../models/request.models';
 import { ScrollPaginator } from '../../../../models/app.model';
+import Picker, { IEmojiData } from 'emoji-picker-react';
 import httpClient from '../../../../services/api-services/http-client';
 import { apiUrls } from '../../../../services/api-services/api-urls';
 import { showSkeletonLoader } from '../../../redux/actions/common.actions';
@@ -26,11 +28,14 @@ import IsTypingMessage from './IsTypingMessage/IsTypingMessage';
 import { User, UserActiveStatus } from '../../../../models/ConversationModels/User.model';
 
 const ChatRoom = (props: any) => {
-    const [populatedChatBox, setPopulatedChatBox] = useState(false);
-    const [messageContent, setMessageContent] = useState("");
+    const [populatedChatBox, setPopulatedChatBox] = useState<boolean>(false);
+    const [messagesPaginationLoader, setMessagesPaginationLoader] = useState<boolean>(false);
     const [isUserOnline, setIsUserOnline] = useState<boolean>(false);
+    const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+    const [messageContent, setMessageContent] = useState<string>("");
     const { userData, currentConversationId, allConversations, skeletonLoader, isTyping } = useSelector((state: any) => state);
     const chatWindow = useRef(null);
+    const chatInput = useRef(null);
     const dispatch = useDispatch();
 
 
@@ -87,11 +92,15 @@ const ChatRoom = (props: any) => {
         
         if(paginationOptions.page_number === 1)
         toggleMessagesSkeleton();
+        else
+        setMessagesPaginationLoader(true);
 
         httpClient.get(apiUrls['messages'].route, fetchMessagesPayload)
         .then((response: any) => {
             if(paginationOptions.page_number === 1)
             toggleMessagesSkeleton();
+            else
+            setMessagesPaginationLoader(false);
 
             let messagesList: Array<Message> = response.message_list || [];
             concatConversationMessages(messagesList);
@@ -168,6 +177,15 @@ const ChatRoom = (props: any) => {
         SocketController.socket.emit(SOCKET_CONSTANT_EVENTS.GET_USER_STATUS, { userEmail: participant.email });
     }
 
+    const onEmojiClick = (event: React.MouseEvent<Element, MouseEvent>, data: IEmojiData) => {
+        let newValue = messageContent + data.emoji;
+
+        setPopulatedChatBox((String(newValue).length > 0));
+        setMessageContent(newValue);
+
+        (chatInput?.current as any)?.focus();
+    }
+
     useEffect(() => {
         return () => {
             if(chatServiceSubscription)
@@ -217,9 +235,17 @@ const ChatRoom = (props: any) => {
                 <img src={ ((isUserOnline) ? onlineIcon : offLineIcon) } alt=""/>
             </div>
 
-
             {/* CONVERSATION WINDOW */}
             <div className="conversation__window" onScroll={(event: any) => onChatWindowScroll(event)} ref={chatWindow} id="conversation__window">
+                {/* MESSAGES PAGINATION SPINNER */}
+                {(messagesPaginationLoader) ?
+                    (
+                        <div className="messages__pagination__spinner">
+                            <img src={messagesSpinner} alt="" />
+                        </div>
+                    ) : null
+                }
+
                 {
                     (skeletonLoader.messagesList) ? 
                     (
@@ -279,6 +305,9 @@ const ChatRoom = (props: any) => {
                 <div className="chat__box__separator"></div>
 
                 <input value={messageContent}
+                       //CHAT BOX REFERENCE
+                       ref={chatInput}
+
                        // CONDITIONAL RENDERING
                        className={(populatedChatBox) ? "populated__chat__box" : ""}
 
@@ -294,9 +323,14 @@ const ChatRoom = (props: any) => {
                         <SendIcon active={populatedChatBox} className={(populatedChatBox) ? "cursor-pointer" : ""} />
                     </button>
                     <div className="option__separator"></div>
-                    <FontAwesomeIcon className="emoji__icon" icon={faLaughBeam} />
+                    <FontAwesomeIcon onClick={() => setShowEmojiPicker(!showEmojiPicker)} icon={faLaughBeam}
+                        className={"emoji__icon " + (showEmojiPicker ? " active__emoji__icon" : "")}
+                    />
                 </div>
             </div>
+            
+            { /* EMOJI PICKER */ }
+            <Picker native={true} pickerStyle={{ width: '100%', height: (showEmojiPicker) ? '320px' : '0px',transition: '0.6s ease' }} disableSearchBar={true} preload={true} onEmojiClick={onEmojiClick} />
         </div>
     )
 }

@@ -19,6 +19,7 @@
     "@types/react-dom": "^16.9.10",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "emoji-picker-react": "^3.4.4",
     "netlify-cli": "^3.5.0",
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.0",
