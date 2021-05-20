@@ -9,8 +9,6 @@ import signOut from "../../../assets/sidebar-icons/sign-out.svg"
 import signOutActive from "../../../assets/sidebar-icons/sign-out-active.svg"
 import aboutDeveloper from "../../../assets/sidebar-icons/about-developer.svg"
 import aboutDeveloperActive from "../../../assets/sidebar-icons/about-developer-active.svg"
-import reportBug from "../../../assets/sidebar-icons/report-bug.svg"
-import reportBugActive from "../../../assets/sidebar-icons/report-bug-active.svg"
 import AuthService from "../../../services/app-services/auth-service"
 import { useState } from 'react'
 import { environment } from '../../../environment'
@@ -90,8 +88,7 @@ const SideBar = () => {
 
         //Application related sidebar options
         appOptions: [
-            { onClick: () => handleAboutDeveloper("Home"), label: "About Developer", icon: aboutDeveloper, activeIcon: aboutDeveloperActive, className: "aboutDeveloper" },
-            { onClick: () => {}, label: "Help / Report Bug", icon: reportBug, activeIcon: reportBugActive, className: "reportBug" }
+            { onClick: () => handleAboutDeveloper("Home"), label: "About Developer", icon: aboutDeveloper, activeIcon: aboutDeveloperActive, className: "aboutDeveloper" }
         ]
     }
 
