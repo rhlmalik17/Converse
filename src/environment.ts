@@ -1,4 +1,4 @@
 export const environment = {
-    BASE_URL: "http://localhost:8080/",
+    BASE_URL: "https://converse-backend-application.herokuapp.com/",
     portfolio_link: "https://rahul-malik.netlify.app/"
 }
