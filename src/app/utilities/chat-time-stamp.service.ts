@@ -29,17 +29,17 @@ class ChatTimeStampService {
     );
   }
 
-  getChatMessageTimeStamp(messageDate: Date): string {
+  getChatMessageTimeStamp(messageDate: Date, includeTimeStamp?: boolean): string {
     if (!messageDate) return "";
 
     let currentDate: Date = new Date();
     //Timestamp is altered on multiple levels
 
     //Same day level: return message Time
-    if (this.sameDay(messageDate, currentDate)) {
+    if (this.sameDay(messageDate, currentDate) || includeTimeStamp) {
       return this.dateTimeStamp(messageDate);
     } else if (currentDate.getDate() - messageDate.getDate() === 1) {
-      return "Yesterday ";
+      return "Yesterday";
     } else {
       return (
         messageDate.getDate() +

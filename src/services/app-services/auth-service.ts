@@ -29,8 +29,8 @@ class AuthenticationService  {
 
     logOut() {
         //Clear the token
-        localStorage.removeItem("token");
-
+        localStorage.clear();
+        
         //Broadcast to route out of the application
         this.authGuard.next({ action: "USER_LOGOUT", route: SignIn_Route.routeSignIn });
 

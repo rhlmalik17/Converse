@@ -282,7 +282,7 @@ const ChatRoom = (props: any) => {
                                     <div className={"message__timestamp "
                                         + ((ChatTimeStampService.invalidTimeStamp(allConversations[currentConversationId].messages, index) ?
                                             "d-none" : ''))}>
-                                        <span>{ChatTimeStampService.getChatMessageTimeStamp(messageDetails.updated_at)}</span>
+                                        <span>{ChatTimeStampService.getChatMessageTimeStamp(messageDetails.updated_at, true)}</span>
                                     </div>
 
                                     <div className="message__text">
