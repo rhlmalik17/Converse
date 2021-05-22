@@ -1,18 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { faLaughBeam } from "@fortawesome/free-solid-svg-icons";
+import { faLaughBeam, faPhoneAlt, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
-import onlineIcon from "../../../../assets/home/user-status/online-light.svg";
-import offLineIcon from "../../../../assets/home/user-status/offline-light.svg";
-import messagesSpinner from "../../../../assets/home/loader.svg"
 import { SendIcon } from '../../../utilities/Icons/Icons';
-import ChatTimeStampService from "../../../utilities/chat-time-stamp.service";
-import DefaultChatScreen from '../../../utilities/DefaultChatScreen/DefaultChatScreen';
 import { Message } from '../../../../models/ConversationModels/Message.model';
 import { updateAllConversations } from '../../../redux/actions/conversations.actions';
 import SocketController, { SOCKET_CONSTANT_EVENTS } from '../../../../services/api-services/sockets'
-import './ChatRoom.css'
 import { Subscription } from 'rxjs';
 import chatRoomService, { chatRoomEvents, ChatRoomUpdate } from '../../../../services/app-services/chatroom.service';
 import { Conversation } from '../../../../models/ConversationModels/Conversation.model';
@@ -20,12 +13,20 @@ import { AxiosRequestConfig } from 'axios';
 import { FetchMessages } from '../../../../models/request.models';
 import { ScrollPaginator } from '../../../../models/app.model';
 import Picker, { IEmojiData } from 'emoji-picker-react';
-import httpClient from '../../../../services/api-services/http-client';
 import { apiUrls } from '../../../../services/api-services/api-urls';
 import { showSkeletonLoader } from '../../../redux/actions/common.actions';
+import { User, UserActiveStatus } from '../../../../models/ConversationModels/User.model';
+import httpClient from '../../../../services/api-services/http-client';
 import MessagesSkeleton from '../../../utilities/MessagesSkeleton/MessagesSkeleton';
 import IsTypingMessage from './IsTypingMessage/IsTypingMessage';
-import { User, UserActiveStatus } from '../../../../models/ConversationModels/User.model';
+import ChatTimeStampService from "../../../utilities/chat-time-stamp.service";
+import DefaultChatScreen from '../../../utilities/DefaultChatScreen/DefaultChatScreen';
+import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
+import onlineIcon from "../../../../assets/home/user-status/online-light.svg";
+import offLineIcon from "../../../../assets/home/user-status/offline-light.svg";
+import messagesSpinner from "../../../../assets/home/loader.svg";
+
+import './ChatRoom.css';
 
 const ChatRoom = (props: any) => {
     const [populatedChatBox, setPopulatedChatBox] = useState<boolean>(false);
@@ -231,8 +232,20 @@ const ChatRoom = (props: any) => {
         <div className="chat__room__container">
             {/* CONVERSATION TITLE */}
             <div className="chat__title">
-                <span>{`${allConversations[currentConversationId].participants[0]?.first_name} ${allConversations[currentConversationId].participants[0]?.last_name}`}</span>
-                <img src={ ((isUserOnline) ? onlineIcon : offLineIcon) } alt=""/>
+                <div className="conversation__label">
+                    <span>{`${allConversations[currentConversationId].participants[0]?.first_name} ${allConversations[currentConversationId].participants[0]?.last_name}`}</span>
+                    <img src={((isUserOnline) ? onlineIcon : offLineIcon)} alt="" />
+                </div>
+
+                <div className="chat__call__options d-flex">
+                    <div className="chat__call__option">
+                        <FontAwesomeIcon icon={faPhoneAlt} />
+                    </div>
+                    
+                    <div className="chat__call__option">
+                        <FontAwesomeIcon icon={faVideo} />
+                    </div>
+                </div>
             </div>
 
             {/* CONVERSATION WINDOW */}
@@ -263,7 +276,7 @@ const ChatRoom = (props: any) => {
                                 ((ChatTimeStampService.showSegregator(allConversations[currentConversationId].messages, index) ? " message__day__segregator" : " d-none"))
                             }>
                                 <div className="segregator"></div>
-                                <span> { ChatTimeStampService.showSegregator(allConversations[currentConversationId].messages, index) } </span>
+                                <span> {ChatTimeStampService.showSegregator(allConversations[currentConversationId].messages, index)} </span>
                             </div>
                             
                             <div className={ "d-flex w-100 align-items-start"

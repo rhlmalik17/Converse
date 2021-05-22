@@ -7,15 +7,43 @@
 .chat__title {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     font-size: 12px;
     height: 54px;
+    min-height: 54px;
+    padding: 0 16px;
     font-family: 'Segoe UI Bold';
     border-bottom: 1px solid var(--input-background);
 }
 
 .chat__title span {
-    margin: 0 12px 0 16px;
+    margin: 0 12px 0 0;
     color: var(--text-grey);
+    max-width: 200px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.chat__call__options .chat__call__option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-grey);
+    height: 34px;
+    width: 34px;
+}
+
+.chat__call__options .chat__call__option:hover {
+    color: var(--primary-purple);
+    background-color: var(--primary-purple-light);
+    border-radius: 6px;
+}
+
+.chat__call__options .chat__call__option:nth-child(2) {
+    margin: 0 0 0 14px;
 }
 
 .chat__title img {

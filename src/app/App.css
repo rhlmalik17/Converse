@@ -1,6 +1,7 @@
 :root {
   --secondary-light-purple: #CEC7FF;
   --primary-purple: #8472FC;
+  --primary-purple-light: rgba(132, 114, 252, 0.1);
   --dark-purple:  #6E41C3;
   --dark-pink: #A555B2;
   --white: #ffff;
