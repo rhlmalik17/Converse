@@ -1,0 +1,147 @@
+.call__container {
+    background: linear-gradient(0.25turn, var(--voice-video-call-purple) 20%, var(--voice-video-call-pink));
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    padding: 60px 0;
+    justify-content: space-between;
+}
+
+.call__chat__title span {
+    color: var(--white) !important;
+}
+
+.call__avatar__container {
+    margin: 100px 0;
+}
+
+.call__avatar {
+    cursor: unset;
+    border: none;
+    height: 156px;
+    width: 156px;
+    z-index: 2;
+    position: relative;
+}
+
+.call__avatar__rings {
+    height: 156px;
+    width: 156px;
+    position: absolute;
+    z-index: 1;
+    border-radius: 50%;
+    transition: 1s ease;
+}
+
+ .call__avatar__rings div, .call__avatar__rings__one {
+    border-radius: 50%;
+    height: 100%;
+    border-width: 14px;
+    border-style: solid;
+}
+
+.call__avatar__rings__one {
+    border-color: rgba(255, 255, 255, 0.04);
+}
+
+.call__avatar__rings__two {
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.call__avatar__rings__three {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.call__avatar__blip {
+    animation: blipping 1.6s linear;
+    animation-iteration-count: infinite;
+}
+
+.call__options {
+    margin: 40px 0 45px 0;
+    width: 220px;
+}
+
+.call__timestamp {
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.call__option {
+    cursor: pointer;
+    height: 46px;
+    width: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.call__option img {
+    transform: scale(0.8);
+}
+
+.call__options .call__option:nth-child(3) img {
+    transform: scale(0.68);
+}
+
+.call__options > .call__option:nth-child(2) {
+    position: relative;
+    background-color: var(--hangup-call-red);
+}
+
+.toggle__call__btn {
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.04);
+    border-radius: 50%;
+}
+
+.toggle__call__btn > img {
+    transform: scale(0.78);
+}
+
+.toggle__call__container > img {
+    height: 12px;
+    margin: 10px 0 0 0;
+    transition: .4s ease-out;
+}
+
+.call__option:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.call__option__overlay {
+    position: absolute;
+    height: 0;
+    width: 0;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.04);
+    transition: .2s cubic-bezier(.68,.86,.42,1.19);
+}
+
+.call__options > .call__option:nth-child(2):hover  .call__option__overlay {
+    height: 65px;
+    width: 65px;
+}
+
+.toggle__call__container:hover .toggle__call__arrow {
+    transform: translateY(8px);
+}
+
+@keyframes blipping {
+    0% {
+        transform: scale(1.56);
+    } 50% {
+
+        transform: scale(2.08);
+    } 100% {
+        transform: scale(1.56);
+    }
+}

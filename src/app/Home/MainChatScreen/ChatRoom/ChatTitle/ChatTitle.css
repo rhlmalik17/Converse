@@ -1,0 +1,20 @@
+.conversation__label {
+    display: flex;
+    align-items: center;
+}
+
+.conversation__label img {
+    height: 12px;
+}
+
+.conversation__label span {
+    margin: 0 12px 0 0;
+    color: var(--text-grey);
+    max-width: 200px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: 500;
+    transform: scaleY(0.88);
+}

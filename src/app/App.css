@@ -2,6 +2,8 @@
   --secondary-light-purple: #CEC7FF;
   --primary-purple: #8472FC;
   --primary-purple-light: rgba(132, 114, 252, 0.1);
+  --voice-video-call-purple: #47297D;
+  --voice-video-call-pink: #6F346F;
   --dark-purple:  #6E41C3;
   --dark-pink: #A555B2;
   --white: #ffff;
@@ -14,6 +16,7 @@
   --error-red: #E8230C;
   --box-shadow-primary: #8472fc6e;
   --toast-notification-error: #ff6b6b;
+  --hangup-call-red: #DD6062;
   --toast-box-error-shadow: #ff8b7f7d;
   --text-grey: #9095A4;
   --light-shade-black: #495969;

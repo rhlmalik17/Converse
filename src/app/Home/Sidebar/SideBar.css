@@ -39,16 +39,6 @@
   height: 80%;
 }
 
-.profile__image {
-  height: 130px;
-  width: 130px;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  border-radius: 50%;
-  border: 2px solid var(--white);
-}
-
 .side__bar__options {
   display: flex;
   flex-grow: 1;
@@ -134,10 +124,6 @@
   border-radius: 50%;
   margin: 0 0 20px 0;
   border: 2px solid var(--input-background);
-}
-
-.default__profile__image {
-  background-size: contain !important;
 }
 
 .set__profile__btn label {

@@ -17,6 +17,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector } from 'react-redux'
 import { ManageProfileModal } from './ManageProfileModal/ManageProfileModal'
+import ProfilePicture from './ProfilePicture/ProfilePicture'
 
 const SideBar = () => {
     const userData = useSelector((state: any) => state.userData);
@@ -111,10 +112,8 @@ const SideBar = () => {
                         <img src={SideBarLogo} alt="" />
                     </div>
 
-                    <div className={ ((userData && userData.profile_img) ? "cursor-pointer" : " default__profile__image") + " profile__image" }
-                        style={{ backgroundImage: `url(${(userData && userData.profile_img) || defaultProfile})` }}
-                        onClick={() => handleViewProfilePicture((userData && userData.profile_img) || defaultProfile)}>
-                    </div>
+                    {/* Profile Picture */}
+                    <ProfilePicture userData={userData || {}} onClick={handleViewProfilePicture} />
 
                     <div className="side__bar__options">
                         <div className="user__options d-flex flex-column align-items-center w-100">

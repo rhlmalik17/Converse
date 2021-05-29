@@ -1,0 +1,13 @@
+.profile__image {
+    height: 130px;
+    width: 130px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    border-radius: 50%;
+    border: 2px solid var(--white);
+  }
+
+  .default__profile__image {
+    background-size: contain !important;
+  }

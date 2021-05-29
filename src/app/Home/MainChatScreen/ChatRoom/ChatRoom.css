@@ -16,15 +16,6 @@
     border-bottom: 1px solid var(--input-background);
 }
 
-.chat__title span {
-    margin: 0 12px 0 0;
-    color: var(--text-grey);
-    max-width: 200px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
 .chat__call__options .chat__call__option {
     display: flex;
     align-items: center;

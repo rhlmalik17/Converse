@@ -23,10 +23,11 @@ import ChatTimeStampService from "../../../utilities/chat-time-stamp.service";
 import DefaultChatScreen from '../../../utilities/DefaultChatScreen/DefaultChatScreen';
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineIcon from "../../../../assets/home/user-status/online-light.svg";
-import offLineIcon from "../../../../assets/home/user-status/offline-light.svg";
 import messagesSpinner from "../../../../assets/home/loader.svg";
 
 import './ChatRoom.css';
+import VoiceVideoCall from './VoiceVideoCall/VoiceVideoCall';
+import ChatTitle from './ChatTitle/ChatTitle';
 
 const ChatRoom = (props: any) => {
     const [populatedChatBox, setPopulatedChatBox] = useState<boolean>(false);
@@ -229,13 +230,13 @@ const ChatRoom = (props: any) => {
 
     return (
         
-        <div className="chat__room__container">
+        <div className="chat__room__container position-relative">
+            {/* VOICE / VIDEO CALL SECTION */}
+            {/* <VoiceVideoCall isUserOnline={isUserOnline} /> */}
+
             {/* CONVERSATION TITLE */}
             <div className="chat__title">
-                <div className="conversation__label">
-                    <span>{`${allConversations[currentConversationId].participants[0]?.first_name} ${allConversations[currentConversationId].participants[0]?.last_name}`}</span>
-                    <img src={((isUserOnline) ? onlineIcon : offLineIcon)} alt="" />
-                </div>
+                <ChatTitle isUserOnline={isUserOnline} />
 
                 <div className="chat__call__options d-flex">
                     <div className="chat__call__option">
