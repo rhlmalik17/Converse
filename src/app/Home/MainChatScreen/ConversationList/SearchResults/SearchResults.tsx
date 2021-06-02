@@ -12,6 +12,7 @@ import { User } from '../../../../../models/ConversationModels/User.model';
 import { useDispatch, useSelector } from 'react-redux';
 import { SkeletonLoader } from '../../../../../models/SkeletonModels/SkeletonLoader.model';
 import { showSkeletonLoader } from '../../../../redux/actions/common.actions';
+import { GlobalState } from '../../../../../models/GlobalStateModels/GlobalState.model';
 
 /* Paginate Records */
 let paginationOptions: ScrollPaginator = new ScrollPaginator(PAGINATION_OPTIONS.search_users);
@@ -19,7 +20,7 @@ let paginationOptions: ScrollPaginator = new ScrollPaginator(PAGINATION_OPTIONS.
 const SearchResults = (props: any) => {
     const skeletonRows: Array<any> = new Array(4).fill(4);
     const [searchResults, setSearchResults] = useState<Array<User>>([]);
-    const skeletonLoader: SkeletonLoader = useSelector((state: any) => state.skeletonLoader); 
+    const skeletonLoader: SkeletonLoader = useSelector((state: GlobalState) => state.skeletonLoader); 
     const dispatch = useDispatch();
 
     const toggleConversationListSkeleton = (loaderStatus: boolean) => {

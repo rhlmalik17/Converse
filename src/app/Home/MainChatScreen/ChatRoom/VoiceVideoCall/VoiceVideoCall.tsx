@@ -8,6 +8,7 @@ import MessageIcon from '../../../../../assets/home/call/call-message.svg';
 import DownArrow from '../../../../../assets/home/call/down-arrow.svg';
 
 import './VoiceVideoCall.css';
+import { GlobalState } from '../../../../../models/GlobalStateModels/GlobalState.model';
 
 /* COMPONENT PROPERTIES */
 interface VoiceVideoCallProps {
@@ -15,7 +16,7 @@ interface VoiceVideoCallProps {
 }
 
 const VoiceVideoCall = ({ isUserOnline }: VoiceVideoCallProps) => {
-    const { currentConversationId, allConversations } = useSelector((state: any) => state);
+    const { currentConversationId, allConversations } = useSelector((state: GlobalState) => state);
     return (
         <div className="d-flex flex-column align-items-center call__container">
             <ChatTitle className="call__chat__title" isUserOnline={isUserOnline} />

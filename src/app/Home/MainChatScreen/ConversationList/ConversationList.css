@@ -242,3 +242,11 @@
     width: 100%;
     height: 74%;
 }
+
+.conversation__ongoing__call, .conversation__ongoing__call:hover {
+    background-color: var(--primary-purple) !important;
+}
+
+.conversation__ongoing__call span {
+    color: var(--white) !important;
+}

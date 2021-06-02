@@ -1,3 +1,4 @@
+import { CallState } from "../../../models/ConversationModels/CallState.model";
 import { SkeletonLoader } from "../../../models/SkeletonModels/SkeletonLoader.model";
 
 export const getUserData = (commonState: any = {}, action: any) => {
@@ -14,6 +15,17 @@ export const skeletonLoader = (state: SkeletonLoader = new SkeletonLoader(), act
     switch(action.type) {
         case "SHOW_SKELETON_LOADER":
             return action.showState || state;
+
+        default:
+            return state;
+    }
+}
+
+/* ONGOING CALL STATE REDUCER */
+export const callState = (state: CallState = new CallState(), action: { type: string }) => {
+    switch(action.type) {
+        case "UPDATE_CALL_STATE": 
+            return state;
 
         default:
             return state;

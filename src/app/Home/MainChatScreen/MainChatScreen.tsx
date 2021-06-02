@@ -14,9 +14,10 @@ import { Conversation, ConversationEvents, ConversationTypingEvent } from '../..
 import { ConversationType } from '../../../models/ConversationModels/ConversationSwitch.model'
 import { Message } from '../../../models/ConversationModels/Message.model'
 import chatRoomService from '../../../services/app-services/chatroom.service'
+import { GlobalState } from '../../../models/GlobalStateModels/GlobalState.model'
 
 const MainChatScreen = () => {
-    const { sideBarMode, skeletonLoader, allConversations } = useSelector((state: any) => state);
+    const { sideBarMode, skeletonLoader, allConversations } = useSelector((state: GlobalState) => state);
     const dispatch = useDispatch();
 
     const toggleMainScreenSkeleton = () => {

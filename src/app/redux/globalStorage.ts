@@ -1,7 +1,7 @@
 import { combineReducers, createStore } from "redux";
 import sideBarMode from './reducers/layout.modes'
 import currentConversationId, { allConversations, isTyping } from './reducers/conversation.switch'
-import { skeletonLoader, getUserData } from './reducers/common.reducer'
+import { skeletonLoader, getUserData, callState } from './reducers/common.reducer'
 
 //COMBINE ALL REDUCERS
 const allReducer = combineReducers({
@@ -10,7 +10,8 @@ const allReducer = combineReducers({
     skeletonLoader,
     allConversations,
     userData: getUserData,
-    isTyping
+    isTyping,
+    callState
 });
 
 const rootReducer = (state: any, action: any) => {

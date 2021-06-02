@@ -8,6 +8,7 @@ import onlineUserDate from "../../../../assets/home/user-status/online-light.svg
 import { Conversation, CONVERSATION_TYPES } from "../../../../models/ConversationModels/Conversation.model";
 import { ConversationType } from "../../../../models/ConversationModels/ConversationSwitch.model";
 import { User } from "../../../../models/ConversationModels/User.model";
+import { GlobalState } from "../../../../models/GlobalStateModels/GlobalState.model";
 import { InitiateConversationResponse } from "../../../../models/ResponseModels/InitiateConversationResponse.model";
 import { apiUrls } from "../../../../services/api-services/api-urls";
 import httpClient from "../../../../services/api-services/http-client";
@@ -26,7 +27,7 @@ const ConversationList = () => {
     //Component states
     const [searchInputState, setSearchInputState] = useState({ showDismissIcon: false, searchText: "" });
     const [conversationListKeys, setConversationListKeys] = useState<Array<string>>([]);
-    const { userData, currentConversationId, skeletonLoader, allConversations } = useSelector((state: any) => state);
+    const { userData, currentConversationId, skeletonLoader, allConversations, callState } = useSelector((state: GlobalState) => state);
     const searchInputRef = useRef(null);
     const dispatch = useDispatch();
 
@@ -144,7 +145,8 @@ const ConversationList = () => {
                             <div onClick={() => handleConversationChange(chat_id)} key={index} 
                                  className={"conversation" + ((chat_id === currentConversationId) ? " selected__conversation" : "") }>
                                 <div className="selected__border"></div>
-                                <div className="conversation__card">
+
+                                <div className={"conversation__card " + ((callState.ongoing_call && callState.chat_id === chat_id) ? "conversation__ongoing__call" : "")} >
                                     
                                     <div className={'conversation__unread__count ' + ((getUserUnreadCount(userData, allConversations, chat_id)) ? 'd-flex' : 'd-none')}> {getUserUnreadCount(userData, allConversations, chat_id)} </div>
 

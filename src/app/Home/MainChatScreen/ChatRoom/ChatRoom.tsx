@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { faLaughBeam, faPhoneAlt, faVideo } from "@fortawesome/free-solid-svg-icons";
+import { faLaughBeam, faPhone, faVideo, faPhoneSlash, faVideoSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SendIcon } from '../../../utilities/Icons/Icons';
 import { Message } from '../../../../models/ConversationModels/Message.model';
@@ -24,10 +24,11 @@ import DefaultChatScreen from '../../../utilities/DefaultChatScreen/DefaultChatS
 import defaultProfileImage from "../../../../assets/home/default-profile-picture.svg";
 import onlineIcon from "../../../../assets/home/user-status/online-light.svg";
 import messagesSpinner from "../../../../assets/home/loader.svg";
-
-import './ChatRoom.css';
 import VoiceVideoCall from './VoiceVideoCall/VoiceVideoCall';
 import ChatTitle from './ChatTitle/ChatTitle';
+import ChatCallIcon from "../../../../app/utilities/ChatCallIcon/ChatCallIcon";
+import './ChatRoom.css';
+import { GlobalState } from '../../../../models/GlobalStateModels/GlobalState.model';
 
 const ChatRoom = (props: any) => {
     const [populatedChatBox, setPopulatedChatBox] = useState<boolean>(false);
@@ -35,11 +36,13 @@ const ChatRoom = (props: any) => {
     const [isUserOnline, setIsUserOnline] = useState<boolean>(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
     const [messageContent, setMessageContent] = useState<string>("");
-    const { userData, currentConversationId, allConversations, skeletonLoader, isTyping } = useSelector((state: any) => state);
+    const { userData, currentConversationId, allConversations, skeletonLoader, isTyping, callState } = useSelector((state: GlobalState) => state);
     const chatWindow = useRef(null);
     const chatInput = useRef(null);
     const dispatch = useDispatch();
 
+    /* STATIC CONTENT */
+    const STATIC_CONTENT = { call_options_disabled_tooltip: "You're already on a call with someone" };
 
     let chatServiceSubscription: Subscription = chatRoomService.chatRoomBroadCaster.subscribe((data: any) => chatRoomServiceHandler(data));
 
@@ -232,21 +235,20 @@ const ChatRoom = (props: any) => {
         
         <div className="chat__room__container position-relative">
             {/* VOICE / VIDEO CALL SECTION */}
-            {/* <VoiceVideoCall isUserOnline={isUserOnline} /> */}
+            { (callState.ongoing_call) ? <VoiceVideoCall isUserOnline={isUserOnline} /> : null }
 
             {/* CONVERSATION TITLE */}
             <div className="chat__title">
                 <ChatTitle isUserOnline={isUserOnline} />
-
-                <div className="chat__call__options d-flex">
-                    <div className="chat__call__option">
-                        <FontAwesomeIcon icon={faPhoneAlt} />
-                    </div>
-                    
-                    <div className="chat__call__option">
-                        <FontAwesomeIcon icon={faVideo} />
-                    </div>
-                </div>
+                {
+                    ((callState.chat_id === currentConversationId && callState.ongoing_call)) ?
+                        <button className="cursor-pointer resume__call__btn"> Resume Call </button> 
+                        :
+                        (<div className="chat__call__options position-relative d-flex">
+                            <ChatCallIcon disabledIconTooltip={STATIC_CONTENT.call_options_disabled_tooltip} icon={faPhone} disabledIcon={faPhoneSlash} disableIcon={(callState.chat_id !== currentConversationId && callState.ongoing_call)} />
+                            <ChatCallIcon disabledIconTooltip={STATIC_CONTENT.call_options_disabled_tooltip} icon={faVideo} disabledIcon={faVideoSlash} disableIcon={(callState.chat_id !== currentConversationId && callState.ongoing_call)} />
+                        </div>)
+                }      
             </div>
 
             {/* CONVERSATION WINDOW */}

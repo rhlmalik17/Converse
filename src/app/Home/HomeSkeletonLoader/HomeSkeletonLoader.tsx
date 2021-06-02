@@ -2,10 +2,11 @@ import './HomeSkeletonLoader.css'
 import Skeleton from '@material-ui/lab/Skeleton';
 import { SkeletonLoader } from '../../../models/SkeletonModels/SkeletonLoader.model';
 import { useSelector } from 'react-redux';
+import { GlobalState } from '../../../models/GlobalStateModels/GlobalState.model';
 
 const HomeSkeletonLoader = () => {
     const skeletonConversationList: Array<any> = new Array<any>(4).fill(null);
-    const showSkeleton: SkeletonLoader = useSelector((state: any) => state.skeletonLoader);
+    const showSkeleton: SkeletonLoader = useSelector((state: GlobalState) => state.skeletonLoader);
 
     if(!showSkeleton.mainChatScreen && !showSkeleton.conversationList)
     return null;

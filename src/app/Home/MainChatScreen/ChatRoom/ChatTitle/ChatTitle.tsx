@@ -2,6 +2,7 @@ import onlineIcon from "../../../../../assets/home/user-status/online-light.svg"
 import offLineIcon from "../../../../../assets/home/user-status/offline-light.svg";
 import { useSelector } from "react-redux";
 import './ChatTitle.css';
+import { GlobalState } from "../../../../../models/GlobalStateModels/GlobalState.model";
 
 interface ChatTitleProps {
     isUserOnline: boolean;
@@ -9,7 +10,7 @@ interface ChatTitleProps {
 }
 
 const ChatTitle = ({ isUserOnline, className }: ChatTitleProps) => {
-    const { currentConversationId, allConversations } = useSelector((state: any) => state);
+    const { currentConversationId, allConversations } = useSelector((state: GlobalState) => state);
     
     return (
         <div className={"conversation__label " + (className || '')}>

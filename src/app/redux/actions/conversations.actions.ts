@@ -36,3 +36,4 @@ export const showTypingMessage = (isTyping: boolean) => {
         isTyping
     }
 }
+

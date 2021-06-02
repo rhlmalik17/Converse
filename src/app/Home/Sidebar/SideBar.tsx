@@ -18,9 +18,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector } from 'react-redux'
 import { ManageProfileModal } from './ManageProfileModal/ManageProfileModal'
 import ProfilePicture from './ProfilePicture/ProfilePicture'
+import { GlobalState } from '../../../models/GlobalStateModels/GlobalState.model'
 
 const SideBar = () => {
-    const userData = useSelector((state: any) => state.userData);
+    const userData = useSelector((state: GlobalState) => state.userData);
     //View Profile Content
     const ViewProfileModal = (props: any) => {
         const userData = props.userData;
