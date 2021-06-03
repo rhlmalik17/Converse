@@ -1,3 +1,4 @@
+import { CallState } from "../../../models/ConversationModels/CallState.model";
 import { ConversationType } from "../../../models/ConversationModels/ConversationSwitch.model"
 import { User } from "../../../models/ConversationModels/User.model";
 import SocketController from '../../../services/api-services/sockets'
@@ -34,6 +35,21 @@ export const showTypingMessage = (isTyping: boolean) => {
     return {
         type: "SHOW_TYPING_MESSAGE",
         isTyping
+    }
+}
+
+//Update the existing call state with the new one
+export const updateCallState = (callState: CallState) => {
+    return {
+        type: "UPDATE_CALL_STATE",
+        callState
+    }
+}
+
+export const updateCallTimer = (timer: string) => {
+    return {
+        type: "UPDATE_CALL_TIMER",
+        timer
     }
 }
 

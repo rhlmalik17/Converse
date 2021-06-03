@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ChatTitle from '../ChatTitle/ChatTitle';
 import ProfilePicture from '../../../Sidebar/ProfilePicture/ProfilePicture';
 import CallMicrophone from '../../../../../assets/home/call/call-mic.svg';
@@ -9,6 +9,9 @@ import DownArrow from '../../../../../assets/home/call/down-arrow.svg';
 
 import './VoiceVideoCall.css';
 import { GlobalState } from '../../../../../models/GlobalStateModels/GlobalState.model';
+import { updateCallState } from '../../../../redux/actions/conversations.actions';
+import { CallState } from '../../../../../models/ConversationModels/CallState.model';
+import callService from '../../../../../services/app-services/call.service';
 
 /* COMPONENT PROPERTIES */
 interface VoiceVideoCallProps {
@@ -16,7 +19,16 @@ interface VoiceVideoCallProps {
 }
 
 const VoiceVideoCall = ({ isUserOnline }: VoiceVideoCallProps) => {
-    const { currentConversationId, allConversations } = useSelector((state: GlobalState) => state);
+    const { currentConversationId, allConversations, callState } = useSelector((state: GlobalState) => state);
+    const dispatch = useDispatch();
+
+    /* HANG UP THE CALL */
+    const hangUpCall = () => {
+        /* STOP THE TIMER AND RENEW THE CALL STATE */
+        callService.stopTimer();
+        dispatch(updateCallState(new CallState()));
+    }
+
     return (
         <div className="d-flex flex-column align-items-center call__container">
             <ChatTitle className="call__chat__title" isUserOnline={isUserOnline} />
@@ -33,7 +45,7 @@ const VoiceVideoCall = ({ isUserOnline }: VoiceVideoCallProps) => {
             </div>
 
             <div className="call__dashboard d-flex align-items-center flex-column">
-                <div className="call__timestamp">00:00:00</div>
+                <div className="call__timestamp">{ callState.callTimerClock }</div>
 
                 <div className="call__options d-flex justify-content-between">
                     {/* MUTE OPTION */}
@@ -42,7 +54,7 @@ const VoiceVideoCall = ({ isUserOnline }: VoiceVideoCallProps) => {
                     </div>
 
                     {/* HANG CALL OPTION */}
-                    <div className="call__option">
+                    <div className="call__option" onClick={() => hangUpCall()}>
                         <div className="call__option__overlay"></div>
                         <img src={HangUpIcon} alt="" />
                     </div>

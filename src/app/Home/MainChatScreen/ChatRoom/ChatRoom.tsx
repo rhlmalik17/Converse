@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { faLaughBeam, faPhone, faVideo, faPhoneSlash, faVideoSlash } from "@fortawesome/free-solid-svg-icons";
+import { faLaughBeam, faPhone, faVideo, faPhoneSlash, faVideoSlash, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SendIcon } from '../../../utilities/Icons/Icons';
 import { Message } from '../../../../models/ConversationModels/Message.model';
-import { updateAllConversations } from '../../../redux/actions/conversations.actions';
+import { updateAllConversations, updateCallState, updateCallTimer } from '../../../redux/actions/conversations.actions';
 import SocketController, { SOCKET_CONSTANT_EVENTS } from '../../../../services/api-services/sockets'
 import { Subscription } from 'rxjs';
 import chatRoomService, { chatRoomEvents, ChatRoomUpdate } from '../../../../services/app-services/chatroom.service';
@@ -29,6 +29,8 @@ import ChatTitle from './ChatTitle/ChatTitle';
 import ChatCallIcon from "../../../../app/utilities/ChatCallIcon/ChatCallIcon";
 import './ChatRoom.css';
 import { GlobalState } from '../../../../models/GlobalStateModels/GlobalState.model';
+import { CallState } from '../../../../models/ConversationModels/CallState.model';
+import callService from '../../../../services/app-services/call.service';
 
 const ChatRoom = (props: any) => {
     const [populatedChatBox, setPopulatedChatBox] = useState<boolean>(false);
@@ -191,6 +193,28 @@ const ChatRoom = (props: any) => {
         (chatInput?.current as any)?.focus();
     }
 
+    /* CALL ICONS CLICK HANDLERS */
+    const handleInvokeCall = (icon: IconDefinition) => {
+        // AUDIO STREAM / VOICE CALL MODE WILL ALWAYS BE TRUE
+        let callStreams = { audio: true, video: icon === faVideo };
+
+        /**
+         * 1. Set the conversation ID the call is connected to
+         * 2. Set the ongoing call flag to true
+         * 3. Set the outgoing call to the participants array
+         * 4. Set the call outgoing streams
+         */
+        callState.chat_id = currentConversationId;
+        callState.ongoing_call = true;
+        callState.outgoing_call_to = allConversations[currentConversationId]?.participants || new Array<User>();
+        callState.call_streams = callStreams;
+
+        /* Start the timer Set the new call state */
+        callService.startTimer(dispatch, updateCallTimer);
+        dispatch(updateCallState(new CallState(callState)));
+    }
+
+
     useEffect(() => {
         return () => {
             if(chatServiceSubscription)
@@ -235,7 +259,7 @@ const ChatRoom = (props: any) => {
         
         <div className="chat__room__container position-relative">
             {/* VOICE / VIDEO CALL SECTION */}
-            { (callState.ongoing_call) ? <VoiceVideoCall isUserOnline={isUserOnline} /> : null }
+            { (callState.ongoing_call && callState.chat_id === currentConversationId) ? <VoiceVideoCall isUserOnline={isUserOnline} /> : null }
 
             {/* CONVERSATION TITLE */}
             <div className="chat__title">
@@ -245,8 +269,8 @@ const ChatRoom = (props: any) => {
                         <button className="cursor-pointer resume__call__btn"> Resume Call </button> 
                         :
                         (<div className="chat__call__options position-relative d-flex">
-                            <ChatCallIcon disabledIconTooltip={STATIC_CONTENT.call_options_disabled_tooltip} icon={faPhone} disabledIcon={faPhoneSlash} disableIcon={(callState.chat_id !== currentConversationId && callState.ongoing_call)} />
-                            <ChatCallIcon disabledIconTooltip={STATIC_CONTENT.call_options_disabled_tooltip} icon={faVideo} disabledIcon={faVideoSlash} disableIcon={(callState.chat_id !== currentConversationId && callState.ongoing_call)} />
+                            <ChatCallIcon onClick={handleInvokeCall} disabledIconTooltip={STATIC_CONTENT.call_options_disabled_tooltip} icon={faPhone} disabledIcon={faPhoneSlash} disableIcon={(callState.chat_id !== currentConversationId && callState.ongoing_call)} />
+                            <ChatCallIcon onClick={handleInvokeCall} disabledIconTooltip={STATIC_CONTENT.call_options_disabled_tooltip} icon={faVideo} disabledIcon={faVideoSlash} disableIcon={(callState.chat_id !== currentConversationId && callState.ongoing_call)} />
                         </div>)
                 }      
             </div>

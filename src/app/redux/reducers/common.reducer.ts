@@ -22,10 +22,14 @@ export const skeletonLoader = (state: SkeletonLoader = new SkeletonLoader(), act
 }
 
 /* ONGOING CALL STATE REDUCER */
-export const callState = (state: CallState = new CallState(), action: { type: string }) => {
+export const callState = (state: CallState = new CallState(), action: { type: string, callState?: CallState, timer?: string }) => {
     switch(action.type) {
         case "UPDATE_CALL_STATE": 
-            return state;
+            return action.callState;
+
+        case "UPDATE_CALL_TIMER":
+            state.callTimerClock = action.timer || state.callTimerClock;
+            return {...state};
 
         default:
             return state;
