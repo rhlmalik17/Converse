@@ -6,6 +6,7 @@
     z-index: 2;
     padding: 60px 0;
     justify-content: space-between;
+    transition: .5s ease-in-out;
 }
 
 .call__chat__title span {
@@ -133,6 +134,14 @@
 
 .toggle__call__container:hover .toggle__call__arrow {
     transform: translateY(8px);
+}
+
+.hide__call__overlay {
+    transform: translateY(-100%);
+}
+
+.show__call__overlay {
+    transform: translateY(0%);
 }
 
 @keyframes blipping {

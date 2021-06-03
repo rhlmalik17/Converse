@@ -208,6 +208,7 @@ const ChatRoom = (props: any) => {
         callState.ongoing_call = true;
         callState.outgoing_call_to = allConversations[currentConversationId]?.participants || new Array<User>();
         callState.call_streams = callStreams;
+        callState.call_overlay = true;
 
         /* Start the timer Set the new call state */
         callService.startTimer(dispatch, updateCallTimer);
@@ -266,7 +267,8 @@ const ChatRoom = (props: any) => {
                 <ChatTitle isUserOnline={isUserOnline} />
                 {
                     ((callState.chat_id === currentConversationId && callState.ongoing_call)) ?
-                        <button className="cursor-pointer resume__call__btn"> Resume Call </button> 
+                        <button className="cursor-pointer resume__call__btn"
+                        onClick={() => callService.handleToggleCallOverlay(true, callState, dispatch, updateCallState) }> Resume Call </button> 
                         :
                         (<div className="chat__call__options position-relative d-flex">
                             <ChatCallIcon onClick={handleInvokeCall} disabledIconTooltip={STATIC_CONTENT.call_options_disabled_tooltip} icon={faPhone} disabledIcon={faPhoneSlash} disableIcon={(callState.chat_id !== currentConversationId && callState.ongoing_call)} />

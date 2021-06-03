@@ -30,7 +30,7 @@ const VoiceVideoCall = ({ isUserOnline }: VoiceVideoCallProps) => {
     }
 
     return (
-        <div className="d-flex flex-column align-items-center call__container">
+        <div className={"d-flex flex-column align-items-center call__container" + ((callState.call_overlay) ? "" : " hide__call__overlay")}>
             <ChatTitle className="call__chat__title" isUserOnline={isUserOnline} />
 
             <div className="call__avatar__container position-relative">
@@ -65,7 +65,8 @@ const VoiceVideoCall = ({ isUserOnline }: VoiceVideoCallProps) => {
                     </div>
                 </div>
 
-                <div className="toggle__call__container d-flex flex-column cursor-pointer align-items-center">
+                <div className="toggle__call__container d-flex flex-column cursor-pointer align-items-center"
+                    onClick={() => callService.handleToggleCallOverlay(false, callState, dispatch, updateCallState) }>
                     <div className="toggle__call__btn">
                         <img src={MessageIcon} alt="" />
                     </div>
