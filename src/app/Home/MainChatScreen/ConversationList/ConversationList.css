@@ -5,6 +5,7 @@
     padding: 14px;
     display: flex;
     flex-direction: column;
+    min-width: 340px;
 }
 
 .conversation__switches {
@@ -249,4 +250,62 @@
 
 .conversation__ongoing__call span {
     color: var(--white) !important;
+}
+
+.conversation__incoming__call .incoming__call__options {
+    display: flex !important;
+}
+
+.conversation__incoming__call .conversation__timestamp {
+    display: none !important;
+}
+
+.incoming__call__options {
+    display: none;
+    position: absolute;
+    right: 0;
+    margin: auto 0;
+}
+
+.incoming__call__options > .incoming__call__option {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.incoming__call__options > .incoming__call__option:nth-child(2) {
+    margin: 0 0 0 8px;
+}
+
+.incoming__call__options > .accept__call {
+    background-color: var(--call-green);
+    animation: bounce 1s ease-out;
+    animation-iteration-count: infinite;
+}
+
+.incoming__call__options > .reject__call {
+    background-color: var(--toast-notification-error);
+}
+
+.incoming__call__options > .reject__call > img {
+    height: 14px !important;
+}
+
+.incoming__call__option > img {
+    height: 9px;
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0px);
+    } 50% {
+        transform: translateY(0px);
+    } 80% {
+        transform: translateY(-5px);
+    } 100% {
+        transform: translateY(0px);
+    }
 }

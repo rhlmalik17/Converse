@@ -7,6 +7,7 @@
   --dark-purple:  #6E41C3;
   --dark-pink: #A555B2;
   --white: #ffff;
+  --black: #000;
   --off-white: #F6F6FD;
   --light-grey: #ABABAF;
   --heading-font: #585858;
@@ -26,5 +27,10 @@
   --modal-heading:  #302F2F;
   --modal-heading-shadow: #cecece;
   --light-primary-purple: #8472fc2c;
-  --skeleton-pulse: rgb(74 74 74 / 6%)
+  --skeleton-pulse: rgb(74 74 74 / 6%);
+  --call-green:  #1BCB27;
+  --call-overlay-red: #FFF1F4;
+  --call-overlay-red-text: #D18C8F;
+  --call-overlay-green: #E7F6DF;
+  --call-overlay-green-text: #65964A;
 }

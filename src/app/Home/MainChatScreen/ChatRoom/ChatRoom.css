@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     width: 75%;
+    min-width: 400px;
 }
 
 .chat__title {

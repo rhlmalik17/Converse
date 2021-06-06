@@ -1,0 +1,79 @@
+.incoming__call__container {
+    position: absolute;
+    background-color: var(--white);
+    z-index: 10;
+    box-shadow: 0px 1px 21px var(--modal-heading-shadow);
+    min-width: 330px;
+    width: fit-content;
+    left:0;
+    right:0;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    border-radius: 12px;
+    top: 54px;
+    animation: callOverlay .4s ease-in-out;
+}
+
+.incoming__call__parent {
+    padding: 12px 20px;
+}
+
+.incoming__call__header {
+    background-color: var(--primary-purple);
+    font-size: 15px;
+    padding: 12px 0;
+    color: var(--white)
+}
+
+.incoming__call__header img {
+    height: 10px;
+}
+
+.incoming__call__header span {
+    transform: scaleY(0.9);
+}
+
+.incoming__call__overlay__options > button {
+    border: none;
+    font-size: 10px;
+    padding: 7px 36px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.incoming__call__overlay__options > .incoming__call__reject__btn {
+    background-color: var(--call-overlay-red);
+    color: var(--call-overlay-red-text)
+}
+
+.incoming__call__overlay__options > .incoming__call__accept__btn {
+    background-color: var(--call-overlay-green);
+    color: var(--call-overlay-green-text)
+}
+
+.incoming__caller__avatar {
+    height: 50px;
+    width: 50px;
+}
+
+.incoming__caller__details {
+    color: var(--light-shade-black);
+}
+
+.incoming__caller__details > .incoming__caller__name {
+    font-family: 'Segoe UI Bold';
+    font-size: 14px;
+}
+
+.incoming__caller__details > .incoming__caller__email {
+    font-size: 12px;
+}
+
+@keyframes callOverlay {
+    0% {
+        transform: translateY(calc(-100% - 54px));
+    } 100% {
+        transform: translateY(0);
+    }
+}

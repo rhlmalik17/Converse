@@ -1,4 +1,4 @@
-import  { useEffect } from 'react'
+import  React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { apiUrls } from '../../../services/api-services/api-urls'
 import httpClient from '../../../services/api-services/http-client'
@@ -15,6 +15,7 @@ import { ConversationType } from '../../../models/ConversationModels/Conversatio
 import { Message } from '../../../models/ConversationModels/Message.model'
 import chatRoomService from '../../../services/app-services/chatroom.service'
 import { GlobalState } from '../../../models/GlobalStateModels/GlobalState.model'
+import IncomingCallOverlay from './ChatRoom/IncomingCallOverlay/IncomingCallOverlay'
 
 const MainChatScreen = () => {
     const { sideBarMode, skeletonLoader, allConversations } = useSelector((state: GlobalState) => state);
@@ -140,6 +141,9 @@ const MainChatScreen = () => {
 
     return (
         <div className={"main__chat__screen d-flex "+ ((sideBarMode) ? "hide__side__bar" : "")}>
+            {/* Incoming Call Popup. TODO: Apply conditional rendering for incoming call overlay */}
+            {/* <IncomingCallOverlay /> */}
+            
             {/* Skeleton Loader */}
             <HomeSkeletonLoader />
 

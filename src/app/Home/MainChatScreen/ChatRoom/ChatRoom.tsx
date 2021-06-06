@@ -259,6 +259,7 @@ const ChatRoom = (props: any) => {
     return (
         
         <div className="chat__room__container position-relative">
+
             {/* VOICE / VIDEO CALL SECTION */}
             { (callState.ongoing_call && callState.chat_id === currentConversationId) ? <VoiceVideoCall isUserOnline={isUserOnline} /> : null }
 
