@@ -13,3 +13,13 @@
 .hide__side__bar {
     transform: scale(0.8) translateX(169px);
 }
+
+@media screen and (max-width: 767px) {
+    .hide__side__bar {
+        transform: scale(1) translateX(300px);
+    }
+
+    .side__bar__parent {
+        min-width: 300px;
+    }
+}

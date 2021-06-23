@@ -206,9 +206,18 @@ const ChatRoom = (props: any) => {
          */
         callState.chat_id = currentConversationId;
         callState.ongoing_call = true;
-        callState.outgoing_call_to = allConversations[currentConversationId]?.participants || new Array<User>();
+        callState.participants = allConversations[currentConversationId]?.participants || new Array<User>();
         callState.call_streams = callStreams;
         callState.call_overlay = true;
+
+        /* GET THE USER PERMISSIONS */
+        navigator.getUserMedia({ video: true, audio: true }, function (stream) {
+            let remotePeerID: string = SocketController.getUserPeerId(callState.participants[0] || new User());
+            SocketController.peer.call(remotePeerID, stream, { metadata: userData });
+        }, function (err) {
+            alert('Failed to get local stream');
+        });
+
 
         /* Start the timer Set the new call state */
         callService.startTimer(dispatch, updateCallTimer);

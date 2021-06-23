@@ -9,16 +9,17 @@ import ConversationList from './ConversationList/ConversationList'
 import SocketController, { SOCKET_CONSTANT_EVENTS } from '../../../services/api-services/sockets'
 import './MainChatScreen.css'
 import { User } from '../../../models/ConversationModels/User.model'
-import { showTypingMessage, switchConversation, updateAllConversations } from '../../redux/actions/conversations.actions'
+import { invokeIncomingCall, showTypingMessage, switchConversation, updateAllConversations } from '../../redux/actions/conversations.actions'
 import { Conversation, ConversationEvents, ConversationTypingEvent } from '../../../models/ConversationModels/Conversation.model'
 import { ConversationType } from '../../../models/ConversationModels/ConversationSwitch.model'
 import { Message } from '../../../models/ConversationModels/Message.model'
 import chatRoomService from '../../../services/app-services/chatroom.service'
 import { GlobalState } from '../../../models/GlobalStateModels/GlobalState.model'
 import IncomingCallOverlay from './ChatRoom/IncomingCallOverlay/IncomingCallOverlay'
+import Peer from 'peerjs'
 
 const MainChatScreen = () => {
-    const { sideBarMode, skeletonLoader, allConversations } = useSelector((state: GlobalState) => state);
+    const { sideBarMode, skeletonLoader, allConversations, callState } = useSelector((state: GlobalState) => state);
     const dispatch = useDispatch();
 
     const toggleMainScreenSkeleton = () => {
@@ -29,7 +30,11 @@ const MainChatScreen = () => {
     const socketHandlers = (userData: User) => {
         //Attach the socket and it's handlers
         SocketController.connectSocket(userData);
+        
+        //Add Peer Handlers
+        SocketController.peer.on("call", (mediaConnection: Peer.MediaConnection) => SocketController.handleOnCallEvent(mediaConnection, dispatch, invokeIncomingCall));
 
+        //Add Socket Handlers
         SocketController.socket?.on(SOCKET_CONSTANT_EVENTS.UPDATE_INITIAL_STATE, (data: any) => updateInitialState(data, userData));
         SocketController.socket?.on(String(userData.email), (data: any) => getNewMessageFromForeignUser(data, userData));
     }
@@ -141,8 +146,8 @@ const MainChatScreen = () => {
 
     return (
         <div className={"main__chat__screen d-flex "+ ((sideBarMode) ? "hide__side__bar" : "")}>
-            {/* Incoming Call Popup. TODO: Apply conditional rendering for incoming call overlay */}
-            {/* <IncomingCallOverlay /> */}
+            {/* Incoming Call Popup. */}
+            { (callState && callState.incoming_call) ? <IncomingCallOverlay /> : null }
             
             {/* Skeleton Loader */}
             <HomeSkeletonLoader />

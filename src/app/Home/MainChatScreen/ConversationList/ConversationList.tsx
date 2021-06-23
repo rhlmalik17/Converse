@@ -149,12 +149,12 @@ const ConversationList = () => {
 
                                 <div
                                     /* CONDITIONAL CONVERSATION CARD RENDERING */
-                                    className={"conversation__card "
+                                    className={"conversation__card"
 
                                         // ONGOING CALL
-                                        + ((callState.ongoing_call && callState.chat_id === chat_id) ? "conversation__ongoing__call" : "")
+                                        + ((callState.ongoing_call && callState.chat_id === chat_id) ? " conversation__ongoing__call" : "")
 
-                                        // INCOMING CALL - TODO: apply the condition for incoming call to add class 'conversation__incoming__call'
+                                        + ((callState && callState.incoming_call) ? " conversation__incoming__call": "")
                                     }>
 
                                     <div className={'conversation__unread__count ' + ((getUserUnreadCount(userData, allConversations, chat_id)) ? 'd-flex' : 'd-none')}> {getUserUnreadCount(userData, allConversations, chat_id)} </div>
@@ -173,12 +173,14 @@ const ConversationList = () => {
                                         <div className="conversation__last__message">
 
                                             <span className="conversation__message">
-                                                {/* TODO: Add a condition for 'Incoming Call as well' */}
                                                 {/* CONDITIONAL RENDERING FOR THE CONVERSATION MESSAGE TEXT */}
-                                                {
-                                                    (callState.ongoing_call && callState.chat_id === chat_id) ? "Ongoing Call..." :
-                                                        (allConversations[chat_id].last_message.body || allConversations[chat_id]?.participants[0]?.email)
-                                                }
+                                                <span className="conversation__conditional__message">
+                                                    {
+                                                        (callState.ongoing_call && callState.chat_id === chat_id) ? "Ongoing Call..." :
+                                                            (allConversations[chat_id].last_message.body || allConversations[chat_id]?.participants[0]?.email)
+                                                    }
+                                                </span>
+                                                <span className="incoming__call__message"> Incoming Call... </span>
                                             </span>
 
                                             <span className="conversation__timestamp">

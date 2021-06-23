@@ -1,3 +1,5 @@
+import Peer from "peerjs";
+import { Dispatch } from "react";
 import socketIOClient,{ Socket } from "socket.io-client";
 import { environment } from "../../environment";
 import { ConversationType } from "../../models/ConversationModels/ConversationSwitch.model";
@@ -6,6 +8,7 @@ import { User } from "../../models/ConversationModels/User.model";
 import toastService from "../app-services/toast-service";
 
 export const SOCKET_CONSTANT_EVENTS = {
+    //SOCKET IO EVENTS
     INITIAL_MESSAGE: 'INITIAL_MESSAGE',
     CONVERSATION_MESSAGE: 'CONVERSATION_MESSAGE',
     UPDATE_INITIAL_STATE: 'UPDATE_INITIAL_STATE',
@@ -16,11 +19,19 @@ export const SOCKET_CONSTANT_EVENTS = {
 }
 class SocketController {  
     public socket!: Socket;
+    public peer!: Peer;
     public userData: User = new User();
     private allConversations: ConversationType = {};
     private currentConversationId: string = "";
 
     connectSocket(userData: User): void {
+        //WebRTC PEER
+        this.peer = new Peer(this.getUserPeerId(userData), {
+            host: environment.PEER_SERVER_URL,
+            port: environment.PEER_SERVER_PORT
+        });
+
+        //Web Socket
         this.socket = socketIOClient(environment.BASE_URL, { query: { userEmail: userData.email }});
         this.socket.on(SOCKET_CONSTANT_EVENTS.UNKNOWN_ERROR, this.handleUnknownServerSideError);
     }
@@ -99,6 +110,31 @@ class SocketController {
 
     handleUnknownServerSideError(error: any): void {
         toastService.showToast("error", error.message);
+    }
+
+    /* WEB RTC EVENTS */
+
+    /**
+     * Get the Peer ID for the user
+     * @param userData - User Data
+     * @returns - Peer ID for the user provided
+     */
+    getUserPeerId({ email }: User): string {
+        let regex: RegExp = /^[a-zA-Z0-9_]*$/;
+        
+        let peerID: string = "";
+        for(let i = 0;i < email.length;i++) {
+            if(!regex.test(email.charAt(i))) continue;
+
+            peerID += email.charAt(i);
+        }
+
+        return peerID;
+    }
+
+    handleOnCallEvent(mediaConnection: Peer.MediaConnection, dispatch: Dispatch<any>, invokeIncomingCall: Function): void {    
+        //Invoke incoming call
+        dispatch(invokeIncomingCall(true, new User(mediaConnection.metadata)));
     }
 }
 

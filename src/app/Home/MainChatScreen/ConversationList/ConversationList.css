@@ -298,6 +298,27 @@
     height: 9px;
 }
 
+.incoming__call__message {
+    display: none;
+    color: var(--white);
+}
+
+.conversation__incoming__call {
+    background-color: var(--primary-purple) !important;
+}
+
+.conversation__incoming__call .incoming__call__message {
+    display: block !important;
+}
+
+.conversation__incoming__call .conversation__conditional__message {
+    display: none !important;
+}
+
+.conversation__incoming__call .conversation__title {
+    color: var(--white);
+}
+
 @keyframes bounce {
     0% {
         transform: translateY(0px);

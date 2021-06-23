@@ -53,3 +53,10 @@ export const updateCallTimer = (timer: string) => {
     }
 }
 
+export const invokeIncomingCall = (invokeIncomingCall: boolean, callerData: User) => {
+    return {
+        type: "INVOKE_INCOMING_CALL",
+        invokeIncomingCall,
+        callerData
+    }
+}
